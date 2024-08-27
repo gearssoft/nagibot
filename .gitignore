@@ -24,3 +24,4 @@ output/*
 runs/
 
 openai_study/key.txt
+.env
