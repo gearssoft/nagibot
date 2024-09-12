@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1920</width>
-    <height>1080</height>
+    <height>1027</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -674,25 +674,269 @@ margin : 4px;
 </string>
    </property>
   </widget>
-  <widget class="QWidget" name="widget_10" native="true">
+  <widget class="QWidget" name="widget_controlKeys" native="true">
    <property name="geometry">
     <rect>
      <x>1370</x>
-     <y>700</y>
-     <width>321</width>
-     <height>321</height>
+     <y>670</y>
+     <width>401</width>
+     <height>341</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">border : 1px solid black;
 </string>
    </property>
+   <widget class="QWidget" name="widget_keyup" native="true">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>0</y>
+      <width>151</width>
+      <height>131</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border : none;</string>
+    </property>
+    <widget class="QLabel" name="label_keyup_normal">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>151</width>
+       <height>131</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="../assets/icons.qrc">:/방향키_상_기본.png</pixmap>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_keyup_push">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>151</width>
+       <height>131</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="../assets/icons.qrc">:/방향키_상_누름.png</pixmap>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnKeyUp">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>151</width>
+       <height>131</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="widget_keydown" native="true">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>200</y>
+      <width>151</width>
+      <height>131</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border : none;</string>
+    </property>
+    <widget class="QLabel" name="label_keydown_normal">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>151</width>
+       <height>131</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="../assets/icons.qrc">:/방향키_하_기본.png</pixmap>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_keydown_push">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>151</width>
+       <height>131</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="../assets/icons.qrc">:/방향키_하_누름.png</pixmap>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnKeyDown">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>151</width>
+       <height>131</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="widget_keyleft" native="true">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>80</y>
+      <width>120</width>
+      <height>160</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border : none;</string>
+    </property>
+    <widget class="QLabel" name="label_keyleft_normal">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>120</width>
+       <height>160</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="../assets/icons.qrc">:/방향키_좌_기본.png</pixmap>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_keyleft_push">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>120</width>
+       <height>160</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="../assets/icons.qrc">:/방향키_좌_누름.png</pixmap>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnKeyLeft">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>120</width>
+       <height>160</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="widget_keyright" native="true">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>90</y>
+      <width>121</width>
+      <height>161</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border : none;</string>
+    </property>
+    <widget class="QLabel" name="label_keyright_normal">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>151</width>
+       <height>161</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="../assets/icons.qrc">:/방향키_우_기본.png</pixmap>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_keyright_push">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>151</width>
+       <height>161</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="../assets/icons.qrc">:/방향키_우_누름.png</pixmap>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnKeyRight">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>151</width>
+       <height>161</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </widget>
   </widget>
   <widget class="QWidget" name="controlOpenWidget" native="true">
    <property name="geometry">
     <rect>
-     <x>1740</x>
-     <y>880</y>
+     <x>1790</x>
+     <y>870</y>
      <width>121</width>
      <height>51</height>
     </rect>
@@ -729,8 +973,8 @@ margin : 4px;
   <widget class="QWidget" name="controLockWidget" native="true">
    <property name="geometry">
     <rect>
-     <x>1740</x>
-     <y>940</y>
+     <x>1790</x>
+     <y>930</y>
      <width>121</width>
      <height>51</height>
     </rect>
