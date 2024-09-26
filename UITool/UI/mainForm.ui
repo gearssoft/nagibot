@@ -7,14 +7,26 @@
     <x>0</x>
     <y>0</y>
     <width>1920</width>
-    <height>1027</height>
+    <height>1080</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1920</width>
+    <height>1080</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1920</width>
+    <height>1080</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Control System</string>
@@ -28,26 +40,25 @@
      <x>0</x>
      <y>0</y>
      <width>1920</width>
-     <height>96</height>
+     <height>72</height>
     </rect>
    </property>
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>96</height>
+     <width>1920</width>
+     <height>72</height>
     </size>
    </property>
    <property name="styleSheet">
-    <string notr="true">border : 1px solid black;
-</string>
+    <string notr="true">border : 1px solid black;</string>
    </property>
    <widget class="QWidget" name="widgetBtnGoHome" native="true">
     <property name="geometry">
      <rect>
-      <x>12</x>
-      <y>16</y>
-      <width>64</width>
-      <height>64</height>
+      <x>0</x>
+      <y>0</y>
+      <width>72</width>
+      <height>72</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -58,26 +69,27 @@
     </property>
     <property name="minimumSize">
      <size>
-      <width>64</width>
-      <height>64</height>
+      <width>72</width>
+      <height>72</height>
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-radius:8px</string>
+     <string notr="true">border-radius:8px;
+margin:4px;</string>
     </property>
     <widget class="QPushButton" name="btnGoHome">
      <property name="geometry">
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>64</width>
-       <height>64</height>
+       <width>72</width>
+       <height>72</height>
       </rect>
      </property>
      <property name="minimumSize">
       <size>
-       <width>64</width>
-       <height>64</height>
+       <width>72</width>
+       <height>72</height>
       </size>
      </property>
      <property name="styleSheet">
@@ -89,24 +101,24 @@ background-color: transparent;
       <string/>
      </property>
     </widget>
-    <widget class="QLabel" name="label_3">
+    <widget class="QLabel" name="label_home">
      <property name="geometry">
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>64</width>
-       <height>64</height>
+       <width>72</width>
+       <height>72</height>
       </rect>
      </property>
      <property name="minimumSize">
       <size>
-       <width>64</width>
-       <height>64</height>
+       <width>72</width>
+       <height>72</height>
       </size>
      </property>
      <property name="styleSheet">
       <string notr="true">border: none;
-margin: 4px;</string>
+</string>
      </property>
      <property name="text">
       <string/>
@@ -117,17 +129,20 @@ margin: 4px;</string>
      <property name="scaledContents">
       <bool>true</bool>
      </property>
+     <property name="margin">
+      <number>8</number>
+     </property>
     </widget>
-    <zorder>label_3</zorder>
+    <zorder>label_home</zorder>
     <zorder>btnGoHome</zorder>
    </widget>
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>86</x>
-      <y>12</y>
-      <width>64</width>
-      <height>64</height>
+      <x>72</x>
+      <y>0</y>
+      <width>72</width>
+      <height>72</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -138,13 +153,12 @@ margin: 4px;</string>
     </property>
     <property name="minimumSize">
      <size>
-      <width>64</width>
-      <height>64</height>
+      <width>0</width>
+      <height>0</height>
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">margin : 4px;
-border : none;</string>
+     <string notr="true">border : none;</string>
     </property>
     <property name="text">
      <string/>
@@ -155,15 +169,21 @@ border : none;</string>
     <property name="scaledContents">
      <bool>true</bool>
     </property>
+    <property name="margin">
+     <number>24</number>
+    </property>
    </widget>
    <widget class="QLabel" name="wifiStatus">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>20</y>
-      <width>64</width>
-      <height>64</height>
+      <x>144</x>
+      <y>0</y>
+      <width>72</width>
+      <height>72</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border : none;</string>
     </property>
     <property name="text">
      <string/>
@@ -174,14 +194,17 @@ border : none;</string>
     <property name="scaledContents">
      <bool>true</bool>
     </property>
+    <property name="margin">
+     <number>24</number>
+    </property>
    </widget>
    <widget class="QLabel" name="platformRobot">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>20</y>
-      <width>64</width>
-      <height>64</height>
+      <x>300</x>
+      <y>0</y>
+      <width>72</width>
+      <height>72</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -196,14 +219,17 @@ border : none;</string>
     <property name="scaledContents">
      <bool>true</bool>
     </property>
+    <property name="margin">
+     <number>16</number>
+    </property>
    </widget>
    <widget class="QLabel" name="networkStatus">
     <property name="geometry">
      <rect>
-      <x>340</x>
-      <y>20</y>
-      <width>64</width>
-      <height>64</height>
+      <x>372</x>
+      <y>0</y>
+      <width>72</width>
+      <height>72</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -218,14 +244,17 @@ border : none;</string>
     <property name="scaledContents">
      <bool>true</bool>
     </property>
+    <property name="margin">
+     <number>24</number>
+    </property>
    </widget>
    <widget class="QLabel" name="batteryStatus">
     <property name="geometry">
      <rect>
-      <x>420</x>
-      <y>20</y>
-      <width>64</width>
-      <height>64</height>
+      <x>445</x>
+      <y>0</y>
+      <width>72</width>
+      <height>72</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -240,14 +269,17 @@ border : none;</string>
     <property name="scaledContents">
      <bool>true</bool>
     </property>
+    <property name="margin">
+     <number>16</number>
+    </property>
    </widget>
-   <widget class="QWidget" name="widget" native="true">
+   <widget class="QWidget" name="widgetTimeInfo" native="true">
     <property name="geometry">
      <rect>
       <x>980</x>
-      <y>10</y>
-      <width>291</width>
-      <height>80</height>
+      <y>0</y>
+      <width>300</width>
+      <height>72</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -314,130 +346,143 @@ border : none;</string>
     <property name="geometry">
      <rect>
       <x>550</x>
-      <y>10</y>
-      <width>301</width>
-      <height>80</height>
+      <y>0</y>
+      <width>258</width>
+      <height>72</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">border : none;</string>
     </property>
-    <widget class="QLabel" name="label_5">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>30</y>
-       <width>81</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>D2Coding</family>
-       <pointsize>18</pointsize>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">border : none;
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="label_5">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>D2Coding</family>
+         <pointsize>18</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border : none;
 </string>
-     </property>
-     <property name="text">
-      <string>제어장치</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignCenter</set>
-     </property>
-    </widget>
-    <widget class="Line" name="line">
-     <property name="geometry">
-      <rect>
-       <x>100</x>
-       <y>10</y>
-       <width>3</width>
-       <height>61</height>
-      </rect>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Orientation::Vertical</enum>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_6">
-     <property name="geometry">
-      <rect>
-       <x>110</x>
-       <y>30</y>
-       <width>81</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>D2Coding</family>
-       <pointsize>18</pointsize>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">border : none;
+       </property>
+       <property name="text">
+        <string>제어장치</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">bacground-color:black;</string>
+       </property>
+       <property name="lineWidth">
+        <number>1</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Orientation::Vertical</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_6">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>D2Coding</family>
+         <pointsize>18</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border : none;
 </string>
-     </property>
-     <property name="text">
-      <string>감시장치</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignCenter</set>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_7">
-     <property name="geometry">
-      <rect>
-       <x>210</x>
-       <y>30</y>
-       <width>81</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>D2Coding</family>
-       <pointsize>18</pointsize>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">border : none;
+       </property>
+       <property name="text">
+        <string>감시장치</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line_2">
+       <property name="lineWidth">
+        <number>1</number>
+       </property>
+       <property name="midLineWidth">
+        <number>0</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Orientation::Vertical</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_7">
+       <property name="font">
+        <font>
+         <family>D2Coding</family>
+         <pointsize>18</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border : none;
 </string>
-     </property>
-     <property name="text">
-      <string>기타</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignCenter</set>
-     </property>
-    </widget>
-    <widget class="Line" name="line_2">
-     <property name="geometry">
-      <rect>
-       <x>200</x>
-       <y>10</y>
-       <width>3</width>
-       <height>61</height>
-      </rect>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Orientation::Vertical</enum>
-     </property>
-    </widget>
+       </property>
+       <property name="text">
+        <string>기타</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
    <widget class="QLabel" name="label_10">
     <property name="geometry">
      <rect>
-      <x>1320</x>
-      <y>10</y>
-      <width>64</width>
-      <height>64</height>
+      <x>1528</x>
+      <y>0</y>
+      <width>72</width>
+      <height>72</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-radius : 32px;</string>
+     <string notr="true">border-radius : 16px;
+margin : 16px
+</string>
     </property>
     <property name="text">
      <string/>
@@ -448,14 +493,17 @@ border : none;</string>
     <property name="scaledContents">
      <bool>true</bool>
     </property>
+    <property name="margin">
+     <number>0</number>
+    </property>
    </widget>
    <widget class="QLabel" name="txUnitNuberInfo">
     <property name="geometry">
      <rect>
-      <x>1430</x>
-      <y>15</y>
-      <width>91</width>
-      <height>51</height>
+      <x>1600</x>
+      <y>0</y>
+      <width>120</width>
+      <height>72</height>
      </rect>
     </property>
     <property name="font">
@@ -463,6 +511,9 @@ border : none;</string>
       <family>D2Coding</family>
       <pointsize>18</pointsize>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border : none;</string>
     </property>
     <property name="text">
      <string>N 호기</string>
@@ -475,21 +526,22 @@ border : none;</string>
     <property name="geometry">
      <rect>
       <x>1840</x>
-      <y>10</y>
-      <width>64</width>
-      <height>64</height>
+      <y>0</y>
+      <width>72</width>
+      <height>72</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-radius : 8px;</string>
+     <string notr="true">border-radius : 8px;
+margin : 4px;</string>
     </property>
     <widget class="QLabel" name="label_11">
      <property name="geometry">
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>64</width>
-       <height>64</height>
+       <width>72</width>
+       <height>72</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -505,14 +557,17 @@ padding : 4px;</string>
      <property name="scaledContents">
       <bool>true</bool>
      </property>
+     <property name="margin">
+      <number>8</number>
+     </property>
     </widget>
     <widget class="QPushButton" name="btnGotoSetup">
      <property name="geometry">
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>64</width>
-       <height>64</height>
+       <width>72</width>
+       <height>72</height>
       </rect>
      </property>
      <property name="text">
@@ -524,16 +579,15 @@ padding : 4px;</string>
   <widget class="QWidget" name="mainCamScreen" native="true">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>100</y>
-     <width>1351</width>
-     <height>571</height>
+     <x>0</x>
+     <y>72</y>
+     <width>1360</width>
+     <height>671</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">border : 1px solid black;
-margin : 4px;
-</string>
+margin : 4px;</string>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
     <property name="leftMargin">
@@ -563,124 +617,281 @@ margin : 4px;
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="widget_3" native="true">
+  <widget class="QWidget" name="widgetBottomLeftScreen" native="true">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>680</y>
-     <width>671</width>
-     <height>331</height>
+     <x>0</x>
+     <y>740</y>
+     <width>680</width>
+     <height>340</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">border : 1px solid black;
-</string>
+margin : 4px;</string>
    </property>
   </widget>
-  <widget class="QWidget" name="widget_4" native="true">
+  <widget class="QWidget" name="widgetBottomRightScreen" native="true">
    <property name="geometry">
     <rect>
-     <x>690</x>
-     <y>680</y>
-     <width>641</width>
-     <height>331</height>
+     <x>680</x>
+     <y>740</y>
+     <width>680</width>
+     <height>340</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">border : 1px solid black;
-</string>
+margin : 4px;</string>
    </property>
   </widget>
   <widget class="QWidget" name="widget_5" native="true">
    <property name="geometry">
     <rect>
-     <x>1370</x>
-     <y>110</y>
-     <width>541</width>
-     <height>111</height>
+     <x>1360</x>
+     <y>72</y>
+     <width>560</width>
+     <height>200</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">border : 1px solid black;
-</string>
+margin : 4px;</string>
    </property>
   </widget>
   <widget class="QWidget" name="widget_6" native="true">
    <property name="geometry">
     <rect>
-     <x>1370</x>
-     <y>240</y>
-     <width>541</width>
-     <height>121</height>
+     <x>1360</x>
+     <y>270</y>
+     <width>560</width>
+     <height>221</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">border : 1px solid black;
-</string>
+margin : 4px;</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="btnAbnormalStop">
    <property name="geometry">
     <rect>
      <x>1370</x>
-     <y>370</y>
+     <y>490</y>
      <width>541</width>
      <height>71</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: red;
+color: white;
+font-size: 24px;
+font-weight: bold;</string>
+   </property>
    <property name="text">
-    <string>PushButton</string>
+    <string>비상정지</string>
    </property>
   </widget>
-  <widget class="QWidget" name="widget_7" native="true">
+  <widget class="QWidget" name="widget_opmode" native="true">
    <property name="geometry">
     <rect>
      <x>1370</x>
-     <y>460</y>
+     <y>570</y>
      <width>541</width>
-     <height>61</height>
+     <height>48</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">border : 1px solid black;
 </string>
    </property>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>128</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font-size:24px;
+padding-left:16px;
+border : none;</string>
+    </property>
+    <property name="text">
+     <string>운영모드</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnAutoDrv">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>8</y>
+      <width>120</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font-size:24px;</string>
+    </property>
+    <property name="text">
+     <string>자율</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnRemoteDrv">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>8</y>
+      <width>120</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font-size:24px;
+</string>
+    </property>
+    <property name="text">
+     <string>원격</string>
+    </property>
+   </widget>
   </widget>
-  <widget class="QWidget" name="widget_8" native="true">
+  <widget class="QWidget" name="widgetDpmode" native="true">
    <property name="geometry">
     <rect>
      <x>1370</x>
-     <y>530</y>
-     <width>541</width>
-     <height>61</height>
+     <y>620</y>
+     <width>540</width>
+     <height>48</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">border : 1px solid black;
 </string>
    </property>
+   <widget class="QLabel" name="label_13">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>128</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font-size:24px;
+padding-left:16px;
+border : none;</string>
+    </property>
+    <property name="text">
+     <string>출력모드</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnOpticalMode">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>8</y>
+      <width>120</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font-size:24px;</string>
+    </property>
+    <property name="text">
+     <string>광학</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnIRMode">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>8</y>
+      <width>120</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font-size:24px;</string>
+    </property>
+    <property name="text">
+     <string>적외선</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QWidget" name="widget_9" native="true">
    <property name="geometry">
     <rect>
      <x>1370</x>
-     <y>600</y>
-     <width>541</width>
-     <height>61</height>
+     <y>670</y>
+     <width>540</width>
+     <height>48</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">border : 1px solid black;
 </string>
    </property>
+   <widget class="QLabel" name="label_14">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>136</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font-size:24px;
+padding-left:16px;
+border : none;</string>
+    </property>
+    <property name="text">
+     <string>Zoom 기능</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnScaleUp">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>8</y>
+      <width>120</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font-size:24px;</string>
+    </property>
+    <property name="text">
+     <string>확대</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnScaleDown">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>8</y>
+      <width>120</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font-size:24px;</string>
+    </property>
+    <property name="text">
+     <string>축소</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QWidget" name="widget_controlKeys" native="true">
    <property name="geometry">
     <rect>
      <x>1370</x>
-     <y>670</y>
+     <y>730</y>
      <width>401</width>
-     <height>341</height>
+     <height>342</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -936,22 +1147,28 @@ margin : 4px;
    <property name="geometry">
     <rect>
      <x>1790</x>
-     <y>870</y>
-     <width>121</width>
-     <height>51</height>
+     <y>920</y>
+     <width>120</width>
+     <height>48</height>
     </rect>
    </property>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="image_unlock">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>41</width>
-      <height>41</height>
+      <x>80</x>
+      <y>10</y>
+      <width>24</width>
+      <height>24</height>
      </rect>
     </property>
     <property name="text">
-     <string>운행</string>
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="../assets/icons.qrc">:/잠금.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_2">
@@ -959,53 +1176,99 @@ margin : 4px;
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>111</width>
-      <height>41</height>
+      <width>120</width>
+      <height>48</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
     </property>
     <property name="text">
      <string/>
     </property>
    </widget>
+   <widget class="QLabel" name="label_12">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>0</y>
+      <width>48</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font-size: 20px;</string>
+    </property>
+    <property name="text">
+     <string>운행</string>
+    </property>
+   </widget>
    <zorder>pushButton_2</zorder>
-   <zorder>label</zorder>
+   <zorder>image_unlock</zorder>
+   <zorder>label_12</zorder>
   </widget>
   <widget class="QWidget" name="controLockWidget" native="true">
    <property name="geometry">
     <rect>
      <x>1790</x>
-     <y>930</y>
-     <width>121</width>
-     <height>51</height>
+     <y>968</y>
+     <width>120</width>
+     <height>48</height>
     </rect>
    </property>
-   <widget class="QLabel" name="label_2">
+   <widget class="QLabel" name="image_lock">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>41</width>
-      <height>41</height>
+      <x>80</x>
+      <y>10</y>
+      <width>24</width>
+      <height>24</height>
      </rect>
     </property>
     <property name="text">
-     <string>잠금</string>
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="../assets/icons.qrc">:/운행.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_3">
+   <widget class="QPushButton" name="btnLock">
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>111</width>
-      <height>41</height>
+      <width>120</width>
+      <height>48</height>
      </rect>
     </property>
     <property name="text">
      <string/>
     </property>
    </widget>
-   <zorder>pushButton_3</zorder>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>0</y>
+      <width>48</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font-size:20px;</string>
+    </property>
+    <property name="text">
+     <string>잠금</string>
+    </property>
+   </widget>
+   <zorder>btnLock</zorder>
+   <zorder>image_lock</zorder>
    <zorder>label_2</zorder>
   </widget>
  </widget>
