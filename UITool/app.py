@@ -11,7 +11,7 @@ class MainForm(QWidget):
         super().__init__()
         self.setGeometry(QRect(0, 0, 1920, 1080))
         self.setFixedSize(1920, 1080)
-        self.setWindowState(Qt.WindowMaximized)
+        self.setWindowState(Qt.WindowFullScreen)
         
         #stackedWidget 만들고 
         self.stacked_widget = QStackedWidget(self)
