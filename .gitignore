@@ -26,5 +26,5 @@ runs/
 openai_study/key.txt
 .env
 build/
-.spec
+*.spec
 dist/
