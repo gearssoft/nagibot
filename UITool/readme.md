@@ -34,3 +34,41 @@ pyinstaller --onefile --windowed app.py
 ```
 
 위 명령어를 사용하여 윈도우용 실행 파일을 만들 수 있습니다. `--onefile` 옵션은 단일 실행 파일을 생성하고, `--windowed` 옵션은 콘솔 창 없이 GUI 애플리케이션을 실행하도록 합니다.
+
+
+## launch.json 
+
+
+lauch.json 파일은 다음과 같이 설정합니다.  
+
+```json
+{
+    
+    "configurations": [
+        {
+            "type": "debugpy",
+            "request": "launch",
+            "name": "Launch Current Venv",
+            "python": "${workspaceFolder}/.venv/bin/python", // 가상환경을 사용하고 있다면 python 경로를 가상환경의 python 경로로 설정해야 합니다.  
+            //"program": "${workspaceFolder}/${input:programPath}",
+            "program": "${file}",
+            "cwd": "${fileDirname}", //cwd는 현재 파일이 있는 디렉토리로 설정해야 합니다.  
+            "console": "integratedTerminal",
+        },
+        {
+            "name": "Python 디버거: 현재 파일",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        }
+    ],
+    "inputs": [
+        {
+            "type": "promptString",
+            "id": "programPath",
+            "description": "Enter the relative path to the main Python file"
+        }
+    ]
+}
+```

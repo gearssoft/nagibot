@@ -28,3 +28,5 @@ openai_study/key.txt
 build/
 *.spec
 dist/
+
+*.ttf
