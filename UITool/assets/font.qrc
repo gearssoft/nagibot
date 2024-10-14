@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="font">
+    <file>font/DungGeunMo.ttf</file>
+  </qresource>
+</RCC>

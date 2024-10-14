@@ -16,8 +16,6 @@ opencv/basic/image/*.jpg
 
 .vscode/
 
-yolov5/runs
-yolov5/*.pt
 
 output/*
 
@@ -30,3 +28,5 @@ build/
 dist/
 
 *.ttf
+
+font_rc.py

@@ -37,7 +37,7 @@
      </property>
      <property name="font">
       <font>
-       <family>D2Coding</family>
+       <family>DungGeunMo</family>
        <pointsize>24</pointsize>
       </font>
      </property>
@@ -92,6 +92,11 @@
           <height>96</height>
          </size>
         </property>
+        <property name="font">
+         <font>
+          <family>D2Coding</family>
+         </font>
+        </property>
         <property name="text">
          <string>시작</string>
         </property>
@@ -118,6 +123,11 @@
           <height>96</height>
          </size>
         </property>
+        <property name="font">
+         <font>
+          <family>D2Coding</family>
+         </font>
+        </property>
         <property name="text">
          <string>설정</string>
         </property>
@@ -143,6 +153,11 @@
           <width>96</width>
           <height>96</height>
          </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>D2Coding</family>
+         </font>
         </property>
         <property name="text">
          <string>종료</string>
@@ -180,6 +195,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../assets/icons.qrc"/>
+  <include location="../assets/font.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -1,14 +1,21 @@
 import sys
 from PySide6.QtCore import QTimer, QRect, Qt
 from PySide6.QtWidgets import QApplication,QWidget,QStackedWidget,QMessageBox
+from PySide6.QtGui import QFontDatabase
 
 import startUpform ,mainForm ,setupForm
 
-
+import icons_rc
+import font_rc
 
 class MainForm(QWidget):
     def __init__(self):
         super().__init__()
+        
+        # load font
+        QFontDatabase.addApplicationFont(":/font/font/DungGeunMo.ttf")
+        QFontDatabase.addApplicationFont(":/font/font/D2Coding-Ver1.3.2-20180524.ttf")
+        
         self.setGeometry(QRect(0, 0, 1920, 1080))
         self.setFixedSize(1920, 1080)
         self.setWindowState(Qt.WindowFullScreen)
