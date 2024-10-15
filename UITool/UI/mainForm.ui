@@ -28,6 +28,11 @@
     <height>1080</height>
    </size>
   </property>
+  <property name="font">
+   <font>
+    <family>Arial</family>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Control System</string>
   </property>
@@ -295,6 +300,11 @@ background-color: transparent;
        <height>16</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+      </font>
+     </property>
      <property name="text">
       <string>현재시간</string>
      </property>
@@ -307,6 +317,11 @@ background-color: transparent;
        <width>58</width>
        <height>16</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+      </font>
      </property>
      <property name="text">
       <string>운용시간</string>
@@ -347,128 +362,143 @@ background-color: transparent;
      <rect>
       <x>550</x>
       <y>0</y>
-      <width>258</width>
+      <width>288</width>
       <height>72</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">border : none;</string>
     </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QLabel" name="label_5">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <family>D2Coding</family>
-         <pointsize>18</pointsize>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">border : none;
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>96</width>
+       <height>72</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border : none;
 </string>
-       </property>
-       <property name="text">
-        <string>제어장치</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="Line" name="line">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="autoFillBackground">
-        <bool>false</bool>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">bacground-color:black;</string>
-       </property>
-       <property name="lineWidth">
-        <number>1</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Orientation::Vertical</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_6">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <family>D2Coding</family>
-         <pointsize>18</pointsize>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">border : none;
+     </property>
+     <property name="text">
+      <string>제어장치</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_6">
+     <property name="geometry">
+      <rect>
+       <x>96</x>
+       <y>0</y>
+       <width>96</width>
+       <height>72</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border : none;
 </string>
-       </property>
-       <property name="text">
-        <string>감시장치</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="Line" name="line_2">
-       <property name="lineWidth">
-        <number>1</number>
-       </property>
-       <property name="midLineWidth">
-        <number>0</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Orientation::Vertical</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_7">
-       <property name="font">
-        <font>
-         <family>D2Coding</family>
-         <pointsize>18</pointsize>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">border : none;
+     </property>
+     <property name="text">
+      <string>감시장치</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_7">
+     <property name="geometry">
+      <rect>
+       <x>192</x>
+       <y>0</y>
+       <width>64</width>
+       <height>72</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border : none;
 </string>
-       </property>
-       <property name="text">
-        <string>기타</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-    </layout>
+     </property>
+     <property name="text">
+      <string>기타</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="Line" name="line">
+     <property name="geometry">
+      <rect>
+       <x>94</x>
+       <y>10</y>
+       <width>2</width>
+       <height>48</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color : black; 
+background-color : black;</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Orientation::Vertical</enum>
+     </property>
+    </widget>
+    <widget class="Line" name="line_2">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>10</y>
+       <width>2</width>
+       <height>48</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color : black; 
+background-color : black;</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Orientation::Vertical</enum>
+     </property>
+    </widget>
    </widget>
    <widget class="QLabel" name="label_10">
     <property name="geometry">
@@ -645,7 +675,7 @@ margin : 4px;</string>
 margin : 4px;</string>
    </property>
   </widget>
-  <widget class="QWidget" name="widget_5" native="true">
+  <widget class="QWidget" name="widgetWether" native="true">
    <property name="geometry">
     <rect>
      <x>1360</x>
@@ -655,11 +685,287 @@ margin : 4px;</string>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">border : 1px solid black;
-margin : 4px;</string>
+    <string notr="true">QWidget {
+border: 1px solid black;
+margin : 4px;
+}
+
+QLabel  {
+border : none;
+    
+
+}
+</string>
    </property>
+   <widget class="QLabel" name="IconWether">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>50</y>
+      <width>80</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="../assets/icons.qrc">:/날씨10.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="IconTemper">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>10</y>
+      <width>48</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="../assets/icons.qrc">:/온도계.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="IconWind">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>140</y>
+      <width>48</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="../assets/icons.qrc">:/바람.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="IconRain">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>80</y>
+      <width>48</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="../assets/icons.qrc">:/강수확률.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="IconHumidty">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>10</y>
+      <width>48</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="../assets/icons.qrc">:/습도.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="IconPrecipitation">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>80</y>
+      <width>48</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="../assets/icons.qrc">:/강수량.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="IconWaveHeight">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>140</y>
+      <width>48</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="../assets/icons.qrc">:/파고.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelWether">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>60</y>
+      <width>108</width>
+      <height>64</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">qproperty-wordWrap : true;</string>
+    </property>
+    <property name="text">
+     <string>aaaa aaaaaaaa aaaan bbbbbb cccccc</string>
+    </property>
+    <property name="textFormat">
+     <enum>Qt::TextFormat::PlainText</enum>
+    </property>
+    <property name="scaledContents">
+     <bool>false</bool>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelTemper">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>20</y>
+      <width>96</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelRain">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>90</y>
+      <width>96</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelWindy">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>150</y>
+      <width>96</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelHumidty">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>20</y>
+      <width>96</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelPrecipitation">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>90</y>
+      <width>96</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelWaveHeight">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>150</y>
+      <width>96</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelAreaName">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>96</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
   </widget>
-  <widget class="QWidget" name="widget_6" native="true">
+  <widget class="QWidget" name="systemLog" native="true">
    <property name="geometry">
     <rect>
      <x>1360</x>
@@ -670,8 +976,26 @@ margin : 4px;</string>
    </property>
    <property name="styleSheet">
     <string notr="true">border : 1px solid black;
-margin : 4px;</string>
+margin : 4px;
+</string>
    </property>
+   <widget class="QPlainTextEdit" name="edLogText">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>560</width>
+      <height>221</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(0,0,0);
+color : rgb(0,255,0);</string>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+   </widget>
   </widget>
   <widget class="QPushButton" name="btnAbnormalStop">
    <property name="geometry">
@@ -732,11 +1056,29 @@ border : none;</string>
       <height>32</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>-1</pointsize>
+     </font>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
     <property name="styleSheet">
      <string notr="true">font-size:24px;</string>
     </property>
     <property name="text">
      <string>자율</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+    <property name="checked">
+     <bool>false</bool>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="btnRemoteDrv">
@@ -898,244 +1240,274 @@ border : none;</string>
     <string notr="true">border : 1px solid black;
 </string>
    </property>
-   <widget class="QWidget" name="widget_keyup" native="true">
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>0</y>
-      <width>151</width>
-      <height>131</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border : none;</string>
-    </property>
-    <widget class="QLabel" name="label_keyup_normal">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>151</width>
-       <height>131</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="../assets/icons.qrc">:/방향키_상_기본.png</pixmap>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_keyup_push">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>151</width>
-       <height>131</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="../assets/icons.qrc">:/방향키_상_누름.png</pixmap>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="btnKeyUp">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>151</width>
-       <height>131</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="widget_keydown" native="true">
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>200</y>
-      <width>151</width>
-      <height>131</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border : none;</string>
-    </property>
-    <widget class="QLabel" name="label_keydown_normal">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>151</width>
-       <height>131</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="../assets/icons.qrc">:/방향키_하_기본.png</pixmap>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_keydown_push">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>151</width>
-       <height>131</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="../assets/icons.qrc">:/방향키_하_누름.png</pixmap>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="btnKeyDown">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>151</width>
-       <height>131</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="widget_keyleft" native="true">
+   <widget class="QWidget" name="widget" native="true">
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>80</y>
-      <width>120</width>
-      <height>160</height>
+      <y>10</y>
+      <width>330</width>
+      <height>330</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">border : none;</string>
+     <string notr="true">border:none;</string>
     </property>
-    <widget class="QLabel" name="label_keyleft_normal">
+    <widget class="QWidget" name="widget_keydown" native="true">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>200</y>
+       <width>151</width>
+       <height>131</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border : none;</string>
+     </property>
+     <widget class="QLabel" name="label_keydown_normal">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>151</width>
+        <height>131</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="../assets/icons.qrc">:/방향키_하_기본.png</pixmap>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_keydown_push">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>151</width>
+        <height>131</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="../assets/icons.qrc">:/방향키_하_누름.png</pixmap>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnKeyDown">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>151</width>
+        <height>131</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="widget_keyleft" native="true">
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>0</y>
+       <y>85</y>
        <width>120</width>
        <height>160</height>
       </rect>
      </property>
-     <property name="text">
-      <string/>
+     <property name="styleSheet">
+      <string notr="true">border : none;</string>
      </property>
-     <property name="pixmap">
-      <pixmap resource="../assets/icons.qrc">:/방향키_좌_기본.png</pixmap>
-     </property>
+     <widget class="QLabel" name="label_keyleft_normal">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>120</width>
+        <height>160</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="../assets/icons.qrc">:/방향키_좌_기본.png</pixmap>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_keyleft_push">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>120</width>
+        <height>160</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="../assets/icons.qrc">:/방향키_좌_누름.png</pixmap>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnKeyLeft">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>120</width>
+        <height>160</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
     </widget>
-    <widget class="QLabel" name="label_keyleft_push">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
+    <widget class="QWidget" name="widget_keyup" native="true">
      <property name="geometry">
       <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>120</width>
-       <height>160</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="../assets/icons.qrc">:/방향키_좌_누름.png</pixmap>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="btnKeyLeft">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>120</width>
-       <height>160</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="widget_keyright" native="true">
-    <property name="geometry">
-     <rect>
-      <x>250</x>
-      <y>90</y>
-      <width>121</width>
-      <height>161</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border : none;</string>
-    </property>
-    <widget class="QLabel" name="label_keyright_normal">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
+       <x>90</x>
        <y>0</y>
        <width>151</width>
+       <height>131</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border : none;</string>
+     </property>
+     <widget class="QLabel" name="label_keyup_normal">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>151</width>
+        <height>131</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="../assets/icons.qrc">:/방향키_상_기본.png</pixmap>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_keyup_push">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>151</width>
+        <height>131</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="../assets/icons.qrc">:/방향키_상_누름.png</pixmap>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnKeyUp">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>151</width>
+        <height>131</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="widget_keyright" native="true">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>85</y>
+       <width>121</width>
        <height>161</height>
       </rect>
      </property>
-     <property name="text">
-      <string/>
+     <property name="styleSheet">
+      <string notr="true">border : none;</string>
      </property>
-     <property name="pixmap">
-      <pixmap resource="../assets/icons.qrc">:/방향키_우_기본.png</pixmap>
-     </property>
+     <widget class="QLabel" name="label_keyright_normal">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>151</width>
+        <height>161</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="../assets/icons.qrc">:/방향키_우_기본.png</pixmap>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_keyright_push">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>151</width>
+        <height>161</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="../assets/icons.qrc">:/방향키_우_누름.png</pixmap>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnKeyRight">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>151</width>
+        <height>161</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
     </widget>
-    <widget class="QLabel" name="label_keyright_push">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
+    <widget class="QLabel" name="label_2">
      <property name="geometry">
       <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>151</width>
-       <height>161</height>
+       <x>150</x>
+       <y>150</y>
+       <width>32</width>
+       <height>32</height>
       </rect>
      </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="../assets/icons.qrc">:/방향키_우_누름.png</pixmap>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="btnKeyRight">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>151</width>
-       <height>161</height>
-      </rect>
+     <property name="styleSheet">
+      <string notr="true">background-color:black;
+border-radius : 16px;</string>
      </property>
      <property name="text">
       <string/>
@@ -1147,7 +1519,7 @@ border : none;</string>
    <property name="geometry">
     <rect>
      <x>1790</x>
-     <y>920</y>
+     <y>900</y>
      <width>120</width>
      <height>48</height>
     </rect>
@@ -1171,7 +1543,7 @@ border : none;</string>
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="btnUnLock">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -1186,35 +1558,40 @@ border : none;</string>
       <verstretch>0</verstretch>
      </sizepolicy>
     </property>
+    <property name="styleSheet">
+     <string notr="true">background-color : transparent;</string>
+    </property>
     <property name="text">
      <string/>
     </property>
    </widget>
-   <widget class="QLabel" name="label_12">
+   <widget class="QLabel" name="labelUnLock">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>0</x>
       <y>0</y>
-      <width>48</width>
+      <width>120</width>
       <height>48</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">font-size: 20px;</string>
+     <string notr="true">font-size: 20px;
+padding-left : 4px;
+border:1px solid black;</string>
     </property>
     <property name="text">
      <string>운행</string>
     </property>
    </widget>
-   <zorder>pushButton_2</zorder>
+   <zorder>labelUnLock</zorder>
    <zorder>image_unlock</zorder>
-   <zorder>label_12</zorder>
+   <zorder>btnUnLock</zorder>
   </widget>
   <widget class="QWidget" name="controLockWidget" native="true">
    <property name="geometry">
     <rect>
      <x>1790</x>
-     <y>968</y>
+     <y>970</y>
      <width>120</width>
      <height>48</height>
     </rect>
@@ -1247,29 +1624,34 @@ border : none;</string>
       <height>48</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:transparent;
+</string>
+    </property>
     <property name="text">
      <string/>
     </property>
    </widget>
-   <widget class="QLabel" name="label_2">
+   <widget class="QLabel" name="labelLock">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>0</x>
       <y>0</y>
-      <width>48</width>
+      <width>120</width>
       <height>48</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">font-size:20px;</string>
+     <string notr="true">font-size:20px;
+border:1px solid black;</string>
     </property>
     <property name="text">
      <string>잠금</string>
     </property>
    </widget>
-   <zorder>btnLock</zorder>
+   <zorder>labelLock</zorder>
    <zorder>image_lock</zorder>
-   <zorder>label_2</zorder>
+   <zorder>btnLock</zorder>
   </widget>
  </widget>
  <resources>
