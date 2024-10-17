@@ -2,13 +2,19 @@ from random import randint
 import sys
 from PySide6.QtWidgets import QApplication, QWidget
 from PySide6.QtCore import Signal, QTimer, Qt, QThread,Slot, QDateTime
-from PySide6.QtGui import QImage, QPixmap, QTextCursor
+from PySide6.QtGui import QImage, QPixmap, QTextCursor, QFont, QFontDatabase
+
+from PySide6.QtWebEngineWidgets import QWebEngineView
+
 import cv2
 import numpy as np
 
 import UI.mainForm
 
-from cssutils import change_background_color, change_text_color, limit_plaintext_lines
+from cssutils import change_background_color, change_text_color
+from videoFrame import VideoDialog
+from my_qt_utils import match_widget_to_parent,limit_plaintext_lines
+
 
 class VideoThread(QThread):
     change_pixmap_signal = Signal(np.ndarray)
@@ -55,7 +61,35 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
     
     def __init__(self, parent=None):
         super().__init__(parent)
+        # load font
+        QFontDatabase.addApplicationFont(":/font/font/DungGeunMo.ttf")
+        
+        
+        # 폰트 파일 추가
+        font_id = QFontDatabase.addApplicationFont(":/font/font/D2Coding-Ver1.3.2-20180524.ttf")
+        if font_id != -1:  # 폰트 로드 성공 시
+            font_families = QFontDatabase.applicationFontFamilies(font_id)
+            if font_families:
+                font_family = font_families[0]  # 첫 번째 폰트 패밀리를 선택
+                self.font_d2coding = font_family
+                print("D2Coding 폰트 로드 성공")
+        else:
+            self.font_d2coding = None
+            print("D2Coding 폰트 로드 실패")
+            # 에러 종료
+            sys.exit(-1)
+            
         self.setupUi(self)
+        
+        
+        
+        # 모든 UI 요소에 D2Coding 폰트 패밀리 적용
+        widgets = self.findChildren(QWidget)  # 모든 자식 위젯 찾기
+        for widget in widgets:
+            font = widget.font()  # 기존 폰트 가져오기
+            font.setFamily(self.font_d2coding)  # 폰트 패밀리 변경
+            widget.setFont(font)  # 변경된 폰트를 위젯에 설정
+        
         
         self.btnGoHome.clicked.connect(self.gotoHome)
         self.btnGotoSetup.clicked.connect(self.gotoSetup)
@@ -150,19 +184,69 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         
         # 초기 "준비 중" 메시지 표시
         self.mainCamScreen_bmpLabel.setText("영상 준비 중...")
+        # 화면 중앙에 텍스트 정렬 ,크기는 24, 굵기는 75
+        self.mainCamScreen_bmpLabel.setAlignment(Qt.AlignCenter)
+        self.mainCamScreen_bmpLabel.setFont(QFont(self.font_d2coding, 24, 75))
+        
+        
+        
         
         # RTSP 스트림 설정
         self.rtsp_url = "rtsp://gbox3d:71021707@gears001.iptime.org:21028/stream_ch00_0"
+        #충청남도 천안시 서북구 신당동 482-22	
+        self.rtsp_url_subScreen = "rtsp://210.99.70.120:1935/live/cctv001.stream"
+        # self.rtsp_url = "rtsp://rtspstream.com/pattern"
         
-        # 비디오 스레드 생성 및 시작
-        self.thread = VideoThread(self.rtsp_url)
-        self.thread.change_pixmap_signal.connect(self.update_image)
-        self.thread.start()
+        
+        # Main Camera 비디오 스레드 생성 및 시작
+        self.mainCameraThread = VideoThread(self.rtsp_url)
+        self.mainCameraThread.change_pixmap_signal.connect(self.update_image)
+        self.mainCameraThread.start()
         
         # 상태 업데이트 스레드 생성 및 시작
         self.statusUpdateThread = StatusUpdateThread()
         self.statusUpdateThread.statusUpdateSignal.connect(self.updateStatus)
         self.statusUpdateThread.start()
+        
+        # VideoDialog 미리 생성
+        self.video_dialog = VideoDialog()
+        
+        
+        # subCamera Screen 
+        self.labelSubCamera.setText(" 영싱준비중 ")
+        #부모위젯의 크게에 맞춤
+        match_widget_to_parent(self.labelSubCamera)
+        self.labelSubCamera.setAlignment(Qt.AlignCenter)
+        
+        self.subCameraThread = VideoThread(self.rtsp_url_subScreen)
+        self.subCameraThread.change_pixmap_signal.connect(self.update_image_SubCamera)
+        self.subCameraThread.start()
+        
+        #지도화면
+            
+                
+        # 대한민국 부안 앞바다 근처의 위도, 경도 및 줌 레벨 설정
+        latitude = 35.7299    # 위도 (부안 앞바다 근처)
+        longitude = 126.5833  # 경도 (부안 앞바다 근처)
+        zoom = 13             # 줌 레벨 (적절한 확대 비율)
+
+        # OpenStreetMap URL 설정
+        map_url = f"https://www.openstreetmap.org/#map={zoom}/{latitude}/{longitude}"
+# OpenStreetMap URL 설정
+# map_url = f"https://www.openstreetmap.org/#map={zoom}/{latitude}/{longitude}"
+        self.labelBottomRightScreen.setText("지도 준비 중")
+        match_widget_to_parent(self.labelBottomRightScreen)
+        
+        self.labelBottomRightScreen.setAlignment(Qt.AlignCenter)
+        self.web_view = QWebEngineView(self.widgetBottomRightScreen)
+        self.web_view.setUrl(map_url)
+        #맨뒤로 보내기
+        self.web_view.lower()
+        self.labelBottomRightScreen.lower()
+        match_widget_to_parent(self.web_view)
+        
+        
+        
         
     @Slot()
     def updateStatus(self):
@@ -237,10 +321,30 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         p = convert_to_Qt_format.scaled(self.mainCamScreen.size(), Qt.KeepAspectRatio)
         self.mainCamScreen_bmpLabel.setPixmap(QPixmap.fromImage(p))
         
+        if self.video_dialog.isVisible():
+            self.video_dialog.update_video_frame(QPixmap.fromImage(p))
+            
+    @Slot(np.ndarray)
+    def update_image_SubCamera(self, cv_img):
+        """비디오 프레임을 업데이트하는 메서드"""
+        rgb_image = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
+        h, w, ch = rgb_image.shape
+        bytes_per_line = ch * w
+        convert_to_Qt_format = QImage(rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888)
+        p = convert_to_Qt_format.scaled(self.labelSubCamera.size(), Qt.KeepAspectRatio)
+        self.labelSubCamera.setPixmap(QPixmap.fromImage(p))
+        
+        # if self.video_dialog.isVisible():
+        #     self.video_dialog.update_video_frame(QPixmap.fromImage(p))
+            
+        
     @Slot()
     def onClickedBtnZoomInMainScreen(self):
         print("onClickedBtnZoomInMainScreen")
-    
+        # VideoDialog 창 열기
+        if not self.video_dialog.isVisible():
+            self.video_dialog.show()
+        
     @Slot()
     def onClickedBtnZoomInBottomScreen(self):
         print("onClickedBtnZoomInBottomScreen")
@@ -392,13 +496,10 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         
         print("onClickedBtnLock")
     
-    
-    
-           
-    
     def closeEvent(self, event):
         print("closeEvent")
-        self.thread.stop()
+        self.mainCameraThread.stop()
+        self.statusUpdateThread.stop()  # 추가
         self.closedSignal.emit()
         super().closeEvent(event)
 

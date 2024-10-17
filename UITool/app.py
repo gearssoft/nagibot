@@ -1,20 +1,21 @@
 import sys
 from PySide6.QtCore import QTimer, QRect, Qt
 from PySide6.QtWidgets import QApplication,QWidget,QStackedWidget,QMessageBox
-from PySide6.QtGui import QFontDatabase
+# from PySide6.QtGui import QFontDatabase
 
 import startUpform ,mainForm ,setupForm
 
-import icons_rc
-import font_rc
+# import icons_rc
+# import font_rc
 
 class MainForm(QWidget):
     def __init__(self):
         super().__init__()
         
-        # load font
-        QFontDatabase.addApplicationFont(":/font/font/DungGeunMo.ttf")
-        QFontDatabase.addApplicationFont(":/font/font/D2Coding-Ver1.3.2-20180524.ttf")
+                # QLabel에 폰트를 설정
+                # self.mainCamScreen_bmpLabel.setFont(QFont(font_family, 20))
+                
+        # self.font_d2coding = font_id
         
         self.setGeometry(QRect(0, 0, 1920, 1080))
         self.setFixedSize(1920, 1080)
@@ -37,8 +38,6 @@ class MainForm(QWidget):
         self.startup_form.btnStart.clicked.connect(self.show_main_form)
         self.startup_form.btnSetup.clicked.connect(self.show_setup_form)
         self.startup_form.btnExit.clicked.connect(self.close)
-
-        
 
     def show_startup_form(self):
         
@@ -106,8 +105,6 @@ class MainForm(QWidget):
         else:
             event.ignore() # 이벤트 무시
         
-        
-
 if __name__ == '__main__':
     theApp = QApplication(sys.argv)
     form = MainForm()
