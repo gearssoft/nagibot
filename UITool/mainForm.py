@@ -137,6 +137,11 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         self.btnUnLock.clicked.connect(self.onClickedBtnUnLock)
         self.btnLock.clicked.connect(self.onClickedBtnLock)
         
+        # zoom in/out button
+        self.btnZoomInMainScreen.clicked.connect(self.onClickedBtnZoomInMainScreen)
+        self.btnZoomInBottomScreen.clicked.connect(self.onClickedBtnZoomInBottomScreen)
+        self.btnZoomInBottomRightScreen.clicked.connect(self.onClickedBtnZoomInBottomRightScreen)
+        
         
         # # wifi status label
         # self.wifiStatus.setPixmap(QPixmap(":/와이파이3.png"))
@@ -221,10 +226,6 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
             
         #     # 변경된 커서를 다시 설정
         #     self.edLogText.setTextCursor(cursor)
-
-
-        
-        
     
     @Slot(np.ndarray)
     def update_image(self, cv_img):
@@ -235,6 +236,17 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         convert_to_Qt_format = QImage(rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888)
         p = convert_to_Qt_format.scaled(self.mainCamScreen.size(), Qt.KeepAspectRatio)
         self.mainCamScreen_bmpLabel.setPixmap(QPixmap.fromImage(p))
+        
+    @Slot()
+    def onClickedBtnZoomInMainScreen(self):
+        print("onClickedBtnZoomInMainScreen")
+    
+    @Slot()
+    def onClickedBtnZoomInBottomScreen(self):
+        print("onClickedBtnZoomInBottomScreen")
+    @Slot()
+    def onClickedBtnZoomInBottomRightScreen(self):
+        print("onClickedBtnZoomInBottomRightScreen")
         
     @Slot()
     def gotoHome(self):
