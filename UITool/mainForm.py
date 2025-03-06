@@ -244,10 +244,7 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         self.web_view.lower()
         self.labelBottomRightScreen.lower()
         match_widget_to_parent(self.web_view)
-        
-        
-        
-        
+            
     @Slot()
     def updateStatus(self):
         #print("updateStatus")
