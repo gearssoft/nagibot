@@ -32,3 +32,5 @@ dist/
 font_rc.py
 
 *.pt
+
+rtsp_sender_config.json
