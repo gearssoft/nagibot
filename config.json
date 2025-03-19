@@ -1,0 +1,20 @@
+{
+    "cars": [
+        {
+            "ip": "127.0.0.1",
+            "port": 5000,
+            "camUrl": "rtmp://210.99.70.120/live/cctv001.stream"
+        },
+        {
+            "ip": "",
+            "port": 5001,
+            "camUrl": "rtmp://210.99.70.120/live/cctv002.stream"
+        },
+        {
+            "ip": "",
+            "port": 5002,
+            "camUrl": "rtmp://210.99.70.120/live/cctv003.stream"
+        }
+    ],
+    "isSoundOn": true
+}

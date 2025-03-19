@@ -1,3 +1,9 @@
+"""
+filename : MainForm.py
+author : gbox3d
+
+위 주석을 수정하지 마시오
+"""
 from random import randint
 import sys
 from PySide6.QtWidgets import QApplication, QWidget
@@ -15,6 +21,10 @@ from cssutils import change_background_color, change_text_color
 from videoFrame import VideoDialog
 from my_qt_utils import match_widget_to_parent,limit_plaintext_lines
 
+from configMng import ConfigManager
+
+# 정찰로봇 클라이언트 모듈 임포트
+from robot_client import RobotClient
 
 class VideoThread(QThread):
     change_pixmap_signal = Signal(np.ndarray)
@@ -63,6 +73,9 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         super().__init__(parent)
         # load font
         QFontDatabase.addApplicationFont(":/font/font/DungGeunMo.ttf")
+        
+        self.configMng = ConfigManager()
+        self.configMng.load_config()
         
         
         # 폰트 파일 추가
@@ -188,13 +201,11 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         self.mainCamScreen_bmpLabel.setAlignment(Qt.AlignCenter)
         self.mainCamScreen_bmpLabel.setFont(QFont(self.font_d2coding, 24, 75))
         
-        
-        
-        
         # RTSP 스트림 설정
-        self.rtsp_url = "rtsp://gbox3d:71021707@gears001.iptime.org:21028/stream_ch00_0"
+        # self.rtsp_url = "rtsp://gbox3d:71021707@gears001.iptime.org:21028/stream_ch00_0"
+        self.rtsp_url = self.configMng.get_car_cam_url()
         #충청남도 천안시 서북구 신당동 482-22	
-        self.rtsp_url_subScreen = "rtsp://210.99.70.120:1935/live/cctv001.stream"
+        self.rtsp_url_subScreen = self.configMng.get_car_cam_url(1)
         # self.rtsp_url = "rtsp://rtspstream.com/pattern"
         
         
@@ -244,6 +255,27 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         self.web_view.lower()
         self.labelBottomRightScreen.lower()
         match_widget_to_parent(self.web_view)
+        
+        
+        # 로봇 클라이언트 초기화 및 연결
+        self.robotClient = RobotClient()
+        if self.robotClient.connect() :
+            print("로봇 클라이언트 연결 성공")
+            self.robotClient.on_sensor_updated = self.handleSensorUpdate
+        else:
+            print("로봇 클라이언트 연결 실패")
+            
+    @Slot()
+    def handleSensorUpdate(self):
+        print("handleSensorUpdate")
+        # robotClient 쓰레드에서 호출되므로, 메인 쓰레드로 UI 업데이트를 전달합니다.
+        # QTimer.singleShot(0, self.updateSensorUI)
+        sensor_data = self.robotClient.get_sensor_data()
+        
+        sensor1 = sensor_data['sensors'][1]
+        print("Sensor 1:", sensor1)
+        print("Sensor 1 Temperature:", sensor1.temperature)
+        
             
     @Slot()
     def updateStatus(self):
@@ -363,41 +395,58 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
     def keyUpPressed(self):
         self.label_keyup_normal.setVisible(False)
         self.label_keyup_push.setVisible(True)
+        # 전진 명령
+        self.robotClient.send_drive_command(1.0, 0.0)
     
     @Slot()
     def keyUpReleased(self):
         self.label_keyup_normal.setVisible(True)
         self.label_keyup_push.setVisible(False)
+        # 정지 명령
+        self.robotClient.send_drive_command(0.0, 0.0)
         
     @Slot()
     def keyDownPressed(self):
         self.label_keydown_normal.setVisible(False)
         self.label_keydown_push.setVisible(True)
+        # 후진 명령
+        self.robotClient.send_drive_command(-1.0, 0.0)
     
     @Slot()
     def keyDownReleased(self):
         self.label_keydown_normal.setVisible(True)
         self.label_keydown_push.setVisible(False)
+        # 정지 명령
+        self.robotClient.send_drive_command(0.0, 0.0)
         
     @Slot()
     def keyLeftPressed(self):
         self.label_keyleft_normal.setVisible(False)
         self.label_keyleft_push.setVisible(True)
+        # 좌회전 명령
+        self.robotClient.send_drive_command(0.5, 0.5)
+        
     
     @Slot()
     def keyLeftReleased(self):
         self.label_keyleft_normal.setVisible(True)
         self.label_keyleft_push.setVisible(False)
+        # 정지 명령
+        self.robotClient.send_drive_command(0.0, 0.0)
         
     @Slot()
     def keyRightPressed(self):
         self.label_keyright_normal.setVisible(False)
         self.label_keyright_push.setVisible(True)
+        # 우회전 명령
+        self.robotClient.send_drive_command(0.5, -0.5)
         
     @Slot()
     def keyRightReleased(self):
         self.label_keyright_normal.setVisible(True)
         self.label_keyright_push.setVisible(False)
+        # 정지 명령
+        self.robotClient.send_drive_command(0.0, 0.0)
         
     @Slot()
     def onClickedBtnAutoDrv(self):
