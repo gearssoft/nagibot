@@ -545,6 +545,8 @@ class CarSimulator:
 
 # 메인 실행 부분
 if __name__ == "__main__":
+    import sys
+    
     parser = argparse.ArgumentParser(description='MuJoCo 기반 차량 시뮬레이터')
     parser.add_argument('--port', type=int, default=5000, help='TCP 서버 포트')
     parser.add_argument('--no-render', action='store_true', help='렌더링 비활성화')
@@ -554,8 +556,8 @@ if __name__ == "__main__":
     # 모델 파일 경로 확인
     if not os.path.exists(args.model):
         print(f"오류: 모델 파일 '{args.model}'을 찾을 수 없습니다.")
-        print("현재 디렉토리에 new_car_model.xml 파일이 있는지 확인하세요.")
-        exit(1)
+        print("현재 디렉토리에 car_model.xml 파일이 있는지 확인하세요.")
+        sys.exit(1)
     
     simulator = CarSimulator(port=args.port, model_path=args.model)
     simulator.start(render=not args.no_render)
