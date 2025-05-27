@@ -43,14 +43,14 @@ class DetectionClient:
             if self.on_connection_status:
                 self.on_connection_status(True)
             if self.on_status_update:
-                self.on_status_update(f"YOLO 서버 연결 성공: {self.host}:{self.port}")
+                self.on_status_update(f"서버 연결 성공: {self.host}:{self.port}")
             return True
         except Exception as e:
             self.connected = False
             if self.on_connection_status:
                 self.on_connection_status(False)
             if self.on_status_update:
-                self.on_status_update(f"YOLO 서버 연결 실패: {e}")
+                self.on_status_update(f"서버 연결 실패: {e}")
             return False
     
     def disconnect_from_server(self):
@@ -65,7 +65,7 @@ class DetectionClient:
         if self.on_connection_status:
             self.on_connection_status(False)
         if self.on_status_update:
-            self.on_status_update("YOLO 서버 연결 종료")
+            self.on_status_update(" 서버 연결 종료")
     
     def is_connected(self) -> bool:
         """연결 상태 확인"""
