@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>891</width>
+    <width>1095</width>
     <height>877</height>
    </rect>
   </property>
@@ -16,8 +16,8 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>70</y>
+     <x>30</x>
+     <y>60</y>
      <width>111</width>
      <height>16</height>
     </rect>
@@ -30,9 +30,9 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>100</y>
-     <width>601</width>
-     <height>211</height>
+     <y>80</y>
+     <width>681</width>
+     <height>191</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -44,130 +44,130 @@
    <property name="frameShadow">
     <enum>QFrame::Shadow::Raised</enum>
    </property>
-  </widget>
-  <widget class="QWidget" name="widgetSoundSetting" native="true">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>330</y>
-     <width>601</width>
-     <height>61</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">border : 1px solid black;
+   <widget class="QWidget" name="widgetScreenSetting" native="true">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>90</y>
+      <width>601</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border : 1px solid black;
 </string>
-   </property>
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <item>
-     <widget class="QLabel" name="soundconfiglabel">
-      <property name="text">
-       <string>사운드설정</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <spacer name="horizontalSpacer">
-      <property name="orientation">
-       <enum>Qt::Orientation::Horizontal</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>40</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item>
-     <widget class="QPushButton" name="btnSoundOn">
-      <property name="minimumSize">
-       <size>
-        <width>96</width>
-        <height>32</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>켬</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="btnSoundOff">
-      <property name="minimumSize">
-       <size>
-        <width>96</width>
-        <height>32</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>끔</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QWidget" name="widgetScreenSetting" native="true">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>400</y>
-     <width>601</width>
-     <height>61</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">border : 1px solid black;
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="screenconfig_label">
+       <property name="text">
+        <string>화면설정</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnFullScreenOn">
+       <property name="minimumSize">
+        <size>
+         <width>96</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>켬</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnFullScreenOff">
+       <property name="minimumSize">
+        <size>
+         <width>96</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>끔</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="widgetSoundSetting" native="true">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>601</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border : 1px solid black;
 </string>
-   </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
-    <item>
-     <widget class="QLabel" name="screenconfig_label">
-      <property name="text">
-       <string>화면설정</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <spacer name="horizontalSpacer_2">
-      <property name="orientation">
-       <enum>Qt::Orientation::Horizontal</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>40</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item>
-     <widget class="QPushButton" name="btnFullScreenOn">
-      <property name="minimumSize">
-       <size>
-        <width>96</width>
-        <height>32</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>켬</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="btnFullScreenOff">
-      <property name="minimumSize">
-       <size>
-        <width>96</width>
-        <height>32</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>끔</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="soundconfiglabel">
+       <property name="text">
+        <string>사운드설정</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnSoundOn">
+       <property name="minimumSize">
+        <size>
+         <width>96</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>켬</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnSoundOff">
+       <property name="minimumSize">
+        <size>
+         <width>96</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>끔</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <widget class="QPushButton" name="btnBack">
    <property name="geometry">
@@ -182,93 +182,11 @@
     <string>&lt;&lt;</string>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textEditCar1ip">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>490</y>
-     <width>221</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>470</y>
-     <width>71</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>1호기 </string>
-   </property>
-  </widget>
-  <widget class="QTextEdit" name="textEditCar1port">
-   <property name="geometry">
-    <rect>
-     <x>300</x>
-     <y>490</y>
-     <width>111</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_3">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>500</y>
-     <width>31</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>ip</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_4">
-   <property name="geometry">
-    <rect>
-     <x>270</x>
-     <y>490</y>
-     <width>31</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>port</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_5">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>530</y>
-     <width>71</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>cam url</string>
-   </property>
-  </widget>
-  <widget class="QTextEdit" name="textEditCar1Camurl">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>560</y>
-     <width>381</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QPushButton" name="pushButton_saveSetup">
    <property name="geometry">
     <rect>
-     <x>780</x>
-     <y>820</y>
+     <x>930</x>
+     <y>50</y>
      <width>75</width>
      <height>24</height>
     </rect>
@@ -277,169 +195,310 @@
     <string>Save</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_6">
+  <widget class="QGroupBox" name="ImageServerConfigGrp">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>300</y>
+     <width>351</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Image Server Settings</string>
+   </property>
+   <widget class="QTextEdit" name="textEdit_detection_server_IP">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>40</y>
+      <width>220</width>
+      <height>32</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="textEdit_detection_server_port">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>40</y>
+      <width>96</width>
+      <height>32</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ip</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_11">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>20</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>port</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>670</y>
-     <width>71</width>
-     <height>16</height>
+     <y>300</y>
+     <width>400</width>
+     <height>150</height>
     </rect>
    </property>
-   <property name="text">
-    <string>cam url</string>
+   <property name="title">
+    <string>1호기</string>
    </property>
+   <widget class="QTextEdit" name="textEditCar1Camurl">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>110</y>
+      <width>381</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ip</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="textEditCar1port">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>40</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>90</y>
+      <width>71</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>cam url</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="textEditCar1ip">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>40</y>
+      <width>221</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>20</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>port</string>
+    </property>
+   </widget>
   </widget>
-  <widget class="QTextEdit" name="textEditCar2port">
-   <property name="geometry">
-    <rect>
-     <x>300</x>
-     <y>630</y>
-     <width>111</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_7">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>610</y>
-     <width>71</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>2호기 </string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_8">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>640</y>
-     <width>31</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>ip</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_9">
-   <property name="geometry">
-    <rect>
-     <x>270</x>
-     <y>630</y>
-     <width>31</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>port</string>
-   </property>
-  </widget>
-  <widget class="QTextEdit" name="textEditCar2ip">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>630</y>
-     <width>221</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QTextEdit" name="textEditCar2Camurl">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>700</y>
-     <width>381</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_10">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>800</y>
-     <width>71</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>cam url</string>
-   </property>
-  </widget>
-  <widget class="QTextEdit" name="textEditCar3port">
-   <property name="geometry">
-    <rect>
-     <x>300</x>
-     <y>760</y>
-     <width>111</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_11">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>740</y>
-     <width>71</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>3호기 </string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_12">
+  <widget class="QGroupBox" name="groupBox_2">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>770</y>
-     <width>31</width>
-     <height>16</height>
+     <y>460</y>
+     <width>400</width>
+     <height>150</height>
     </rect>
    </property>
-   <property name="text">
-    <string>ip</string>
+   <property name="title">
+    <string>2호기</string>
    </property>
+   <widget class="QTextEdit" name="textEditCar2Camurl">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>100</y>
+      <width>381</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ip</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_9">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>20</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>port</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="textEditCar2port">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>40</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="textEditCar2ip">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>40</y>
+      <width>221</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>80</y>
+      <width>71</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>cam url</string>
+    </property>
+   </widget>
   </widget>
-  <widget class="QLabel" name="label_13">
+  <widget class="QGroupBox" name="groupBox_3">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>760</y>
-     <width>31</width>
-     <height>16</height>
+     <x>20</x>
+     <y>620</y>
+     <width>400</width>
+     <height>150</height>
     </rect>
    </property>
-   <property name="text">
-    <string>port</string>
+   <property name="title">
+    <string>3호기</string>
    </property>
-  </widget>
-  <widget class="QTextEdit" name="textEditCar3ip">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>760</y>
-     <width>221</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QTextEdit" name="textEditCar3Camurl">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>830</y>
-     <width>381</width>
-     <height>31</height>
-    </rect>
-   </property>
+   <widget class="QTextEdit" name="textEditCar3Camurl">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>100</y>
+      <width>381</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_12">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ip</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="textEditCar3port">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>40</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="textEditCar3ip">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>40</y>
+      <width>221</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_13">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>20</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>port</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_10">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>80</y>
+      <width>71</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>cam url</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

@@ -166,6 +166,7 @@ class ImageReceiver(QObject):
             self.server_socket.listen(1)
             self.server_socket.settimeout(1.0)
             self.connection_status.emit(f"Server started on {self.host}:{self.port}")
+            print(f"Server started on {self.host}:{self.port}")
             while self.running:
                 try:
                     self.connection_status.emit("Waiting for connection...")

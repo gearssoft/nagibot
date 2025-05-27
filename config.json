@@ -3,18 +3,22 @@
         {
             "ip": "127.0.0.1",
             "port": 5000,
-            "camUrl": "rtmp://210.99.70.120/live/cctv001.stream"
+            "camUrl": "rtsp://ailab.miso.center:21054/test1"
         },
         {
             "ip": "",
             "port": 5001,
-            "camUrl": "rtmp://210.99.70.120/live/cctv002.stream"
+            "camUrl": "rtsp://ailab.miso.center:21054/test2"
         },
         {
             "ip": "",
             "port": 5002,
-            "camUrl": "rtmp://210.99.70.120/live/cctv003.stream"
+            "camUrl": ""
         }
     ],
+    "imageDetectionServer": {
+        "ip": "106.255.251.154",
+        "port": 21035
+    },
     "isSoundOn": true
 }
