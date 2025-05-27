@@ -1,7 +1,7 @@
 """
 author: gbox3d
 date: 2025-05-27
-description: YOLO 객체 감지 서버 클라이언트
+description: 객체 감지 클라이언트 모듈
 
 이 주석은 수정하지 마세요.
 version: 1.0.0
