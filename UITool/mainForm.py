@@ -417,9 +417,9 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
             detection_summary = ", ".join([f"{d['name']}({d['confidence']:.2f})" for d in detections[:3]])
             if len(detections) > 3:
                 detection_summary += f" 외 {len(detections)-3}개"
-            log_msg = f"[YOLO] 감지: {detection_summary}"
+            log_msg = f"[detetor] 감지: {detection_summary}"
         else:
-            log_msg = "[YOLO] 객체 감지되지 않음"
+            log_msg = "[detector] 객체 감지되지 않음"
             
         self.edLogText.appendPlainText(log_msg)
         limit_plaintext_lines(self.edLogText, 10)
@@ -427,7 +427,7 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
     @Slot(str)
     def onYOLOStatus(self, msg):
         """YOLO 상태 메시지 처리"""
-        self.edLogText.appendPlainText(f"[YOLO] {msg}")
+        self.edLogText.appendPlainText(f"[Detector] {msg}")
         limit_plaintext_lines(self.edLogText, 10)
     
     def toggle_detection_overlay(self, enabled: bool):

@@ -189,7 +189,7 @@ class DetectionClient:
             return None
 
 class DetectionThread(QThread):
-    """YOLO 감지를 위한 전용 쓰레드"""
+    """감지를 위한 전용 쓰레드"""
     
     detection_results = Signal(list, np.ndarray)  # 감지 결과, 원본 이미지
     status_update = Signal(str)

@@ -2,9 +2,9 @@ import sys
 from PySide6.QtWidgets import QApplication ,QWidget ,QLabel
 # from PySide6.QtCore import Signal
 
-import UI.StartUpForm
+from UI import StartUpForm
 
-class setupForm(QWidget,UI.StartUpForm.Ui_StartUpForm):
+class setupForm(QWidget,StartUpForm.Ui_StartUpForm):
     
     def __init__(self,parent=None):
         super().__init__(parent)
