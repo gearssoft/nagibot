@@ -33,6 +33,10 @@ class setupForm(QWidget,UI.setupForm.Ui_SetupForm):
         self.textEditCar3Camurl.setText(self.configMng.get_car_cam_url(2))
         
         
+        self.textEdit_detection_server_IP.setText(self.configMng.get_detection_server_ip())
+        self.textEdit_detection_server_port.setText(str(self.configMng.get_detection_server_port()))
+        
+        
         
         self.btnBack.clicked.connect(self.onClick_btnBack)
         self.pushButton_saveSetup.clicked.connect(self.onClick_btnSaveSetup)
@@ -66,7 +70,15 @@ class setupForm(QWidget,UI.setupForm.Ui_SetupForm):
         self.configMng.set_car_port(self.textEditCar3port.toPlainText(),2)
         self.configMng.set_car_cam_url(self.textEditCar3Camurl.toPlainText(),2)
         
+        self.configMng.set_detection_server_ip(self.textEdit_detection_server_IP.toPlainText())
+        self.configMng.set_detection_server_port(self.textEdit_detection_server_port.toPlainText())
+        
         self.configMng.save_config()
+        
+        print("설정 저장 완료")
+        
+        # self.closedSignal.emit()
+        self.backSignal.emit()  # 설정 저장 후 뒤로가기 신호 발생
         
 if __name__ == '__main__':
     

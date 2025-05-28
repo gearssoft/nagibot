@@ -3,9 +3,5 @@
 ## Description
 
 이 프로잭트는 비살상 정찰 목적의 자율주행 로봇 관제용 소프트웨어입니다.
+디지털트윈 기술 이 사용될 예정이고 차후 ROS2 기반으로 개발될 예정입니다.  
 
-## Project Installation
-
-```bash
-pip install -r requirements.txt
-``` 

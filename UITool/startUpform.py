@@ -1,14 +1,27 @@
 import sys
-from PySide6.QtWidgets import QApplication ,QWidget
-from PySide6.QtCore import Signal
+from PySide6.QtWidgets import QApplication ,QWidget ,QLabel
+# from PySide6.QtCore import Signal
 
-import UI.StartUpForm
+from UI import StartUpForm
 
-class setupForm(QWidget,UI.StartUpForm.Ui_StartUpForm):
+class setupForm(QWidget,StartUpForm.Ui_StartUpForm):
     
     def __init__(self,parent=None):
         super().__init__(parent)
         self.setupUi(self)
+        
+         # 버전 정보 추가 - 좌상단에 작은 글씨로 표시
+        self.version_label = QLabel(self)
+        self.version_label.setText("v1.0.0(build:20250527)")  # 원하는 버전 번호로 변경하세요
+        self.version_label.setGeometry(10, 10, 120, 20)  # 좌상단 위치 (x, y, 너비, 높이)
+        
+        # 작은 글씨로 표시
+        font = self.version_label.font()
+        font.setPointSize(8)  # 폰트 크기 설정
+        self.version_label.setFont(font)
+        
+        # 반투명 효과 (선택 사항)
+        self.version_label.setStyleSheet("color: rgba(0, 0, 0, 180);")
         
         self.btnStart.clicked.connect(self.gotoMain)
         self.btnSetup.clicked.connect(self.gotoSetup)

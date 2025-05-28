@@ -3,10 +3,9 @@ from PySide6.QtCore import QTimer, QRect, Qt
 from PySide6.QtWidgets import QApplication,QWidget,QStackedWidget,QMessageBox
 # from PySide6.QtGui import QFontDatabase
 
-import startUpform ,mainForm ,setupForm
+# import startUpform ,mainForm ,setupForm
+import startUpform, mainForm, setupForm
 
-# import icons_rc
-# import font_rc
 
 class MainForm(QWidget):
     def __init__(self):

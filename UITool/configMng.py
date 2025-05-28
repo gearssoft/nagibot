@@ -42,6 +42,10 @@ class ConfigManager:
                     "camUrl": ""
                 }
             ],
+            "imageDetectionServer" : {
+                "ip": "localhost",
+                "port": 8085
+            },
             "isSoundOn": True
         }
         
@@ -175,6 +179,44 @@ class ConfigManager:
                 raise ValueError(f"차량 정보에 '{key}' 키가 필요합니다.")
         
         self.config["cars"][car_idx] = car_info
+        
+    def get_detection_server_ip(self):
+        """
+        이미지 감지 서버 IP 반환
+        
+        Returns:
+            str: 이미지 감지 서버 IP 주소
+        """
+        return self.config["imageDetectionServer"]["ip"]
+    
+    def get_detection_server_port(self):
+        """
+        이미지 감지 서버 포트 반환
+        
+        Returns:
+            int: 이미지 감지 서버 포트 번호
+        """
+        return self.config["imageDetectionServer"]["port"]
+    
+    def set_detection_server_ip(self, ip):
+        """
+        이미지 감지 서버 IP 설정
+        
+        Args:
+            ip (str): 설정할 이미지 감지 서버 IP 주소
+        """
+        self.config["imageDetectionServer"]["ip"] = ip
+        
+    def set_detection_server_port(self, port):
+        """
+        이미지 감지 서버 포트 설정
+        
+        Args:
+            port (int): 설정할 이미지 감지 서버 포트 번호
+        """
+        self.config["imageDetectionServer"]["port"] = int(port)
+        
+    
     
     def save_config(self):
         """
@@ -215,6 +257,15 @@ class ConfigManager:
                 # isSoundOn 업데이트
                 if "isSoundOn" in loaded_config:
                     self.config["isSoundOn"] = loaded_config["isSoundOn"]
+                    
+                if "imageDetectionServer" in loaded_config:
+                    self.config["imageDetectionServer"].update(loaded_config["imageDetectionServer"])
+                else:
+                    # 기본 이미지 감지 서버 설정 추가
+                    self.config["imageDetectionServer"] = {
+                        "ip": "localhost",
+                        "port": 8085
+                    }
                     
             return True
         except Exception as e:

@@ -23,6 +23,9 @@ from my_qt_utils import match_widget_to_parent,limit_plaintext_lines
 
 from configMng import ConfigManager
 
+from detector_client import DetectionThread,draw_detections
+
+
 # 정찰로봇 클라이언트 모듈 임포트
 from robot_client import RobotClient
 
@@ -56,7 +59,7 @@ class StatusUpdateThread(QThread):
     def run(self):
         while self._run_flag:
             self.statusUpdateSignal.emit()
-            self.sleep(1)
+            self.sleep(10)  # 10초마다 상태 업데이트
             pass
 
     def stop(self):
@@ -75,8 +78,19 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         QFontDatabase.addApplicationFont(":/font/font/DungGeunMo.ttf")
         
         self.configMng = ConfigManager()
-        self.configMng.load_config()
-        
+        if self.configMng.load_config() == True:
+            print("ConfigManager: 설정 파일 로드 성공")
+            
+            print("ConfigManager: 차량 IP 목록:", [car['ip'] for car in self.configMng.config['cars']])
+            print("ConfigManager: 차량 포트 목록:", [car['port'] for car in self.configMng.config['cars']])
+            print("ConfigManager: 차량 카메라 URL 목록:", [car['camUrl'] for car in self.configMng.config['cars']])
+            print("ConfigManager: 이미지 감지 서버 IP:", self.configMng.config['imageDetectionServer']['ip'])
+            print("ConfigManager: 이미지 감지 서버 포트:", self.configMng.config['imageDetectionServer']['port'])
+            
+        else:
+            print("ConfigManager: 설정 파일 로드 실패")
+            # 에러 종료
+            sys.exit(-1)
         
         # 폰트 파일 추가
         font_id = QFontDatabase.addApplicationFont(":/font/font/D2Coding-Ver1.3.2-20180524.ttf")
@@ -202,11 +216,27 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         self.mainCamScreen_bmpLabel.setFont(QFont(self.font_d2coding, 24, 75))
         
         # RTSP 스트림 설정
-        # self.rtsp_url = "rtsp://gbox3d:71021707@gears001.iptime.org:21028/stream_ch00_0"
-        self.rtsp_url = self.configMng.get_car_cam_url()
-        #충청남도 천안시 서북구 신당동 482-22	
-        self.rtsp_url_subScreen = self.configMng.get_car_cam_url(1)
-        # self.rtsp_url = "rtsp://rtspstream.com/pattern"
+        self.rtsp_url = self.configMng.get_car_cam_url(car_idx=0)
+        self.rtsp_url_subScreen = self.configMng.get_car_cam_url(car_idx=1)
+        
+        print("RTSP URL:", self.rtsp_url)
+        print("RTSP URL SubScreen:", self.rtsp_url_subScreen)
+        
+        # ──────────── 이미지 감지 서버로 프레임 전송 세팅 ────────────
+        det_ip = self.configMng.get_detection_server_ip()
+        det_port = self.configMng.get_detection_server_port()
+        
+        # YOLO 감지 쓰레드 생성
+        self.yolo_detection_thread = DetectionThread(host=det_ip, port=det_port)
+        self.yolo_detection_thread.detection_results.connect(self.onYOLODetectionResults)
+        self.yolo_detection_thread.status_update.connect(self.onYOLOStatus)
+        self.yolo_detection_thread.start_detection()
+        
+        # 감지 결과를 저장할 변수
+        self.current_detections = []
+        self.detection_overlay_enabled = True  # 감지 결과 표시 여부
+        
+        # ────────────────────────────────────────────────────────
         
         
         # Main Camera 비디오 스레드 생성 및 시작
@@ -243,8 +273,8 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
 
         # OpenStreetMap URL 설정
         map_url = f"https://www.openstreetmap.org/#map={zoom}/{latitude}/{longitude}"
-# OpenStreetMap URL 설정
-# map_url = f"https://www.openstreetmap.org/#map={zoom}/{latitude}/{longitude}"
+        # OpenStreetMap URL 설정
+        # map_url = f"https://www.openstreetmap.org/#map={zoom}/{latitude}/{longitude}"
         self.labelBottomRightScreen.setText("지도 준비 중")
         match_widget_to_parent(self.labelBottomRightScreen)
         
@@ -258,12 +288,23 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         
         
         # 로봇 클라이언트 초기화 및 연결
-        self.robotClient = RobotClient()
-        if self.robotClient.connect() :
-            print("로봇 클라이언트 연결 성공")
+        # configMng에서 첫 번째 차량(0번 인덱스)의 IP와 포트를 가져와 사용
+        robot_ip = self.configMng.get_car_ip(0)
+        robot_port = self.configMng.get_car_port(0)
+
+        # 설정된 IP와 포트로 로봇 클라이언트 초기화
+        self.robotClient = RobotClient(host=robot_ip, port=robot_port)
+        
+        print(f"로봇 클라이언트 연결시도 (IP: {robot_ip}, 포트: {robot_port})")
+
+        # 연결 시도
+        if self.robotClient.connect():
+            print(f"로봇 클라이언트 연결 성공 (IP: {robot_ip}, 포트: {robot_port})")
             self.robotClient.on_sensor_updated = self.handleSensorUpdate
         else:
-            print("로봇 클라이언트 연결 실패")
+            print(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
+            # 연결 실패 시 로그에 기록
+            self.edLogText.appendPlainText(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
             
     @Slot()
     def handleSensorUpdate(self):
@@ -340,18 +381,64 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         #     # 변경된 커서를 다시 설정
         #     self.edLogText.setTextCursor(cursor)
     
+    # main camera 화면에 비디오 프레임을 업데이트하는 메서드
+    #############################################################################
     @Slot(np.ndarray)
     def update_image(self, cv_img):
-        """비디오 프레임을 업데이트하는 메서드"""
-        rgb_image = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
+        """비디오 프레임을 업데이트하는 메서드 - YOLO 감지 추가"""
+        # YOLO 감지 요청 (논블로킹)
+        if hasattr(self, 'yolo_detection_thread'):
+            self.yolo_detection_thread.detect_objects(cv_img)
+        
+        # 현재 감지 결과가 있으면 이미지에 그리기
+        display_image = cv_img.copy()
+        if self.detection_overlay_enabled and self.current_detections:
+            display_image = draw_detections(display_image, self.current_detections)
+        
+        # Qt 형식으로 변환하여 화면에 표시
+        rgb_image = cv2.cvtColor(display_image, cv2.COLOR_BGR2RGB)
         h, w, ch = rgb_image.shape
         bytes_per_line = ch * w
         convert_to_Qt_format = QImage(rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888)
         p = convert_to_Qt_format.scaled(self.mainCamScreen.size(), Qt.KeepAspectRatio)
         self.mainCamScreen_bmpLabel.setPixmap(QPixmap.fromImage(p))
         
+        # VideoDialog에도 감지 결과가 포함된 이미지 전달
         if self.video_dialog.isVisible():
             self.video_dialog.update_video_frame(QPixmap.fromImage(p))
+    
+    @Slot(list, np.ndarray)
+    def onYOLODetectionResults(self, detections, original_image):
+        """YOLO 감지 결과 처리"""
+        self.current_detections = detections
+        
+        # 감지 결과 로그
+        if detections:
+            detection_summary = ", ".join([f"{d['name']}({d['confidence']:.2f})" for d in detections[:3]])
+            if len(detections) > 3:
+                detection_summary += f" 외 {len(detections)-3}개"
+            log_msg = f"[detetor] 감지: {detection_summary}"
+        else:
+            log_msg = "[detector] 객체 감지되지 않음"
+            
+        self.edLogText.appendPlainText(log_msg)
+        limit_plaintext_lines(self.edLogText, 10)
+    
+    @Slot(str)
+    def onYOLOStatus(self, msg):
+        """YOLO 상태 메시지 처리"""
+        self.edLogText.appendPlainText(f"[Detector] {msg}")
+        limit_plaintext_lines(self.edLogText, 10)
+    
+    def toggle_detection_overlay(self, enabled: bool):
+        """감지 결과 오버레이 표시 토글"""
+        self.detection_overlay_enabled = enabled
+        
+    def clear_detections(self):
+        """현재 감지 결과 초기화"""
+        self.current_detections = []
+        
+    #############################################################################
             
     @Slot(np.ndarray)
     def update_image_SubCamera(self, cv_img):
@@ -541,6 +628,8 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         change_text_color(self.labelUnLock, self.defaultColor)
         
         print("onClickedBtnLock")
+        
+    
     
     def closeEvent(self, event):
         print("closeEvent")
