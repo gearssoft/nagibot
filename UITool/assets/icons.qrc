@@ -1,5 +1,6 @@
 <RCC>
   <qresource>
+    <file>zoom_icon.png</file>
     <file>강수량.png</file>
     <file>강수확률.png</file>
     <file>날씨1.png</file>

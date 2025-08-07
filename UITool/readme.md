@@ -24,6 +24,7 @@ qrc 파일을 py로 변환합니다. 아래 예제를 참고 하세요.
 
 ```bash
 pyside6-rcc assets/icons.qrc -o icons_rc.py
+pyside6-rcc assets/font.qrc -o font_rc.py
 ```
 
 ## window용 실행파일만들기

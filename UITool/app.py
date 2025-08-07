@@ -1,20 +1,12 @@
 import sys
-from PySide6.QtCore import QTimer, QRect, Qt
+from PySide6.QtCore import QRect, Qt
 from PySide6.QtWidgets import QApplication,QWidget,QStackedWidget,QMessageBox
-# from PySide6.QtGui import QFontDatabase
-
-# import startUpform ,mainForm ,setupForm
 import startUpform, mainForm, setupForm
 
 
 class MainForm(QWidget):
     def __init__(self):
-        super().__init__()
-        
-                # QLabel에 폰트를 설정
-                # self.mainCamScreen_bmpLabel.setFont(QFont(font_family, 20))
-                
-        # self.font_d2coding = font_id
+        super().__init__()        
         
         self.setGeometry(QRect(0, 0, 1920, 1080))
         self.setFixedSize(1920, 1080)

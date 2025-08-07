@@ -609,10 +609,10 @@ padding : 4px;</string>
   <widget class="QWidget" name="mainCamScreen" native="true">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>72</y>
-     <width>1360</width>
-     <height>672</height>
+     <x>560</x>
+     <y>70</y>
+     <width>1361</width>
+     <height>661</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -624,8 +624,8 @@ margin : 4px;</string>
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>1360</width>
-      <height>672</height>
+      <width>1361</width>
+      <height>661</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -685,7 +685,7 @@ margin : 4px;</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="../assets/icons.qrc">:/확대.png</pixmap>
+      <pixmap resource="../assets/icons.qrc">:/zoom_icon.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -699,9 +699,9 @@ margin : 4px;</string>
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>740</y>
-     <width>680</width>
-     <height>340</height>
+     <y>580</y>
+     <width>561</width>
+     <height>281</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -711,8 +711,8 @@ margin : 4px;</string>
    <widget class="QWidget" name="widgetZoomInBottom" native="true">
     <property name="geometry">
      <rect>
-      <x>570</x>
-      <y>230</y>
+      <x>450</x>
+      <y>170</y>
       <width>96</width>
       <height>96</height>
      </rect>
@@ -749,7 +749,7 @@ margin : 4px;</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="../assets/icons.qrc">:/확대.png</pixmap>
+      <pixmap resource="../assets/icons.qrc">:/zoom_icon.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -777,10 +777,10 @@ margin : 4px;</string>
   <widget class="QWidget" name="widgetBottomRightScreen" native="true">
    <property name="geometry">
     <rect>
-     <x>680</x>
-     <y>740</y>
-     <width>680</width>
-     <height>340</height>
+     <x>0</x>
+     <y>270</y>
+     <width>561</width>
+     <height>311</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -790,8 +790,8 @@ margin : 4px;</string>
    <widget class="QWidget" name="widgetBottomRightCam" native="true">
     <property name="geometry">
      <rect>
-      <x>570</x>
-      <y>230</y>
+      <x>450</x>
+      <y>200</y>
       <width>96</width>
       <height>96</height>
      </rect>
@@ -828,7 +828,7 @@ margin : 4px;</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="../assets/icons.qrc">:/확대.png</pixmap>
+      <pixmap resource="../assets/icons.qrc">:/zoom_icon.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -842,20 +842,20 @@ margin : 4px;</string>
      <rect>
       <x>60</x>
       <y>40</y>
-      <width>151</width>
+      <width>181</width>
       <height>91</height>
      </rect>
     </property>
     <property name="text">
-     <string>연상을준비중입니다.</string>
+     <string>지도 데이터를 불러오는중</string>
     </property>
    </widget>
   </widget>
   <widget class="QWidget" name="widgetWether" native="true">
    <property name="geometry">
     <rect>
-     <x>1360</x>
-     <y>72</y>
+     <x>0</x>
+     <y>70</y>
      <width>560</width>
      <height>200</height>
     </rect>
@@ -1144,8 +1144,8 @@ border : none;
   <widget class="QWidget" name="systemLog" native="true">
    <property name="geometry">
     <rect>
-     <x>1360</x>
-     <y>270</y>
+     <x>0</x>
+     <y>860</y>
      <width>560</width>
      <height>221</height>
     </rect>
@@ -1176,10 +1176,10 @@ color : rgb(0,255,0);</string>
   <widget class="QPushButton" name="btnAbnormalStop">
    <property name="geometry">
     <rect>
-     <x>1370</x>
-     <y>490</y>
-     <width>541</width>
-     <height>71</height>
+     <x>560</x>
+     <y>730</y>
+     <width>351</width>
+     <height>341</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -1195,10 +1195,10 @@ font-weight: bold;</string>
   <widget class="QWidget" name="widget_opmode" native="true">
    <property name="geometry">
     <rect>
-     <x>1370</x>
-     <y>570</y>
-     <width>541</width>
-     <height>48</height>
+     <x>920</x>
+     <y>730</y>
+     <width>441</width>
+     <height>100</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -1209,7 +1209,7 @@ font-weight: bold;</string>
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>0</y>
+      <y>30</y>
       <width>128</width>
       <height>48</height>
      </rect>
@@ -1226,10 +1226,10 @@ border : none;</string>
    <widget class="QPushButton" name="btnAutoDrv">
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>8</y>
+      <x>160</x>
+      <y>20</y>
       <width>120</width>
-      <height>32</height>
+      <height>61</height>
      </rect>
     </property>
     <property name="font">
@@ -1260,10 +1260,10 @@ border : none;</string>
    <widget class="QPushButton" name="btnRemoteDrv">
     <property name="geometry">
      <rect>
-      <x>370</x>
-      <y>8</y>
+      <x>300</x>
+      <y>20</y>
       <width>120</width>
-      <height>32</height>
+      <height>61</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -1278,10 +1278,10 @@ border : none;</string>
   <widget class="QWidget" name="widgetDpmode" native="true">
    <property name="geometry">
     <rect>
-     <x>1370</x>
-     <y>620</y>
-     <width>540</width>
-     <height>48</height>
+     <x>920</x>
+     <y>850</y>
+     <width>441</width>
+     <height>100</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -1292,7 +1292,7 @@ border : none;</string>
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>0</y>
+      <y>30</y>
       <width>128</width>
       <height>48</height>
      </rect>
@@ -1309,10 +1309,10 @@ border : none;</string>
    <widget class="QPushButton" name="btnOpticalMode">
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>8</y>
+      <x>160</x>
+      <y>20</y>
       <width>120</width>
-      <height>32</height>
+      <height>61</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -1325,10 +1325,10 @@ border : none;</string>
    <widget class="QPushButton" name="btnIRMode">
     <property name="geometry">
      <rect>
-      <x>370</x>
-      <y>8</y>
+      <x>300</x>
+      <y>20</y>
       <width>120</width>
-      <height>32</height>
+      <height>61</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -1339,13 +1339,13 @@ border : none;</string>
     </property>
    </widget>
   </widget>
-  <widget class="QWidget" name="widget_9" native="true">
+  <widget class="QWidget" name="widg_zoom" native="true">
    <property name="geometry">
     <rect>
-     <x>1370</x>
-     <y>670</y>
-     <width>540</width>
-     <height>48</height>
+     <x>920</x>
+     <y>970</y>
+     <width>441</width>
+     <height>100</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -1356,8 +1356,8 @@ border : none;</string>
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>0</y>
-      <width>136</width>
+      <y>20</y>
+      <width>141</width>
       <height>48</height>
      </rect>
     </property>
@@ -1373,10 +1373,10 @@ border : none;</string>
    <widget class="QPushButton" name="btnScaleUp">
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>8</y>
+      <x>160</x>
+      <y>20</y>
       <width>120</width>
-      <height>32</height>
+      <height>61</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -1389,10 +1389,10 @@ border : none;</string>
    <widget class="QPushButton" name="btnScaleDown">
     <property name="geometry">
      <rect>
-      <x>370</x>
-      <y>8</y>
+      <x>300</x>
+      <y>20</y>
       <width>120</width>
-      <height>32</height>
+      <height>61</height>
      </rect>
     </property>
     <property name="styleSheet">
