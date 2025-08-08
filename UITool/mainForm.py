@@ -203,11 +203,10 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         self.btnZoomInBottomScreen.clicked.connect(self.onClickedBtnZoomInBottomScreen)
         self.btnZoomInBottomRightScreen.clicked.connect(self.onClickedBtnZoomInBottomRightScreen)
         
-        
-        # # wifi status label
-        # self.wifiStatus.setPixmap(QPixmap(":/와이파이3.png"))
-        
         self.systemBeginTime = QDateTime.currentDateTime()
+
+        # 호기 표시
+        self.txUnitNuberInfo.setText("1 호기"); # 호기 표시를 비워둠
         
         # 초기 "준비 중" 메시지 표시
         self.mainCamScreen_bmpLabel.setText("영상 준비 중...")
