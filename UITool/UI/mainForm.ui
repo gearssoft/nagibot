@@ -503,7 +503,7 @@ background-color : black;</string>
    <widget class="QLabel" name="label_10">
     <property name="geometry">
      <rect>
-      <x>1528</x>
+      <x>1320</x>
       <y>0</y>
       <width>72</width>
       <height>72</height>
@@ -525,31 +525,6 @@ margin : 16px
     </property>
     <property name="margin">
      <number>0</number>
-    </property>
-   </widget>
-   <widget class="QLabel" name="txUnitNuberInfo">
-    <property name="geometry">
-     <rect>
-      <x>1600</x>
-      <y>0</y>
-      <width>120</width>
-      <height>72</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>D2Coding</family>
-      <pointsize>18</pointsize>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border : none;</string>
-    </property>
-    <property name="text">
-     <string>N 호기</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
     </property>
    </widget>
    <widget class="QWidget" name="widgetbtnSetup" native="true">
@@ -605,14 +580,168 @@ padding : 4px;</string>
      </property>
     </widget>
    </widget>
+   <widget class="QWidget" name="widget_UnitNum1" native="true">
+    <property name="geometry">
+     <rect>
+      <x>1430</x>
+      <y>0</y>
+      <width>121</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <widget class="QPushButton" name="btnUnitChg_1">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>121</width>
+       <height>71</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="txUnitNuberInfo">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>121</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>D2Coding</family>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border : none;</string>
+     </property>
+     <property name="text">
+      <string>1 호기</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+    <zorder>txUnitNuberInfo</zorder>
+    <zorder>btnUnitChg_1</zorder>
+   </widget>
+   <widget class="QWidget" name="widget_UnitNum_2" native="true">
+    <property name="geometry">
+     <rect>
+      <x>1550</x>
+      <y>0</y>
+      <width>121</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <widget class="QPushButton" name="btnUnitChg_2">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>121</width>
+       <height>71</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="txUnitNuberInfo_2">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>121</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>D2Coding</family>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border : none;</string>
+     </property>
+     <property name="text">
+      <string>2 호기</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+    <zorder>txUnitNuberInfo_2</zorder>
+    <zorder>btnUnitChg_2</zorder>
+   </widget>
+   <widget class="QWidget" name="widget_UnitNum_3" native="true">
+    <property name="geometry">
+     <rect>
+      <x>1670</x>
+      <y>0</y>
+      <width>121</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <widget class="QPushButton" name="btnUnitChg_3">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>121</width>
+       <height>71</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="txUnitNuberInfo_3">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>121</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>D2Coding</family>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border : none;</string>
+     </property>
+     <property name="text">
+      <string>3 호기</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+    <zorder>txUnitNuberInfo_3</zorder>
+    <zorder>btnUnitChg_3</zorder>
+   </widget>
+   <zorder>widget_UnitNum1</zorder>
+   <zorder>widget_UnitNum_2</zorder>
+   <zorder>widget_UnitNum_3</zorder>
+   <zorder>widgetBtnGoHome</zorder>
+   <zorder>label_4</zorder>
+   <zorder>wifiStatus</zorder>
+   <zorder>platformRobot</zorder>
+   <zorder>networkStatus</zorder>
+   <zorder>batteryStatus</zorder>
+   <zorder>widgetTimeInfo</zorder>
+   <zorder>widget_11</zorder>
+   <zorder>label_10</zorder>
+   <zorder>widgetbtnSetup</zorder>
   </widget>
   <widget class="QWidget" name="mainCamScreen" native="true">
    <property name="geometry">
     <rect>
-     <x>560</x>
-     <y>70</y>
-     <width>1361</width>
-     <height>661</height>
+     <x>0</x>
+     <y>270</y>
+     <width>561</width>
+     <height>311</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -624,8 +753,8 @@ margin : 4px;</string>
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>1361</width>
-      <height>661</height>
+      <width>561</width>
+      <height>311</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -637,9 +766,6 @@ margin : 4px;</string>
     <property name="text">
      <string/>
     </property>
-    <property name="pixmap">
-     <pixmap resource="../assets/icons.qrc">:/강수량.png</pixmap>
-    </property>
     <property name="scaledContents">
      <bool>true</bool>
     </property>
@@ -647,10 +773,10 @@ margin : 4px;</string>
    <widget class="QWidget" name="widgetZommInMainScreen" native="true">
     <property name="geometry">
      <rect>
-      <x>1210</x>
-      <y>520</y>
-      <width>128</width>
-      <height>128</height>
+      <x>440</x>
+      <y>190</y>
+      <width>101</width>
+      <height>101</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -677,8 +803,8 @@ margin : 4px;</string>
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>128</width>
-       <height>128</height>
+       <width>101</width>
+       <height>101</height>
       </rect>
      </property>
      <property name="text">
@@ -777,10 +903,10 @@ margin : 4px;</string>
   <widget class="QWidget" name="widgetBottomRightScreen" native="true">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>270</y>
-     <width>561</width>
-     <height>311</height>
+     <x>560</x>
+     <y>70</y>
+     <width>1361</width>
+     <height>661</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -790,8 +916,8 @@ margin : 4px;</string>
    <widget class="QWidget" name="widgetBottomRightCam" native="true">
     <property name="geometry">
      <rect>
-      <x>450</x>
-      <y>200</y>
+      <x>1220</x>
+      <y>510</y>
       <width>96</width>
       <height>96</height>
      </rect>
@@ -840,8 +966,8 @@ margin : 4px;</string>
    <widget class="QLabel" name="labelBottomRightScreen">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>40</y>
+      <x>540</x>
+      <y>50</y>
       <width>181</width>
       <height>91</height>
      </rect>

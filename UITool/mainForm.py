@@ -202,10 +202,28 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         self.btnZoomInMainScreen.clicked.connect(self.onClickedBtnZoomInMainScreen)
         self.btnZoomInBottomScreen.clicked.connect(self.onClickedBtnZoomInBottomScreen)
         self.btnZoomInBottomRightScreen.clicked.connect(self.onClickedBtnZoomInBottomRightScreen)
-        
-        
-        # # wifi status label
-        # self.wifiStatus.setPixmap(QPixmap(":/와이파이3.png"))
+
+        # 유닛 변경 버튼
+        self.unit_selected_style = {"bg": "rgb(80, 80, 80)", "text": "white"}  # 선택됨 (어둡게)
+        self.unit_deselected_style = {"bg": "rgb(225, 225, 225)", "text": "black"} # 비선택 (밝게)
+
+        # 2. 호기 선택 위젯들을 리스트로 묶어서 관리
+        self.unit_widgets = [
+            {'btn': self.btnUnitChg_1, 'container': self.widget_UnitNum1, 'label': self.txUnitNuberInfo},
+            {'btn': self.btnUnitChg_2, 'container': self.widget_UnitNum_2, 'label': self.txUnitNuberInfo_2},
+            {'btn': self.btnUnitChg_3, 'container': self.widget_UnitNum_3, 'label': self.txUnitNuberInfo_3}
+        ]
+
+        # 3. 현재 선택된 호기 인덱스 초기화 (0: 1호기)
+        self.current_unit_index = 0
+
+        # 4. 각 버튼의 clicked 시그널을 핸들러 함수와 연결 (lambda 사용)
+        self.unit_widgets[0]['btn'].clicked.connect(lambda: self.on_unit_selected(0))
+        self.unit_widgets[1]['btn'].clicked.connect(lambda: self.on_unit_selected(1))
+        self.unit_widgets[2]['btn'].clicked.connect(lambda: self.on_unit_selected(2))
+
+        # 5. 초기 버튼 스타일 적용
+        self.update_unit_button_styles()
         
         self.systemBeginTime = QDateTime.currentDateTime()
         
@@ -305,6 +323,7 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
             print(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
             # 연결 실패 시 로그에 기록
             self.edLogText.appendPlainText(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
+
             
     @Slot()
     def handleSensorUpdate(self):
@@ -628,8 +647,45 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         change_text_color(self.labelUnLock, self.defaultColor)
         
         print("onClickedBtnLock")
+
+    @Slot(int)
+    def on_unit_selected(self, index):
+        """호기 선택 버튼(1, 2, 3)이 클릭될 때 호출되는 슬롯"""
+        # 이미 선택된 버튼을 다시 누르면 아무 작업도 하지 않음
+        if self.current_unit_index == index:
+            return
         
-    
+        # 현재 선택된 호기 인덱스 업데이트
+        self.current_unit_index = index
+        
+        # 모든 버튼의 스타일을 새로고침
+        self.update_unit_button_styles()
+
+        print(f"선택된 유닛: {self.current_unit_index + 1}호기")
+        # TODO: 여기에 실제 로봇 연결(영상, 제어)을 변경하는 코드를 추가해야 합니다.
+        # 예: self.change_robot_connection(self.current_unit_index)
+
+    def update_unit_button_styles(self):
+        """1, 2, 3호기 버튼의 전체 스타일을 업데이트합니다."""
+        for i, widgets in enumerate(self.unit_widgets):
+            container = widgets['container']
+            label = widgets['label']  # label 위젯을 직접 가져옵니다.
+            
+            # 현재 선택된 호기인지 확인
+            if i == self.current_unit_index:
+                # 선택된 스타일 적용
+                style = self.unit_selected_style
+            else:
+                # 비선택된 스타일 적용
+                style = self.unit_deselected_style
+
+            # 컨테이너에는 배경색만 적용
+            # change_background_color(container, style['bg'])
+            # 라벨에는 텍스트 색상만 직접 적용
+            change_text_color(label, style['text'])
+            change_background_color(label, style['bg'])
+
+            
     
     def closeEvent(self, event):
         print("closeEvent")
