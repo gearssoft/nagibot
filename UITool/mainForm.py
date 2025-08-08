@@ -376,32 +376,6 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
                     self.edLogText.appendPlainText(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
 
         self.edLogText.appendPlainText("로봇 클라이언트 초기화 및 연결 완료")
-            
-
-        # robot_ip = self.configMng.get_car_ip(0)
-        # robot_port = self.configMng.get_car_port(0)
-
-        # # 설정된 IP와 포트로 로봇 클라이언트 초기화
-        # self.robotClient = RobotClient(host=robot_ip, port=robot_port)
-        
-        # print(f"로봇 클라이언트 연결시도 (IP: {robot_ip}, 포트: {robot_port})")
-
-        # # 연결 시도
-        # if self.robotClient.connect():
-        #     print(f"로봇 클라이언트 연결 성공 (IP: {robot_ip}, 포트: {robot_port})")
-        #     self.robotClient.on_sensor_updated = self.handleSensorUpdate
-        # else:
-        #     print(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
-        #     # 연결 실패 시 로그에 기록
-        #     self.edLogText.appendPlainText(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
-        # 연결 시도
-        if self.robotClient.connect():
-            print(f"로봇 클라이언트 연결 성공 (IP: {robot_ip}, 포트: {robot_port})")
-            self.robotClient.on_sensor_updated = self.handleSensorUpdate
-        else:
-            print(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
-            # 연결 실패 시 로그에 기록
-            self.edLogText.appendPlainText(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
 
             
     @Slot()
