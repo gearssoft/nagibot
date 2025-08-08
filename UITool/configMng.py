@@ -29,24 +29,28 @@ class ConfigManager:
                 {
                     "ip": "127.0.0.1",
                     "port": 8080,
-                    "camUrl": "http://127.0.0.1:8081/stream"
+                    "camUrl": "http://127.0.0.1:8081/stream",
+                    "enable": False
                 },
                 {
                     "ip": "",
                     "port": 8080,
-                    "camUrl": ""
+                    "camUrl": "",
+                    "enable": False
                 },
                 {
                     "ip": "",
                     "port": 8080,
-                    "camUrl": ""
+                    "camUrl": "",
+                    "enable": False
                 }
             ],
             "imageDetectionServer" : {
                 "ip": "localhost",
-                "port": 8085
+                "port": 8085,
+                "enable": False
             },
-            "isSoundOn": True
+            "isSoundOn": False
         }
         
         # 설정 파일이 존재하면 불러오기
@@ -215,9 +219,46 @@ class ConfigManager:
             port (int): 설정할 이미지 감지 서버 포트 번호
         """
         self.config["imageDetectionServer"]["port"] = int(port)
-        
+
+    def get_detection_server_enable(self):
+        """
+        이미지 감지 서버 활성화 상태 반환
+        Returns:
+            bool: 이미지 감지 서버 활성화 여부
+        """
+        return self.config["imageDetectionServer"]["enable"]
     
+    def set_detection_server_enable(self, enable):
+        """
+        이미지 감지 서버 활성화 설정
+        Args:
+            enable (bool): 활성화 여부
+        """
+        self.config["imageDetectionServer"]["enable"] = bool(enable)
+
+    def get_unit_enable(self, car_idx=0):
+        """
+        차량 유닛 활성화 상태 반환
+        Args:
+            car_idx (int): 차량 인덱스 (0-2)
+        Returns:
+            bool: 차량 유닛 활성화 여부
+        """
+        if car_idx < 0 or car_idx >= 3:
+            raise ValueError("차량 인덱스는 0에서 2 사이여야 합니다.")
+        return self.config["cars"][car_idx].get("enable", False)
     
+    def set_unit_enable(self, enable, car_idx=0):
+        """
+        차량 유닛 활성화 상태 설정
+        Args:
+            enable (bool): 활성화 여부
+            car_idx (int): 차량 인덱스 (0-2)
+        """
+        if car_idx < 0 or car_idx >= 3:
+            raise ValueError("차량 인덱스는 0에서 2 사이여야 합니다.")
+        self.config["cars"][car_idx]["enable"] = bool(enable)
+
     def save_config(self):
         """
         설정을 파일에 저장
@@ -270,7 +311,7 @@ class ConfigManager:
             return True
         except Exception as e:
             print(f"설정 불러오기 중 오류 발생: {e}")
-            return False
+            return False    
 
 # 사용 예시
 if __name__ == "__main__":
@@ -315,6 +356,7 @@ if __name__ == "__main__":
         print(f"IP: {car_info['ip']}")
         print(f"Port: {car_info['port']}")
         print(f"Camera URL: {car_info['camUrl']}")
+        print(f"Enable: {car_info.get('enable', False)}")
         print()
     
     print(f"Sound On: {config_mgr.is_sound_on()}")

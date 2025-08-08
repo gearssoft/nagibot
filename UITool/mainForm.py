@@ -25,6 +25,10 @@ from configMng import ConfigManager
 
 from detector_client import DetectionThread,draw_detections
 
+from random import randint
+import sys
+import os
+
 
 # 정찰로봇 클라이언트 모듈 임포트
 from robot_client import RobotClient
@@ -36,35 +40,61 @@ class VideoThread(QThread):
         super().__init__()
         self.rtsp_url = rtsp_url
         self._run_flag = True
+        self._cap = None
 
     def run(self):
-        cap = cv2.VideoCapture(self.rtsp_url)
+        # cap = cv2.VideoCapture(self.rtsp_url)
+        # while self._run_flag:
+        #     ret, cv_img = cap.read()
+        #     if ret:
+        #         self.change_pixmap_signal.emit(cv_img)
+        # cap.release()
+
+        # RTSP가 종료 시 블로킹되지 않도록 타임아웃/버퍼 최소화
+        os.environ.setdefault("OPENCV_FFMPEG_CAPTURE_OPTIONS",
+                                "rtsp_transport;tcp|stimeout;2000000")  # 2초
+        self._cap = cv2.VideoCapture(self.rtsp_url, cv2.CAP_FFMPEG)
+        try:
+            self._cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+        except Exception:
+            pass
+            print("VideoThread: CAP_PROP_BUFFERSIZE 설정 실패, FFMPEG 버전이 낮을 수 있습니다.")
+        
+        print("VideoThread: RTSP URL:", self.rtsp_url)
+        
         while self._run_flag:
-            ret, cv_img = cap.read()
-            if ret:
-                self.change_pixmap_signal.emit(cv_img)
-        cap.release()
+            if not self._cap.isOpened():
+                self.msleep(50)
+                continue
+            ret, cv_img = self._cap.read()
+            if not ret:
+                self.msleep(10)
+                continue
+            self.change_pixmap_signal.emit(cv_img)
+        if self._cap is not None:
+            self._cap.release()
+            self._cap = None
 
     def stop(self):
         self._run_flag = False
         self.wait()
         
-class StatusUpdateThread(QThread):
-    statusUpdateSignal = Signal()
+# class StatusUpdateThread(QThread):
+#     statusUpdateSignal = Signal()
     
-    def __init__(self):
-        super().__init__()
-        self._run_flag = True
+#     def __init__(self):
+#         super().__init__()
+#         self._run_flag = True
 
-    def run(self):
-        while self._run_flag:
-            self.statusUpdateSignal.emit()
-            self.sleep(10)  # 10초마다 상태 업데이트
-            pass
+#     def run(self):
+#         while self._run_flag:
+#             self.statusUpdateSignal.emit()
+#             self.sleep(10)  # 10초마다 상태 업데이트
+#             pass
 
-    def stop(self):
-        self._run_flag = False
-        self.wait()
+#     def stop(self):
+#         self._run_flag = False
+#         self.wait()
 
 class MainForm(QWidget, UI.mainForm.Ui_mainForm):
     
@@ -222,19 +252,33 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         print("RTSP URL SubScreen:", self.rtsp_url_subScreen)
         
         # ──────────── 이미지 감지 서버로 프레임 전송 세팅 ────────────
-        det_ip = self.configMng.get_detection_server_ip()
-        det_port = self.configMng.get_detection_server_port()
-        
-        # YOLO 감지 쓰레드 생성
-        self.yolo_detection_thread = DetectionThread(host=det_ip, port=det_port)
-        self.yolo_detection_thread.detection_results.connect(self.onYOLODetectionResults)
-        self.yolo_detection_thread.status_update.connect(self.onYOLOStatus)
-        self.yolo_detection_thread.start_detection()
-        
-        # 감지 결과를 저장할 변수
-        self.current_detections = []
-        self.detection_overlay_enabled = True  # 감지 결과 표시 여부
-        
+        self.detection_overlay_enabled = False  # 감지 결과 표시 여부
+        if self.configMng.get_detection_server_enable() is True:
+            det_ip = self.configMng.get_detection_server_ip()
+            det_port = self.configMng.get_detection_server_port()
+            
+            # YOLO 감지 쓰레드 생성
+            self.yolo_detection_thread = DetectionThread(host=det_ip, port=det_port)
+            self.yolo_detection_thread.detection_results.connect(self.onYOLODetectionResults)
+            self.yolo_detection_thread.status_update.connect(self.onYOLOStatus)
+            self.yolo_detection_thread.start_detection()
+            
+            # 감지 결과를 저장할 변수
+            self.current_detections = []
+            self.detection_overlay_enabled = True  # 감지 결과 표시 여부
+
+        # ────────────────────────────────────────────────────────
+
+        # 상태 업데이트 스레드 생성 및 시작
+        # self.statusUpdateThread = StatusUpdateThread()
+        # self.statusUpdateThread.statusUpdateSignal.connect(self.updateStatus)
+        # self.statusUpdateThread.start()
+
+        # 상태 업데이트 타이머 설정
+        self.status_timer = QTimer(self)
+        self.status_timer.timeout.connect(self.updateStatus)
+        self.status_timer.start(1000)  # 1초마다
+
         # ────────────────────────────────────────────────────────
         
         
@@ -243,17 +287,12 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         self.mainCameraThread.change_pixmap_signal.connect(self.update_image)
         self.mainCameraThread.start()
         
-        # 상태 업데이트 스레드 생성 및 시작
-        self.statusUpdateThread = StatusUpdateThread()
-        self.statusUpdateThread.statusUpdateSignal.connect(self.updateStatus)
-        self.statusUpdateThread.start()
-        
         # VideoDialog 미리 생성
         self.video_dialog = VideoDialog()
-        
-        
-        # subCamera Screen 
-        self.labelSubCamera.setText(" 영싱준비중 ")
+
+
+        # subCamera Screen
+        self.labelSubCamera.setText(" 영상 준비 중 ")
         #부모위젯의 크게에 맞춤
         match_widget_to_parent(self.labelSubCamera)
         self.labelSubCamera.setAlignment(Qt.AlignCenter)
@@ -263,8 +302,6 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         self.subCameraThread.start()
         
         #지도화면
-            
-                
         # 대한민국 부안 앞바다 근처의 위도, 경도 및 줌 레벨 설정
         latitude = 35.7299    # 위도 (부안 앞바다 근처)
         longitude = 126.5833  # 경도 (부안 앞바다 근처)
@@ -288,29 +325,61 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         
         # 로봇 클라이언트 초기화 및 연결
         # configMng에서 첫 번째 차량(0번 인덱스)의 IP와 포트를 가져와 사용
-        robot_ip = self.configMng.get_car_ip(0)
-        robot_port = self.configMng.get_car_port(0)
 
-        # 설정된 IP와 포트로 로봇 클라이언트 초기화
-        self.robotClient = RobotClient(host=robot_ip, port=robot_port)
+
+        self.edLogText.appendPlainText("로봇 클라이언트 초기화 및 연결 시작")
+
+        cars_units = [
+            { "ip": self.configMng.get_car_ip(0), "port": self.configMng.get_car_port(0), "camUrl": self.configMng.get_car_cam_url(0), "enable": self.configMng.get_unit_enable(0) },
+            { "ip": self.configMng.get_car_ip(1), "port": self.configMng.get_car_port(1), "camUrl": self.configMng.get_car_cam_url(1), "enable": self.configMng.get_unit_enable(1) },
+            { "ip": self.configMng.get_car_ip(2), "port": self.configMng.get_car_port(2), "camUrl": self.configMng.get_car_cam_url(2), "enable": self.configMng.get_unit_enable(2) }
+        ]
+
+        self.robotClients = []
+
+        for idx, car in enumerate(cars_units):
+            print(f"Unit {idx+1} - IP: {car['ip']}, Port: {car['port']}, Cam URL: {car['camUrl']}, Enable: {car['enable']}")
+            if car['enable']:
+                robot_ip = car['ip']
+                robot_port = car['port']
+                print(f"로봇 클라이언트 연결시도 (IP: {robot_ip}, 포트: {robot_port})")
+
+                _client = RobotClient(host=robot_ip, port=robot_port)
+                if _client.connect():
+                    print(f"로봇 클라이언트 연결 성공 (IP: {robot_ip}, 포트: {robot_port})")
+                    _client.on_sensor_updated = self.handleSensorUpdate
+                    self.robotClients.append(_client)
+                else:
+                    print(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
+                    self.edLogText.appendPlainText(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
+
+        self.edLogText.appendPlainText("로봇 클라이언트 초기화 및 연결 완료")
+            
+
+        # robot_ip = self.configMng.get_car_ip(0)
+        # robot_port = self.configMng.get_car_port(0)
+
+        # # 설정된 IP와 포트로 로봇 클라이언트 초기화
+        # self.robotClient = RobotClient(host=robot_ip, port=robot_port)
         
-        print(f"로봇 클라이언트 연결시도 (IP: {robot_ip}, 포트: {robot_port})")
+        # print(f"로봇 클라이언트 연결시도 (IP: {robot_ip}, 포트: {robot_port})")
 
-        # 연결 시도
-        if self.robotClient.connect():
-            print(f"로봇 클라이언트 연결 성공 (IP: {robot_ip}, 포트: {robot_port})")
-            self.robotClient.on_sensor_updated = self.handleSensorUpdate
-        else:
-            print(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
-            # 연결 실패 시 로그에 기록
-            self.edLogText.appendPlainText(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
+        # # 연결 시도
+        # if self.robotClient.connect():
+        #     print(f"로봇 클라이언트 연결 성공 (IP: {robot_ip}, 포트: {robot_port})")
+        #     self.robotClient.on_sensor_updated = self.handleSensorUpdate
+        # else:
+        #     print(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
+        #     # 연결 실패 시 로그에 기록
+        #     self.edLogText.appendPlainText(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
             
     @Slot()
-    def handleSensorUpdate(self):
+    def handleSensorUpdate(self,robotClient):
         print("handleSensorUpdate")
         # robotClient 쓰레드에서 호출되므로, 메인 쓰레드로 UI 업데이트를 전달합니다.
         # QTimer.singleShot(0, self.updateSensorUI)
-        sensor_data = self.robotClient.get_sensor_data()
+        # sensor_data = self.robotClient.get_sensor_data()
+        sensor_data = robotClient.get_sensor_data()
         
         sensor1 = sensor_data['sensors'][1]
         print("Sensor 1:", sensor1)
@@ -627,13 +696,11 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         change_text_color(self.labelUnLock, self.defaultColor)
         
         print("onClickedBtnLock")
-        
-    
     
     def closeEvent(self, event):
         print("closeEvent")
         self.mainCameraThread.stop()
-        self.statusUpdateThread.stop()  # 추가
+        # self.statusUpdateThread.stop()  
         self.closedSignal.emit()
         super().closeEvent(event)
 

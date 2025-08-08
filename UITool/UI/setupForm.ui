@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1095</width>
-    <height>877</height>
+    <height>892</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,7 +26,7 @@
     <string>제어프로그램설정</string>
    </property>
   </widget>
-  <widget class="QFrame" name="frame">
+  <widget class="QFrame" name="ControlFrame">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -195,17 +195,17 @@
     <string>Save</string>
    </property>
   </widget>
-  <widget class="QGroupBox" name="ImageServerConfigGrp">
+  <widget class="QGroupBox" name="DectectionServerConfig">
    <property name="geometry">
     <rect>
-     <x>450</x>
+     <x>710</x>
      <y>300</y>
      <width>351</width>
-     <height>91</height>
+     <height>111</height>
     </rect>
    </property>
    <property name="title">
-    <string>Image Server Settings</string>
+    <string>Image detection Server</string>
    </property>
    <widget class="QTextEdit" name="textEdit_detection_server_IP">
     <property name="geometry">
@@ -253,13 +253,26 @@
      <string>port</string>
     </property>
    </widget>
+   <widget class="QCheckBox" name="cbEnableImgDetection">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>80</y>
+      <width>79</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Enable</string>
+    </property>
+   </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox">
+  <widget class="QGroupBox" name="Unit_1">
    <property name="geometry">
     <rect>
      <x>20</x>
      <y>300</y>
-     <width>400</width>
+     <width>461</width>
      <height>150</height>
     </rect>
    </property>
@@ -335,13 +348,26 @@
      <string>port</string>
     </property>
    </widget>
+   <widget class="QCheckBox" name="cbUnitEnable_1">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>50</y>
+      <width>79</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Enable</string>
+    </property>
+   </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox_2">
+  <widget class="QGroupBox" name="Unit_2">
    <property name="geometry">
     <rect>
      <x>20</x>
      <y>460</y>
-     <width>400</width>
+     <width>461</width>
      <height>150</height>
     </rect>
    </property>
@@ -417,13 +443,26 @@
      <string>cam url</string>
     </property>
    </widget>
+   <widget class="QCheckBox" name="cbUnitEnable_2">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>50</y>
+      <width>79</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Enable</string>
+    </property>
+   </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox_3">
+  <widget class="QGroupBox" name="Unit_3">
    <property name="geometry">
     <rect>
      <x>20</x>
      <y>620</y>
-     <width>400</width>
+     <width>461</width>
      <height>150</height>
     </rect>
    </property>
@@ -497,6 +536,19 @@
     </property>
     <property name="text">
      <string>cam url</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="cbUnitEnable_3">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>50</y>
+      <width>79</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Enable</string>
     </property>
    </widget>
   </widget>
