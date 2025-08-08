@@ -23,18 +23,23 @@ class setupForm(QWidget,UI.setupForm.Ui_SetupForm):
         self.textEditCar1ip.setText(self.configMng.get_car_ip(0))
         self.textEditCar1port.setText(str(self.configMng.get_car_port(0)))
         self.textEditCar1Camurl.setText(self.configMng.get_car_cam_url(0))
+        self.cbUnitEnable_1.setChecked(self.configMng.get_unit_enable(0))
         
         self.textEditCar2ip.setText(self.configMng.get_car_ip(1))
         self.textEditCar2port.setText(str(self.configMng.get_car_port(1)))
         self.textEditCar2Camurl.setText(self.configMng.get_car_cam_url(1))
-        
+        self.cbUnitEnable_2.setChecked(self.configMng.get_unit_enable(1))
+
         self.textEditCar3ip.setText(self.configMng.get_car_ip(2))
         self.textEditCar3port.setText(str(self.configMng.get_car_port(2)))
         self.textEditCar3Camurl.setText(self.configMng.get_car_cam_url(2))
-        
-        
+        self.cbUnitEnable_3.setChecked(self.configMng.get_unit_enable(2))
+
         self.textEdit_detection_server_IP.setText(self.configMng.get_detection_server_ip())
         self.textEdit_detection_server_port.setText(str(self.configMng.get_detection_server_port()))
+        self.cbEnableImgDetection.setChecked(self.configMng.get_detection_server_enable())
+
+
         
         
         
@@ -72,6 +77,14 @@ class setupForm(QWidget,UI.setupForm.Ui_SetupForm):
         
         self.configMng.set_detection_server_ip(self.textEdit_detection_server_IP.toPlainText())
         self.configMng.set_detection_server_port(self.textEdit_detection_server_port.toPlainText())
+        self.configMng.set_detection_server_enable(self.cbEnableImgDetection.isChecked())
+
+        self.configMng.set_unit_enable(self.cbUnitEnable_1.isChecked(), 0)
+        self.configMng.set_unit_enable(self.cbUnitEnable_2.isChecked(), 1)
+        self.configMng.set_unit_enable(self.cbUnitEnable_3.isChecked(), 2)
+        
+        # 설정 파일 저장
+
         
         self.configMng.save_config()
         
