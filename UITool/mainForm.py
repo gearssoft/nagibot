@@ -376,7 +376,7 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
                     self.edLogText.appendPlainText(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
 
         self.edLogText.appendPlainText("로봇 클라이언트 초기화 및 연결 완료")
-
+        
             
     @Slot()
     def handleSensorUpdate(self,robotClient):
