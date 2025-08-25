@@ -299,7 +299,7 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         # 상태 업데이트 타이머 설정
         self.status_timer = QTimer(self)
         self.status_timer.timeout.connect(self.updateStatus)
-        self.status_timer.start(1000)  # 1초마다
+        self.status_timer.start(10000)  # 10초마다
 
         # ────────────────────────────────────────────────────────
         
@@ -358,6 +358,7 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         ]
 
         self.robotClients = []
+        self.activeRobot=None
 
         for idx, car in enumerate(cars_units):
             print(f"Unit {idx+1} - IP: {car['ip']}, Port: {car['port']}, Cam URL: {car['camUrl']}, Enable: {car['enable']}")
@@ -369,16 +370,28 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
                 _client = RobotClient(host=robot_ip, port=robot_port)
                 if _client.connect():
                     print(f"로봇 클라이언트 연결 성공 (IP: {robot_ip}, 포트: {robot_port})")
-                    _client.on_sensor_updated = self.handleSensorUpdate
+                    # _client.on_sensor_updated = self.handleSensorUpdate
+                    _client.on_sensor_updated = (lambda rc=_client: self.handleSensorUpdate(rc))
+                    _client.on_drive_ack = (lambda rc=_client: self.onDriveAck(rc))
+
                     self.robotClients.append(_client)
+
+                    if self.activeRobot is None:
+                        self.activeRobot = _client
                 else:
                     print(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
                     self.edLogText.appendPlainText(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
 
         self.edLogText.appendPlainText("로봇 클라이언트 초기화 및 연결 완료")
         
-            
-    @Slot()
+    @Slot(object)
+    def onDriveAck(self, robotClient):
+        # print("onDriveAck from", robotClient.id)
+        _drive_status = robotClient.get_drive_status()
+        print("Drive Status:", _drive_status)
+        self.edLogText.appendPlainText(f"Drive Ack - Speed: {_drive_status['speed']:.2f} m/s, Yaw: {_drive_status['yaw']:.2f} rad/s, Position: {_drive_status['position']}")
+
+    @Slot(object)
     def handleSensorUpdate(self,robotClient):
         print("handleSensorUpdate")
         # robotClient 쓰레드에서 호출되므로, 메인 쓰레드로 UI 업데이트를 전달합니다.
@@ -556,35 +569,35 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         self.label_keyup_normal.setVisible(False)
         self.label_keyup_push.setVisible(True)
         # 전진 명령
-        self.robotClient.send_drive_command(1.0, 0.0)
-    
+        self.activeRobot.send_drive_command(1.0, 0.0)
+
     @Slot()
     def keyUpReleased(self):
         self.label_keyup_normal.setVisible(True)
         self.label_keyup_push.setVisible(False)
         # 정지 명령
-        self.robotClient.send_drive_command(0.0, 0.0)
+        self.activeRobot.send_drive_command(0.0, 0.0)
         
     @Slot()
     def keyDownPressed(self):
         self.label_keydown_normal.setVisible(False)
         self.label_keydown_push.setVisible(True)
         # 후진 명령
-        self.robotClient.send_drive_command(-1.0, 0.0)
+        self.activeRobot.send_drive_command(-1.0, 0.0)
     
     @Slot()
     def keyDownReleased(self):
         self.label_keydown_normal.setVisible(True)
         self.label_keydown_push.setVisible(False)
         # 정지 명령
-        self.robotClient.send_drive_command(0.0, 0.0)
+        self.activeRobot.send_drive_command(0.0, 0.0)
         
     @Slot()
     def keyLeftPressed(self):
         self.label_keyleft_normal.setVisible(False)
         self.label_keyleft_push.setVisible(True)
         # 좌회전 명령
-        self.robotClient.send_drive_command(0.5, 0.5)
+        self.activeRobot.send_drive_command(0.5, 0.5)
         
     
     @Slot()
@@ -592,21 +605,21 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         self.label_keyleft_normal.setVisible(True)
         self.label_keyleft_push.setVisible(False)
         # 정지 명령
-        self.robotClient.send_drive_command(0.0, 0.0)
+        self.activeRobot.send_drive_command(0.0, 0.0)
         
     @Slot()
     def keyRightPressed(self):
         self.label_keyright_normal.setVisible(False)
         self.label_keyright_push.setVisible(True)
         # 우회전 명령
-        self.robotClient.send_drive_command(0.5, -0.5)
+        self.activeRobot.send_drive_command(0.5, -0.5)
         
     @Slot()
     def keyRightReleased(self):
         self.label_keyright_normal.setVisible(True)
         self.label_keyright_push.setVisible(False)
         # 정지 명령
-        self.robotClient.send_drive_command(0.0, 0.0)
+        self.activeRobot.send_drive_command(0.0, 0.0)
         
     @Slot()
     def onClickedBtnAutoDrv(self):

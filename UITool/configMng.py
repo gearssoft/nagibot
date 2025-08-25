@@ -50,7 +50,8 @@ class ConfigManager:
                 "port": 8085,
                 "enable": False
             },
-            "isSoundOn": False
+            "isSoundOn": False,
+            "fullscreen": True
         }
         
         # 설정 파일이 존재하면 불러오기
@@ -259,6 +260,23 @@ class ConfigManager:
             raise ValueError("차량 인덱스는 0에서 2 사이여야 합니다.")
         self.config["cars"][car_idx]["enable"] = bool(enable)
 
+    def is_fullscreen(self):
+        """
+        전체화면 설정 상태 반환
+        
+        Returns:
+            bool: 전체화면 설정 상태
+        """
+        return self.config.get("fullscreen", True)
+    def set_fullscreen(self, is_fullscreen):
+        """
+        전체화면 설정 상태 변경
+        
+        Args:
+            is_fullscreen (bool): 전체화면 설정 상태
+        """
+        self.config["fullscreen"] = bool(is_fullscreen)
+
     def save_config(self):
         """
         설정을 파일에 저장
@@ -307,6 +325,8 @@ class ConfigManager:
                         "ip": "localhost",
                         "port": 8085
                     }
+                if "fullscreen" in loaded_config:
+                    self.config["fullscreen"] = loaded_config["fullscreen"]
                     
             return True
         except Exception as e:

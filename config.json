@@ -1,10 +1,10 @@
 {
     "cars": [
         {
-            "ip": "192.168.1.100",
-            "port": 9090,
+            "ip": "localhost",
+            "port": 5000,
             "camUrl": "rtsp://ailab.miso.center:21054/test1",
-            "enable": false
+            "enable": true
         },
         {
             "ip": "192.168.1.101",
@@ -24,5 +24,6 @@
         "port": 21035,
         "enable": false
     },
-    "isSoundOn": false
+    "isSoundOn": false,
+    "fullscreen": false
 }
