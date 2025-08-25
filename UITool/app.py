@@ -3,6 +3,7 @@ from PySide6.QtCore import QRect, Qt
 from PySide6.QtWidgets import QApplication,QWidget,QStackedWidget,QMessageBox
 import startUpform, mainForm, setupForm
 
+from configMng import ConfigManager
 
 class MainForm(QWidget):
     def __init__(self):
@@ -10,7 +11,22 @@ class MainForm(QWidget):
         
         self.setGeometry(QRect(0, 0, 1920, 1080))
         self.setFixedSize(1920, 1080)
-        self.setWindowState(Qt.WindowFullScreen)
+
+        self.configMng = ConfigManager()
+        if self.configMng.load_config() == True:
+            print("ConfigManager: 설정 파일 로드 성공")
+            
+            print("ConfigManager: 차량 IP 목록:", [car['ip'] for car in self.configMng.config['cars']])
+            print("ConfigManager: 차량 포트 목록:", [car['port'] for car in self.configMng.config['cars']])
+            print("ConfigManager: 차량 카메라 URL 목록:", [car['camUrl'] for car in self.configMng.config['cars']])
+            print("ConfigManager: 이미지 감지 서버 IP:", self.configMng.config['imageDetectionServer']['ip'])
+            print("ConfigManager: 이미지 감지 서버 포트:", self.configMng.config['imageDetectionServer']['port'])
+
+            print("ConfigManager: 전체화면 모드:", self.configMng.is_fullscreen())
+
+
+        if self.configMng.is_fullscreen():
+            self.setWindowState(Qt.WindowFullScreen)
         
         #stackedWidget 만들고 
         self.stacked_widget = QStackedWidget(self)

@@ -30,6 +30,8 @@ class RobotClient:
         # 센서 데이터 저장용
         self.sensors = {}
         self.position = [0, 0, 0]
+        self.speed = 0
+        self.yaw = 0
         self.orientation = [1, 0, 0, 0]
         self.linear_velocity = [0, 0, 0]
         self.angular_velocity = [0, 0, 0]
@@ -37,6 +39,7 @@ class RobotClient:
         
         # 콜백 함수
         self.on_sensor_updated = None
+        self.on_drive_ack = None
         
     def connect(self):
         """서버에 연결"""
@@ -148,7 +151,7 @@ class RobotClient:
                 
     def process_packet(self, packet):
         """수신된 패킷 처리"""
-        # print(f"패킷 수신: {packet}")
+        print(f"패킷 수신: {packet}")
         
         # 센서 상태 패킷 처리
         if packet.content_type == ContentType.SENSOR_STATUS and packet.send_type == SendType.DATA:
@@ -162,17 +165,25 @@ class RobotClient:
                     # 위치 센서 (ID: 1)
                     if sensor.sensor_id == 1:
                         self.position[0] = sensor.temperature  # X 좌표
-                        
-                    # 속도 센서 (ID: 2)
                     elif sensor.sensor_id == 2:
-                        self.linear_velocity[0] = sensor.temperature  # 전진 속도
+                        self.speed = sensor.temperature  # 전진 속도
+                    elif sensor.sensor_id == 3:
+                        self.yaw = sensor.temperature  # 방향
+                    elif sensor.sensor_id == 4:
+                        self.position[1] = sensor.temperature  # Y 좌표
                         
                 self.last_update_time = time.time()
+
                 
             # 콜백 함수 호출
             if self.on_sensor_updated:
                 self.on_sensor_updated()
-                
+        elif packet.content_type == ContentType.DRIVE_CONTROL and packet.send_type == SendType.ACK:
+            print("드라이브 제어 ACK 수신")
+            if self.on_drive_ack:
+                self.on_drive_ack()
+
+
     def send_drive_command(self, speed, direction):
         """주행 제어 명령 전송"""
         if not self.connected or not self.socket:
@@ -218,6 +229,14 @@ class RobotClient:
                 'linear_velocity': self.linear_velocity.copy(),
                 'angular_velocity': self.angular_velocity.copy(),
                 'last_update_time': self.last_update_time
+            }
+    def get_drive_status(self):
+        """현재 주행 상태 반환"""
+        with self.lock:
+            return {
+                'speed': self.speed,
+                'yaw': self.yaw,
+                'position': self.position.copy()
             }
 
 # 테스트 코드
