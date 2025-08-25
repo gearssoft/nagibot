@@ -210,10 +210,14 @@ class CarSimulator:
                 
                 # 프레임 레이트 조절 (실시간 시뮬레이션을 위해)
                 time.sleep(max(0, self.dt - 0.001))
+
+        except Exception as e:
+            print(f"시뮬레이션 오류: {e}")
                 
         except KeyboardInterrupt:
             print("시뮬레이션 중단됨")
         finally:
+            print("시뮬레이터 종료 중... stop() 호출")
             self.stop()
     
     def render_loop(self):

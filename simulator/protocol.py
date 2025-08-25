@@ -170,6 +170,8 @@ class SensorStatus:
         status_str = "활성" if self.status == 1 else "비활성"
         return (f"센서 ID: {self.sensor_id}, 상태: {status_str}, "
                 f"온도: {self.temperature:.1f}°C, 배터리: {self.battery:.1f}%")
+    
+
 
 
 # 드라이브 제어 구조체 예시
