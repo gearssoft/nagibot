@@ -163,7 +163,20 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         
         self.label_keyright_normal.setVisible(True)
         self.label_keyright_push.setVisible(False)
-        
+
+        self.label_keyup_normal_2.setVisible(True)
+        self.label_keyup_push_2.setVisible(False)
+
+        self.label_keydown_normal_2.setVisible(True)
+        self.label_keydown_push_2.setVisible(False)
+
+        self.label_keyleft_normal_2.setVisible(True)
+        self.label_keyleft_push_2.setVisible(False)
+
+        self.label_keyright_normal_2.setVisible(True)
+        self.label_keyright_push_2.setVisible(False)
+
+
         
         # Connect the button pressed and released signals to show and hide the labels
         self.btnKeyUp.pressed.connect(self.keyUpPressed)
@@ -177,7 +190,17 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         
         self.btnKeyRight.pressed.connect(self.keyRightPressed)
         self.btnKeyRight.released.connect(self.keyRightReleased)
-        
+
+
+        self.btnKeyUp_2.pressed.connect(self.keyUpPressed_2)
+        self.btnKeyUp_2.released.connect(self.keyUpReleased_2)
+        self.btnKeyDown_2.pressed.connect(self.keyDownPressed_2)
+        self.btnKeyDown_2.released.connect(self.keyDownReleased_2)
+        self.btnKeyLeft_2.pressed.connect(self.keyLeftPressed_2)
+        self.btnKeyLeft_2.released.connect(self.keyLeftReleased_2)
+        self.btnKeyRight_2.pressed.connect(self.keyRightPressed_2)
+        self.btnKeyRight_2.released.connect(self.keyRightReleased_2)
+
         #비상정지버튼
         self.btnAbnormalStop.pressed.connect(self.btnAbnormalStopPressed)
         self.btnAbnormalStop.released.connect(self.btnAbnormalStopReleased)
@@ -191,47 +214,47 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         self.defaultBackgroundColor = "#ffffff"
         self.defaultColor = "#000000"
         
-        change_background_color(self.btnAutoDrv, self.checkBackgroundColor)
-        change_text_color(self.btnAutoDrv, self.checkColor)
+        #change_background_color(self.btnAutoDrv, self.checkBackgroundColor)
+        #change_text_color(self.btnAutoDrv, self.checkColor)
         
-        change_background_color(self.btnRemoteDrv, self.defaultBackgroundColor)
-        change_text_color(self.btnRemoteDrv, self.defaultColor)
+        #change_background_color(self.btnRemoteDrv, self.defaultBackgroundColor)
+        #change_text_color(self.btnRemoteDrv, self.defaultColor)
         
-        self.btnAutoDrv.clicked.connect(self.onClickedBtnAutoDrv)
-        self.btnRemoteDrv.clicked.connect(self.onClickedBtnRemoteDrv)
+        #self.btnAutoDrv.clicked.connect(self.onClickedBtnAutoDrv)
+        #self.btnRemoteDrv.clicked.connect(self.onClickedBtnRemoteDrv)
         
-        change_background_color(self.btnOpticalMode, self.checkBackgroundColor)
-        change_text_color(self.btnOpticalMode, self.checkColor)
+        #change_background_color(self.btnOpticalMode, self.checkBackgroundColor)
+        #change_text_color(self.btnOpticalMode, self.checkColor)
         
-        change_background_color(self.btnIRMode, self.defaultBackgroundColor)
-        change_text_color(self.btnIRMode, self.defaultColor)
+        #change_background_color(self.btnIRMode, self.defaultBackgroundColor)
+        #change_text_color(self.btnIRMode, self.defaultColor)
         
-        self.btnOpticalMode.clicked.connect(self.onClickedBtnOpticalMode)
-        self.btnIRMode.clicked.connect(self.onClickedBtnIRMode)
+        #self.btnOpticalMode.clicked.connect(self.onClickedBtnOpticalMode)
+        #self.btnIRMode.clicked.connect(self.onClickedBtnIRMode)
         
-        change_background_color(self.btnScaleUp, self.checkBackgroundColor)
-        change_text_color(self.btnScaleUp, self.checkColor)
+        #change_background_color(self.btnScaleUp, self.checkBackgroundColor)
+        #change_text_color(self.btnScaleUp, self.checkColor)
         
-        change_background_color(self.btnScaleDown, self.defaultBackgroundColor)
-        change_text_color(self.btnScaleDown, self.defaultColor)
+        #change_background_color(self.btnScaleDown, self.defaultBackgroundColor)
+        #change_text_color(self.btnScaleDown, self.defaultColor)
         
-        self.btnScaleUp.clicked.connect(self.onClickedBtnScaleUp)
-        self.btnScaleDown.clicked.connect(self.onClickedBtnScaleDown)
+        #self.btnScaleUp.clicked.connect(self.onClickedBtnScaleUp)
+        #self.btnScaleDown.clicked.connect(self.onClickedBtnScaleDown)
         
         
-        change_background_color(self.labelUnLock, self.checkBackgroundColor)
-        change_text_color(self.labelUnLock, self.checkColor)
+        #change_background_color(self.labelUnLock, self.checkBackgroundColor)
+        #change_text_color(self.labelUnLock, self.checkColor)
         
-        change_background_color(self.labelLock, self.defaultBackgroundColor)
-        change_text_color(self.labelLock, self.defaultColor)
+        #change_background_color(self.labelLock, self.defaultBackgroundColor)
+        #change_text_color(self.labelLock, self.defaultColor)
         
-        self.btnUnLock.clicked.connect(self.onClickedBtnUnLock)
-        self.btnLock.clicked.connect(self.onClickedBtnLock)
+        #self.btnUnLock.clicked.connect(self.onClickedBtnUnLock)
+        #self.btnLock.clicked.connect(self.onClickedBtnLock)
         
         # zoom in/out button
-        self.btnZoomInMainScreen.clicked.connect(self.onClickedBtnZoomInMainScreen)
-        self.btnZoomInBottomScreen.clicked.connect(self.onClickedBtnZoomInBottomScreen)
-        self.btnZoomInBottomRightScreen.clicked.connect(self.onClickedBtnZoomInBottomRightScreen)
+        #self.btnZoomInMainScreen.clicked.connect(self.onClickedBtnZoomInMainScreen)
+        #self.btnZoomInBottomScreen.clicked.connect(self.onClickedBtnZoomInBottomScreen)
+        #self.btnZoomInBottomRightScreen.clicked.connect(self.onClickedBtnZoomInBottomRightScreen)
         
         self.systemBeginTime = QDateTime.currentDateTime()
 
@@ -275,9 +298,9 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         # self.statusUpdateThread.start()
 
         # 상태 업데이트 타이머 설정
-        self.status_timer = QTimer(self)
-        self.status_timer.timeout.connect(self.updateStatus)
-        self.status_timer.start(10000)  # 10초마다
+        #self.status_timer = QTimer(self)
+        #self.status_timer.timeout.connect(self.updateStatus)
+        #self.status_timer.start(10000)  # 10초마다
 
         # ────────────────────────────────────────────────────────
         
@@ -292,14 +315,14 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
 
 
         # subCamera Screen
-        self.labelSubCamera.setText(" 영상 준비 중 ")
+        #self.labelSubCamera.setText(" 영상 준비 중 ")
         #부모위젯의 크게에 맞춤
-        match_widget_to_parent(self.labelSubCamera)
-        self.labelSubCamera.setAlignment(Qt.AlignCenter)
+        #match_widget_to_parent(self.labelSubCamera)
+        #self.labelSubCamera.setAlignment(Qt.AlignCenter)
         
-        self.subCameraThread = VideoThread(self.rtsp_url_subScreen)
-        self.subCameraThread.change_pixmap_signal.connect(self.update_image_SubCamera)
-        self.subCameraThread.start()
+        #self.subCameraThread = VideoThread(self.rtsp_url_subScreen)
+        #self.subCameraThread.change_pixmap_signal.connect(self.update_image_SubCamera)
+        #self.subCameraThread.start()
         
         #지도화면
         # 대한민국 부안 앞바다 근처의 위도, 경도 및 줌 레벨 설정
@@ -327,7 +350,7 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         # configMng에서 첫 번째 차량(0번 인덱스)의 IP와 포트를 가져와 사용
 
 
-        self.edLogText.appendPlainText("로봇 클라이언트 초기화 및 연결 시작")
+        #self.edLogText.appendPlainText("로봇 클라이언트 초기화 및 연결 시작")
 
         cars_units = [
             { "ip": self.configMng.get_car_ip(0), "port": self.configMng.get_car_port(0), "camUrl": self.configMng.get_car_cam_url(0), "enable": self.configMng.get_unit_enable(0) },
@@ -360,14 +383,14 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
                     print(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
                     self.edLogText.appendPlainText(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
 
-        self.edLogText.appendPlainText("로봇 클라이언트 초기화 및 연결 완료")
+        #self.edLogText.appendPlainText("로봇 클라이언트 초기화 및 연결 완료")
         
     @Slot(object)
     def onDriveAck(self, robotClient):
         # print("onDriveAck from", robotClient.id)
         _drive_status = robotClient.get_drive_status()
         print("Drive Status:", _drive_status)
-        self.edLogText.appendPlainText(f"Drive Ack - Speed: {_drive_status['speed']:.2f} m/s, Yaw: {_drive_status['yaw']:.2f} rad/s, Position: {_drive_status['position']}")
+        #self.edLogText.appendPlainText(f"Drive Ack - Speed: {_drive_status['speed']:.2f} m/s, Yaw: {_drive_status['yaw']:.2f} rad/s, Position: {_drive_status['position']}")
 
     @Slot(object)
     def handleSensorUpdate(self,robotClient):
@@ -598,7 +621,55 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         self.label_keyright_push.setVisible(False)
         # 정지 명령
         self.activeRobot.send_drive_command(0.0, 0.0)
-        
+
+    @Slot()
+    def keyUpPressed_2(self):
+        self.label_keyup_normal_2.setVisible(False)
+        self.label_keyup_push_2.setVisible(True)
+        # todo
+    
+    @Slot()
+    def keyUpReleased_2(self):
+        self.label_keyup_normal_2.setVisible(True)
+        self.label_keyup_push_2.setVisible(False)
+        # todo
+
+    @Slot()
+    def keyDownPressed_2(self):
+        self.label_keydown_normal_2.setVisible(False)
+        self.label_keydown_push_2.setVisible(True)
+        # todo
+    
+    @Slot()
+    def keyDownReleased_2(self):
+        self.label_keydown_normal_2.setVisible(True)
+        self.label_keydown_push_2.setVisible(False)
+        # todo
+
+    @Slot()
+    def keyLeftPressed_2(self):
+        self.label_keyleft_normal_2.setVisible(False)
+        self.label_keyleft_push_2.setVisible(True)
+        # todo
+
+    @Slot()
+    def keyLeftReleased_2(self):
+        self.label_keyleft_normal_2.setVisible(True)
+        self.label_keyleft_push_2.setVisible(False)
+        # todo
+
+    @Slot()
+    def keyRightPressed_2(self):
+        self.label_keyright_normal_2.setVisible(False)
+        self.label_keyright_push_2.setVisible(True)
+        # todo
+
+    @Slot()
+    def keyRightReleased_2(self):
+        self.label_keyright_normal_2.setVisible(True)
+        self.label_keyright_push_2.setVisible(False)
+        # todo
+
     @Slot()
     def onClickedBtnAutoDrv(self):
         change_background_color(self.btnAutoDrv, self.checkBackgroundColor)
