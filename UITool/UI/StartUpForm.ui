@@ -42,7 +42,7 @@
       </font>
      </property>
      <property name="text">
-      <string>지휘 통제소 시스템 매니져</string>
+      <string>운용통제시스템</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignCenter</set>
