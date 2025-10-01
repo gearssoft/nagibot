@@ -1,21 +1,21 @@
 {
     "cars": [
         {
-            "ip": "localhost",
-            "port": 5000,
+            "ip": "",
+            "port": 0,
             "camUrl": "rtsp://ailab.miso.center:21054/test1",
             "enable": true
         },
         {
-            "ip": "192.168.1.101",
-            "port": 9091,
+            "ip": "",
+            "port": 0,
             "camUrl": "rtsp://ailab.miso.center:21054/test2",
             "enable": false
         },
         {
             "ip": "",
-            "port": 5002,
-            "camUrl": "\n\nrtsp://210.99.70.120:1935/live/cctv003.stream\n",
+            "port": 0,
+            "camUrl": "rtsp://210.99.70.120:1935/live/cctv003.stream",
             "enable": false
         }
     ],

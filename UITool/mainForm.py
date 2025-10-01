@@ -104,8 +104,9 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
     
     def __init__(self, parent=None):
         super().__init__(parent)
+
         # load font
-        QFontDatabase.addApplicationFont(":/font/font/DungGeunMo.ttf")
+        # QFontDatabase.addApplicationFont(":/font/font/DungGeunMo.ttf")
         
         self.configMng = ConfigManager()
         if self.configMng.load_config() == True:
@@ -269,11 +270,6 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
 
         # ────────────────────────────────────────────────────────
 
-        # 상태 업데이트 스레드 생성 및 시작
-        # self.statusUpdateThread = StatusUpdateThread()
-        # self.statusUpdateThread.statusUpdateSignal.connect(self.updateStatus)
-        # self.statusUpdateThread.start()
-
         # 상태 업데이트 타이머 설정
         self.status_timer = QTimer(self)
         self.status_timer.timeout.connect(self.updateStatus)
@@ -326,7 +322,6 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         # 로봇 클라이언트 초기화 및 연결
         # configMng에서 첫 번째 차량(0번 인덱스)의 IP와 포트를 가져와 사용
 
-
         self.edLogText.appendPlainText("로봇 클라이언트 초기화 및 연결 시작")
 
         cars_units = [
@@ -343,22 +338,27 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
             if car['enable']:
                 robot_ip = car['ip']
                 robot_port = car['port']
-                print(f"로봇 클라이언트 연결시도 (IP: {robot_ip}, 포트: {robot_port})")
 
-                _client = RobotClient(host=robot_ip, port=robot_port)
-                if _client.connect():
-                    print(f"로봇 클라이언트 연결 성공 (IP: {robot_ip}, 포트: {robot_port})")
-                    # _client.on_sensor_updated = self.handleSensorUpdate
-                    _client.on_sensor_updated = (lambda rc=_client: self.handleSensorUpdate(rc))
-                    _client.on_drive_ack = (lambda rc=_client: self.onDriveAck(rc))
+                if robot_port is not 0 and robot_ip is not None:
+                    print(f"로봇 클라이언트 연결시도 (IP: {robot_ip}, 포트: {robot_port})")
+                    _client = RobotClient(host=robot_ip, port=robot_port)
+                    if _client.connect():
+                        print(f"로봇 클라이언트 연결 성공 (IP: {robot_ip}, 포트: {robot_port})")
+                        # _client.on_sensor_updated = self.handleSensorUpdate
+                        _client.on_sensor_updated = (lambda rc=_client: self.handleSensorUpdate(rc))
+                        _client.on_drive_ack = (lambda rc=_client: self.onDriveAck(rc))
 
-                    self.robotClients.append(_client)
+                        self.robotClients.append(_client)
 
-                    if self.activeRobot is None:
-                        self.activeRobot = _client
+                        if self.activeRobot is None:
+                            self.activeRobot = _client
+                    else:
+                        print(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
+                        self.edLogText.appendPlainText(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
                 else:
-                    print(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
-                    self.edLogText.appendPlainText(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
+                    print(f"로봇 {idx+1} 비활성 상태 port 0 또는 IP 없음")
+                    self.edLogText.appendPlainText(f"로봇 {idx+1} 비활성 상태 port 0 또는 IP 없음")
+                break;
 
         self.edLogText.appendPlainText("로봇 클라이언트 초기화 및 연결 완료")
         

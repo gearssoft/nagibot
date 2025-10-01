@@ -277,18 +277,8 @@
     </rect>
    </property>
    <property name="title">
-    <string>1호기</string>
+    <string>1 호기</string>
    </property>
-   <widget class="QTextEdit" name="textEditCar1Camurl">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>110</y>
-      <width>381</width>
-      <height>31</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
@@ -302,37 +292,17 @@
      <string>ip</string>
     </property>
    </widget>
-   <widget class="QTextEdit" name="textEditCar1port">
-    <property name="geometry">
-     <rect>
-      <x>240</x>
-      <y>40</y>
-      <width>111</width>
-      <height>31</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>90</y>
+      <y>70</y>
       <width>71</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
      <string>cam url</string>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="textEditCar1ip">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>40</y>
-      <width>221</width>
-      <height>31</height>
-     </rect>
     </property>
    </widget>
    <widget class="QLabel" name="label_4">
@@ -348,17 +318,83 @@
      <string>port</string>
     </property>
    </widget>
-   <widget class="QCheckBox" name="cbUnitEnable_1">
+   <widget class="QCheckBox" name="cbUnit_1_Enable">
     <property name="geometry">
      <rect>
       <x>370</x>
-      <y>50</y>
+      <y>20</y>
       <width>79</width>
       <height>20</height>
      </rect>
     </property>
     <property name="text">
      <string>Enable</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="textEditCar1ip">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>41</y>
+      <width>221</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="textEditCar1port">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>40</y>
+      <width>113</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="textEditCar1Camurl_rgb">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>90</y>
+      <width>391</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="textEditCar1Camurl_IR">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>120</y>
+      <width>391</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>100</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>RGB</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_14">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>120</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>IR</string>
     </property>
    </widget>
   </widget>
@@ -372,113 +408,8 @@
     </rect>
    </property>
    <property name="title">
-    <string>2호기</string>
+    <string>2 호기</string>
    </property>
-   <widget class="QTextEdit" name="textEditCar2Camurl">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>100</y>
-      <width>381</width>
-      <height>31</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_8">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>20</y>
-      <width>31</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>ip</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_9">
-    <property name="geometry">
-     <rect>
-      <x>240</x>
-      <y>20</y>
-      <width>31</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>port</string>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="textEditCar2port">
-    <property name="geometry">
-     <rect>
-      <x>240</x>
-      <y>40</y>
-      <width>111</width>
-      <height>31</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="textEditCar2ip">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>40</y>
-      <width>221</width>
-      <height>31</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_6">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>80</y>
-      <width>71</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>cam url</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="cbUnitEnable_2">
-    <property name="geometry">
-     <rect>
-      <x>370</x>
-      <y>50</y>
-      <width>79</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Enable</string>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QGroupBox" name="Unit_3">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>620</y>
-     <width>461</width>
-     <height>150</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>3호기</string>
-   </property>
-   <widget class="QTextEdit" name="textEditCar3Camurl">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>100</y>
-      <width>381</width>
-      <height>31</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_12">
     <property name="geometry">
      <rect>
@@ -492,27 +423,20 @@
      <string>ip</string>
     </property>
    </widget>
-   <widget class="QTextEdit" name="textEditCar3port">
-    <property name="geometry">
-     <rect>
-      <x>240</x>
-      <y>40</y>
-      <width>111</width>
-      <height>31</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="textEditCar3ip">
+   <widget class="QLabel" name="label_13">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>40</y>
-      <width>221</width>
-      <height>31</height>
+      <y>70</y>
+      <width>71</width>
+      <height>16</height>
      </rect>
     </property>
+    <property name="text">
+     <string>cam url</string>
+    </property>
    </widget>
-   <widget class="QLabel" name="label_13">
+   <widget class="QLabel" name="label_16">
     <property name="geometry">
      <rect>
       <x>240</x>
@@ -525,11 +449,116 @@
      <string>port</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_10">
+   <widget class="QCheckBox" name="cbUnit_2_Enable">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>20</y>
+      <width>79</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Enable</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="textEditCar2ip">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>80</y>
+      <y>41</y>
+      <width>221</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="textEditCar2port">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>40</y>
+      <width>113</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="textEditCar2Camurl_rgb">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>90</y>
+      <width>391</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="textEditCar2Camurl_IR">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>120</y>
+      <width>391</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_17">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>100</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>RGB</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_18">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>120</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>IR</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="Unit_3">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>630</y>
+     <width>461</width>
+     <height>150</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>3 호기</string>
+   </property>
+   <widget class="QLabel" name="label_19">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ip</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_20">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>70</y>
       <width>71</width>
       <height>16</height>
      </rect>
@@ -538,17 +567,96 @@
      <string>cam url</string>
     </property>
    </widget>
-   <widget class="QCheckBox" name="cbUnitEnable_3">
+   <widget class="QLabel" name="label_21">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>20</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>port</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="cbUnit_3_Enable">
     <property name="geometry">
      <rect>
       <x>370</x>
-      <y>50</y>
+      <y>20</y>
       <width>79</width>
       <height>20</height>
      </rect>
     </property>
     <property name="text">
      <string>Enable</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="textEditCar3ip">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>41</y>
+      <width>221</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="textEditCar3port">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>40</y>
+      <width>113</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="textEditCar3Camurl_rgb">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>90</y>
+      <width>391</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="textEditCar3Camurl_IR">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>120</y>
+      <width>391</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_22">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>100</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>RGB</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_23">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>120</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>IR</string>
     </property>
    </widget>
   </widget>

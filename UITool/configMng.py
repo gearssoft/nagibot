@@ -134,6 +134,32 @@ class ConfigManager:
         if car_idx < 0 or car_idx >= 3:
             raise ValueError("차량 인덱스는 0에서 2 사이여야 합니다.")
         self.config["cars"][car_idx]["camUrl"] = url
+
+    def get_car_cam_url_ir(self, car_idx=0):
+        """
+        차량 적외선 카메라 URL 반환
+        
+        Args:
+            car_idx (int): 차량 인덱스 (0-2)
+            
+        Returns:
+            str: 차량 적외선 카메라 URL
+        """
+        if car_idx < 0 or car_idx >= 3:
+            raise ValueError("차량 인덱스는 0에서 2 사이여야 합니다.")
+        return self.config["cars"][car_idx].get("camUrl_ir", "")
+    
+    def set_car_cam_url_ir(self, url, car_idx=0):
+        """
+        차량 적외선 카메라 URL 설정
+        
+        Args:
+            url (str): 설정할 적외선 카메라 URL
+            car_idx (int): 차량 인덱스 (0-2)
+        """
+        if car_idx < 0 or car_idx >= 3:
+            raise ValueError("차량 인덱스는 0에서 2 사이여야 합니다.")
+        self.config["cars"][car_idx]["camUrl_ir"] = url
     
     def is_sound_on(self):
         """

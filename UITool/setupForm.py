@@ -21,26 +21,26 @@ class setupForm(QWidget,UI.setupForm.Ui_SetupForm):
         self.configMng.load_config()
         
         self.textEditCar1ip.setText(self.configMng.get_car_ip(0))
-        self.textEditCar1port.setText(str(self.configMng.get_car_port(0)))
-        self.textEditCar1Camurl.setText(self.configMng.get_car_cam_url(0))
-        self.cbUnitEnable_1.setChecked(self.configMng.get_unit_enable(0))
+        self.textEditCar1port.setText(str(self.configMng.get_car_port(0)))        
+        self.textEditCar1Camurl_rgb.setText(self.configMng.get_car_cam_url(0))
+        self.textEditCar1Camurl_IR.setText(self.configMng.get_car_cam_url_ir(0))
+        self.cbUnit_1_Enable.setChecked(self.configMng.get_unit_enable(0))
         
         self.textEditCar2ip.setText(self.configMng.get_car_ip(1))
         self.textEditCar2port.setText(str(self.configMng.get_car_port(1)))
-        self.textEditCar2Camurl.setText(self.configMng.get_car_cam_url(1))
-        self.cbUnitEnable_2.setChecked(self.configMng.get_unit_enable(1))
+        self.textEditCar2Camurl_rgb.setText(self.configMng.get_car_cam_url(1))
+        self.textEditCar2Camurl_IR.setText(self.configMng.get_car_cam_url_ir(1))
+        self.cbUnit_2_Enable.setChecked(self.configMng.get_unit_enable(1))
 
         self.textEditCar3ip.setText(self.configMng.get_car_ip(2))
         self.textEditCar3port.setText(str(self.configMng.get_car_port(2)))
-        self.textEditCar3Camurl.setText(self.configMng.get_car_cam_url(2))
-        self.cbUnitEnable_3.setChecked(self.configMng.get_unit_enable(2))
+        self.textEditCar3Camurl_rgb.setText(self.configMng.get_car_cam_url(2))
+        self.textEditCar3Camurl_IR.setText(self.configMng.get_car_cam_url_ir(2))    
+        self.cbUnit_3_Enable.setChecked(self.configMng.get_unit_enable(2))
 
         self.textEdit_detection_server_IP.setText(self.configMng.get_detection_server_ip())
         self.textEdit_detection_server_port.setText(str(self.configMng.get_detection_server_port()))
         self.cbEnableImgDetection.setChecked(self.configMng.get_detection_server_enable())
-
-
-        
         
         
         self.btnBack.clicked.connect(self.onClick_btnBack)
