@@ -327,6 +327,7 @@ class ConfigManager:
         """
         if not os.path.exists(self.config_file):
             # 파일이 없으면 기본 설정 사용
+            self.save_config()
             return False
         
         try:

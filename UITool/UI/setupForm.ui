@@ -207,26 +207,6 @@
    <property name="title">
     <string>Image detection Server</string>
    </property>
-   <widget class="QTextEdit" name="textEdit_detection_server_IP">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>40</y>
-      <width>220</width>
-      <height>32</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="textEdit_detection_server_port">
-    <property name="geometry">
-     <rect>
-      <x>240</x>
-      <y>40</y>
-      <width>96</width>
-      <height>32</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
@@ -264,6 +244,26 @@
     </property>
     <property name="text">
      <string>Enable</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_detecter_ip">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>50</y>
+      <width>191</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_detecter_port">
+    <property name="geometry">
+     <rect>
+      <x>222</x>
+      <y>50</y>
+      <width>91</width>
+      <height>22</height>
+     </rect>
     </property>
    </widget>
   </widget>

@@ -1,0 +1,32 @@
+{
+    "cars": [
+        {
+            "ip": "",
+            "port": 0,
+            "camUrl": "rtsp://192.168.10.81:3000/eo",
+            "enable": true,
+            "camUrl_ir": "rtsp://192.168.10.81:3000/ir"
+        },
+        {
+            "ip": "",
+            "port": 0,
+            "camUrl": "",
+            "enable": false,
+            "camUrl_ir": "rtsp://192.168.10.81:3000/ir"
+        },
+        {
+            "ip": "",
+            "port": 0,
+            "camUrl": "",
+            "enable": false,
+            "camUrl_ir": ""
+        }
+    ],
+    "imageDetectionServer": {
+        "ip": "localhost",
+        "port": 8085,
+        "enable": false
+    },
+    "isSoundOn": false,
+    "fullscreen": true
+}

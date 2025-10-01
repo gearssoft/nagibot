@@ -38,8 +38,8 @@ class setupForm(QWidget,UI.setupForm.Ui_SetupForm):
         self.textEditCar3Camurl_IR.setText(self.configMng.get_car_cam_url_ir(2))    
         self.cbUnit_3_Enable.setChecked(self.configMng.get_unit_enable(2))
 
-        self.textEdit_detection_server_IP.setText(self.configMng.get_detection_server_ip())
-        self.textEdit_detection_server_port.setText(str(self.configMng.get_detection_server_port()))
+        self.lineEdit_detecter_ip.setText(self.configMng.get_detection_server_ip())
+        self.lineEdit_detecter_port.setText(str(self.configMng.get_detection_server_port()))
         self.cbEnableImgDetection.setChecked(self.configMng.get_detection_server_enable())
         
         
@@ -59,29 +59,30 @@ class setupForm(QWidget,UI.setupForm.Ui_SetupForm):
     def onClick_btnSaveSetup(self):
         
         print("onClick_btnSaveSetup")
-        car1ip = self.textEditCar1ip.toPlainText()
-        car1port = self.textEditCar1port.toPlainText()
-        carCamurl = self.textEditCar1Camurl.toPlainText()
         
-        self.configMng.set_car_ip(car1ip)
-        self.configMng.set_car_port(car1port)
-        self.configMng.set_car_cam_url(carCamurl)
+        self.configMng.set_car_ip(self.textEditCar1ip.text(),car_idx=0)
+        self.configMng.set_car_port(self.textEditCar1port.text(),car_idx=0)
+        self.configMng.set_car_cam_url(self.textEditCar1Camurl_rgb.text(),car_idx=0)
+        self.configMng.set_car_cam_url_ir(self.textEditCar1Camurl_IR.text(),car_idx=0)
         
-        self.configMng.set_car_ip(self.textEditCar2ip.toPlainText(),1)
-        self.configMng.set_car_port(self.textEditCar2port.toPlainText(),1)
-        self.configMng.set_car_cam_url(self.textEditCar2Camurl.toPlainText(),1)
+        self.configMng.set_car_ip(self.textEditCar2ip.text(),1)
+        self.configMng.set_car_port(self.textEditCar2port.text(),1)
+        self.configMng.set_car_cam_url(self.textEditCar2Camurl_rgb.text(),1)
+        self.configMng.set_car_cam_url_ir(self.textEditCar2Camurl_IR.text(),1)
         
-        self.configMng.set_car_ip(self.textEditCar3ip.toPlainText(),2)
-        self.configMng.set_car_port(self.textEditCar3port.toPlainText(),2)
-        self.configMng.set_car_cam_url(self.textEditCar3Camurl.toPlainText(),2)
+        self.configMng.set_car_ip(self.textEditCar3ip.text(),2)
+        self.configMng.set_car_port(self.textEditCar3port.text(),2)
+        self.configMng.set_car_cam_url(self.textEditCar3Camurl_rgb.text(),2)
+        self.configMng.set_car_cam_url_ir(self.textEditCar3Camurl_IR.text(),2)
+
         
-        self.configMng.set_detection_server_ip(self.textEdit_detection_server_IP.toPlainText())
-        self.configMng.set_detection_server_port(self.textEdit_detection_server_port.toPlainText())
+        self.configMng.set_detection_server_ip(self.lineEdit_detecter_ip.text())
+        self.configMng.set_detection_server_port(self.lineEdit_detecter_port.text())
         self.configMng.set_detection_server_enable(self.cbEnableImgDetection.isChecked())
 
-        self.configMng.set_unit_enable(self.cbUnitEnable_1.isChecked(), 0)
-        self.configMng.set_unit_enable(self.cbUnitEnable_2.isChecked(), 1)
-        self.configMng.set_unit_enable(self.cbUnitEnable_3.isChecked(), 2)
+        self.configMng.set_unit_enable(self.cbUnit_1_Enable.isChecked(), 0)
+        self.configMng.set_unit_enable(self.cbUnit_2_Enable.isChecked(), 1)
+        self.configMng.set_unit_enable(self.cbUnit_3_Enable.isChecked(), 2)
         
         # 설정 파일 저장
 
