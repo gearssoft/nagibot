@@ -22,6 +22,7 @@
             "camUrl_ir": ""
         }
     ],
+    "currentSelectUnit": 1,
     "imageDetectionServer": {
         "ip": "localhost",
         "port": 8085,

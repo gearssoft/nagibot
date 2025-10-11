@@ -45,6 +45,7 @@ class ConfigManager:
                     "enable": False
                 }
             ],
+            "currentSelectUnit" : 1,
             "imageDetectionServer" : {
                 "ip": "localhost",
                 "port": 8085,
@@ -56,6 +57,15 @@ class ConfigManager:
         
         # 설정 파일이 존재하면 불러오기
         self.load_config()
+
+    def get_current_select_unit(self) :
+        if self.config['currentSelectUnit'] is not None :
+            return  self.config['currentSelectUnit']
+        else :
+            return 0
+    
+    def set_current_select_unit(self,index) :
+        self.config['currentSelectUnit'] = index
     
     def get_car_ip(self, car_idx=0):
         """
@@ -354,6 +364,12 @@ class ConfigManager:
                     }
                 if "fullscreen" in loaded_config:
                     self.config["fullscreen"] = loaded_config["fullscreen"]
+                
+                if "currentSelectUnit" in loaded_config:
+                    self.config["currentSelectUnit"] = loaded_config["currentSelectUnit"]
+                else :
+                    self.config["currentSelectUnit"] = 0
+                    
                     
             return True
         except Exception as e:

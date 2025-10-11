@@ -45,6 +45,8 @@ class setupForm(QWidget,UI.setupForm.Ui_SetupForm):
         
         self.btnBack.clicked.connect(self.onClick_btnBack)
         self.pushButton_saveSetup.clicked.connect(self.onClick_btnSaveSetup)
+
+        self.lineEditSelectUnitIndex.setText( str( self.configMng.get_current_select_unit()) )
         
     def onClick_btnBack(self):
         print("onClick_btnBack")
@@ -83,10 +85,10 @@ class setupForm(QWidget,UI.setupForm.Ui_SetupForm):
         self.configMng.set_unit_enable(self.cbUnit_1_Enable.isChecked(), 0)
         self.configMng.set_unit_enable(self.cbUnit_2_Enable.isChecked(), 1)
         self.configMng.set_unit_enable(self.cbUnit_3_Enable.isChecked(), 2)
+
+        self.configMng.set_current_select_unit(int(self.lineEditSelectUnitIndex.text()))
         
         # 설정 파일 저장
-
-        
         self.configMng.save_config()
         
         print("설정 저장 완료")
