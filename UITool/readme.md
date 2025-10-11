@@ -34,7 +34,6 @@ pip install pyinstaller
 pyinstaller --onefile --windowed app.py
 pyinstaller --onefile --windowed --icon=favicon.ico app.py
 
-
 ```
 
 위 명령어를 사용하여 윈도우용 실행 파일을 만들 수 있습니다. `--onefile` 옵션은 단일 실행 파일을 생성하고, `--windowed` 옵션은 콘솔 창 없이 GUI 애플리케이션을 실행하도록 합니다.
