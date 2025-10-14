@@ -22,6 +22,8 @@ class MainForm(QWidget):
             print("ConfigManager: 이미지 감지 서버 IP:", self.configMng.config['imageDetectionServer']['ip'])
             print("ConfigManager: 이미지 감지 서버 포트:", self.configMng.config['imageDetectionServer']['port'])
 
+            print("ConfigManager: 현재 선택된 차량 인덱스:", self.configMng.get_current_select_unit())
+
             print("ConfigManager: 전체화면 모드:", self.configMng.is_fullscreen())
 
 

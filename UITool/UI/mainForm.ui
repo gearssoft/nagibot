@@ -305,6 +305,9 @@ background-color: transparent;
        <family>Arial</family>
       </font>
      </property>
+     <property name="frameShape">
+      <enum>QFrame::Shape::NoFrame</enum>
+     </property>
      <property name="text">
       <string>현재시간</string>
      </property>
@@ -761,11 +764,14 @@ margin : 4px;</string>
    <widget class="QLabel" name="labelSubCamera">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>20</y>
-      <width>161</width>
-      <height>111</height>
+      <x>10</x>
+      <y>10</y>
+      <width>541</width>
+      <height>51</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border : none</string>
     </property>
     <property name="text">
      <string>영상을 준비중입니다.</string>
@@ -840,11 +846,14 @@ margin : 4px;</string>
    <widget class="QLabel" name="labelBottomRightScreen">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>40</y>
-      <width>181</width>
-      <height>91</height>
+      <x>10</x>
+      <y>10</y>
+      <width>541</width>
+      <height>51</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border : none;</string>
     </property>
     <property name="text">
      <string>지도 데이터를 불러오는중</string>

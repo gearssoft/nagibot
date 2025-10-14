@@ -663,10 +663,10 @@
   <widget class="QFrame" name="frameUnitSlect">
    <property name="geometry">
     <rect>
-     <x>690</x>
-     <y>550</y>
-     <width>301</width>
-     <height>91</height>
+     <x>710</x>
+     <y>520</y>
+     <width>231</width>
+     <height>131</height>
     </rect>
    </property>
    <property name="frameShape">
@@ -678,21 +678,21 @@
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>50</y>
+      <x>10</x>
+      <y>40</y>
       <width>121</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>Current Unit Index :</string>
+     <string>Main Unit Index :</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEditSelectUnitIndex">
     <property name="geometry">
      <rect>
       <x>140</x>
-      <y>40</y>
+      <y>30</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -704,6 +704,48 @@
      <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
+   <widget class="QLineEdit" name="lineEditSelectUnitIndex_Sub">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>80</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>2</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>90</y>
+      <width>121</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Sub Unit Index :</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_fullScreen">
+   <property name="geometry">
+    <rect>
+     <x>720</x>
+     <y>740</y>
+     <width>79</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>FullScreen</string>
+   </property>
   </widget>
  </widget>
  <resources/>

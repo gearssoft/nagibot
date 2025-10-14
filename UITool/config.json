@@ -4,7 +4,7 @@
             "ip": "",
             "port": 0,
             "camUrl": "rtsp://192.168.10.81:3000/eo",
-            "enable": true,
+            "enable": false,
             "camUrl_ir": "rtsp://192.168.10.81:3000/ir"
         },
         {
@@ -29,5 +29,6 @@
         "enable": false
     },
     "isSoundOn": false,
-    "fullscreen": true
+    "fullscreen": false,
+    "currentSelectUnit_Sub": 2
 }

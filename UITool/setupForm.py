@@ -40,13 +40,15 @@ class setupForm(QWidget,UI.setupForm.Ui_SetupForm):
 
         self.lineEdit_detecter_ip.setText(self.configMng.get_detection_server_ip())
         self.lineEdit_detecter_port.setText(str(self.configMng.get_detection_server_port()))
-        self.cbEnableImgDetection.setChecked(self.configMng.get_detection_server_enable())
-        
+        self.cbEnableImgDetection.setChecked(self.configMng.get_detection_server_enable())        
         
         self.btnBack.clicked.connect(self.onClick_btnBack)
         self.pushButton_saveSetup.clicked.connect(self.onClick_btnSaveSetup)
 
         self.lineEditSelectUnitIndex.setText( str( self.configMng.get_current_select_unit()) )
+        self.lineEditSelectUnitIndex_Sub.setText( str( self.configMng.get_current_select_unit_sub()) )
+
+        self.checkBox_fullScreen.setChecked(self.configMng.is_fullscreen())
         
     def onClick_btnBack(self):
         print("onClick_btnBack")
@@ -87,6 +89,9 @@ class setupForm(QWidget,UI.setupForm.Ui_SetupForm):
         self.configMng.set_unit_enable(self.cbUnit_3_Enable.isChecked(), 2)
 
         self.configMng.set_current_select_unit(int(self.lineEditSelectUnitIndex.text()))
+        self.configMng.set_current_select_unit_sub(int(self.lineEditSelectUnitIndex_Sub.text()))
+
+        self.configMng.set_fullscreen(self.checkBox_fullScreen.isChecked())
         
         # 설정 파일 저장
         self.configMng.save_config()

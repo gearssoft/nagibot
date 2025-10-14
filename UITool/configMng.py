@@ -66,6 +66,15 @@ class ConfigManager:
     
     def set_current_select_unit(self,index) :
         self.config['currentSelectUnit'] = index
+
+    def get_current_select_unit_sub(self) :
+        if self.config['currentSelectUnit_Sub'] is not None :
+            return  self.config['currentSelectUnit_Sub']
+        else :
+            return 0
+        
+    def set_current_select_unit_sub(self,index) :
+        self.config['currentSelectUnit_Sub'] = index
     
     def get_car_ip(self, car_idx=0):
         """
@@ -369,6 +378,8 @@ class ConfigManager:
                     self.config["currentSelectUnit"] = loaded_config["currentSelectUnit"]
                 else :
                     self.config["currentSelectUnit"] = 0
+                if "currentSelectUnit_Sub" in loaded_config:
+                    self.config["currentSelectUnit_Sub"] = loaded_config["currentSelectUnit_Sub"]
                     
                     
             return True
