@@ -135,6 +135,32 @@ class ConfigManager:
             raise ValueError("차량 인덱스는 0에서 2 사이여야 합니다.")
         self.config["cars"][car_idx]["camUrl"] = url
     
+    def get_car_cam_url_ir(self, car_idx=0):
+        """
+        차량 IR 카메라 URL 반환
+        
+        Args:
+            car_idx (int): 차량 인덱스 (0-2)
+            
+        Returns:
+            str: 차량 IR 카메라 URL
+        """
+        if car_idx < 0 or car_idx >= 3:
+            raise ValueError("차량 인덱스는 0에서 2 사이여야 합니다.")
+        return self.config["cars"][car_idx].get("camUrl_ir", "")
+    
+    def set_car_cam_url_ir(self, url, car_idx=0):
+        """
+        차량 IR 카메라 URL 설정
+        
+        Args:
+            url (str): 설정할 IR 카메라 URL
+            car_idx (int): 차량 인덱스 (0-2)
+        """
+        if car_idx < 0 or car_idx >= 3:
+            raise ValueError("차량 인덱스는 0에서 2 사이여야 합니다.")
+        self.config["cars"][car_idx]["camUrl_ir"] = url
+
     def is_sound_on(self):
         """
         사운드 설정 상태 반환
@@ -277,6 +303,43 @@ class ConfigManager:
         """
         self.config["fullscreen"] = bool(is_fullscreen)
 
+    def get_MMS_ip(self,ip="localhost"):
+        """
+        MMS 서버 IP 반환
+        
+        Returns:
+            str: MMS 서버 IP 주소
+        """
+        return self.config.get("MMS", {}).get("ip", ip)
+    def set_MMS_ip(self, ip):
+        """
+        MMS 서버 IP 설정
+        
+        Args:
+            ip (str): 설정할 MMS 서버 IP 주소
+        """
+        if "MMS" not in self.config:
+            self.config["MMS"] = {}
+        self.config["MMS"]["ip"] = ip
+    def get_MMS_port(self,port=6000):
+        """
+        MMS 서버 포트 반환
+        
+        Returns:
+            int: MMS 서버 포트 번호
+        """
+        return self.config.get("MMS", {}).get("port", port)
+    def set_MMS_port(self, port):
+        """
+        MMS 서버 포트 설정
+        
+        Args:
+            port (int): 설정할 MMS 서버 포트 번호
+        """
+        if "MMS" not in self.config:
+            self.config["MMS"] = {}
+        self.config["MMS"]["port"] = int(port)
+
     def save_config(self):
         """
         설정을 파일에 저장
@@ -327,6 +390,8 @@ class ConfigManager:
                     }
                 if "fullscreen" in loaded_config:
                     self.config["fullscreen"] = loaded_config["fullscreen"]
+                if "MMS" in loaded_config:
+                    self.config["MMS"] = loaded_config["MMS"]
                     
             return True
         except Exception as e:

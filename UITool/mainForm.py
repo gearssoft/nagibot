@@ -43,13 +43,6 @@ class VideoThread(QThread):
         self._cap = None
 
     def run(self):
-        # cap = cv2.VideoCapture(self.rtsp_url)
-        # while self._run_flag:
-        #     ret, cv_img = cap.read()
-        #     if ret:
-        #         self.change_pixmap_signal.emit(cv_img)
-        # cap.release()
-
         # RTSP가 종료 시 블로킹되지 않도록 타임아웃/버퍼 최소화
         os.environ.setdefault("OPENCV_FFMPEG_CAPTURE_OPTIONS",
                                 "rtsp_transport;tcp|stimeout;2000000")  # 2초
@@ -77,24 +70,7 @@ class VideoThread(QThread):
 
     def stop(self):
         self._run_flag = False
-        self.wait()
-        
-# class StatusUpdateThread(QThread):
-#     statusUpdateSignal = Signal()
-    
-#     def __init__(self):
-#         super().__init__()
-#         self._run_flag = True
-
-#     def run(self):
-#         while self._run_flag:
-#             self.statusUpdateSignal.emit()
-#             self.sleep(10)  # 10초마다 상태 업데이트
-#             pass
-
-#     def stop(self):
-#         self._run_flag = False
-#         self.wait()
+        self.wait()        
 
 class MainForm(QWidget, UI.mainForm.Ui_mainForm):
     
@@ -104,8 +80,9 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
     
     def __init__(self, parent=None):
         super().__init__(parent)
+
         # load font
-        QFontDatabase.addApplicationFont(":/font/font/DungGeunMo.ttf")
+        # QFontDatabase.addApplicationFont(":/font/font/DungGeunMo.ttf")
         
         self.configMng = ConfigManager()
         if self.configMng.load_config() == True:
@@ -136,9 +113,7 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
             # 에러 종료
             sys.exit(-1)
             
-        self.setupUi(self)
-        
-        
+        self.setupUi(self)        
         
         # 모든 UI 요소에 D2Coding 폰트 패밀리 적용
         widgets = self.findChildren(QWidget)  # 모든 자식 위젯 찾기
@@ -237,7 +212,7 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         self.unit_selected_style = {"bg": "rgb(80, 80, 80)", "text": "white"}  # 선택됨 (어둡게)
         self.unit_deselected_style = {"bg": "rgb(225, 225, 225)", "text": "black"} # 비선택 (밝게)
 
-        # 2. 호기 선택 위젯들을 리스트로 묶어서 관리
+        # 호기 선택 위젯들을 리스트로 묶어서 관리
         self.unit_widgets = [
             {'btn': self.btnUnitChg_1, 'container': self.widget_UnitNum1, 'label': self.txUnitNuberInfo},
             {'btn': self.btnUnitChg_2, 'container': self.widget_UnitNum_2, 'label': self.txUnitNuberInfo_2},
@@ -245,7 +220,7 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         ]
 
         # 3. 현재 선택된 호기 인덱스 초기화 (0: 1호기)
-        self.current_unit_index = 0
+        self.current_unit_index = 0 
 
         # 4. 각 버튼의 clicked 시그널을 핸들러 함수와 연결 (lambda 사용)
         self.unit_widgets[0]['btn'].clicked.connect(lambda: self.on_unit_selected(0))
@@ -290,11 +265,6 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
             self.detection_overlay_enabled = True  # 감지 결과 표시 여부
 
         # ────────────────────────────────────────────────────────
-
-        # 상태 업데이트 스레드 생성 및 시작
-        # self.statusUpdateThread = StatusUpdateThread()
-        # self.statusUpdateThread.statusUpdateSignal.connect(self.updateStatus)
-        # self.statusUpdateThread.start()
 
         # 상태 업데이트 타이머 설정
         self.status_timer = QTimer(self)
@@ -347,42 +317,40 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         
         # 로봇 클라이언트 초기화 및 연결
         # configMng에서 첫 번째 차량(0번 인덱스)의 IP와 포트를 가져와 사용
+        # self.edLogText.appendPlainText("로봇 클라이언트 초기화 및 연결 시작")
 
+        # cars_units = [
+        #     { "ip": self.configMng.get_car_ip(0), "port": self.configMng.get_car_port(0), "camUrl": self.configMng.get_car_cam_url(0), "enable": self.configMng.get_unit_enable(0) },
+        #     { "ip": self.configMng.get_car_ip(1), "port": self.configMng.get_car_port(1), "camUrl": self.configMng.get_car_cam_url(1), "enable": self.configMng.get_unit_enable(1) },
+        #     { "ip": self.configMng.get_car_ip(2), "port": self.configMng.get_car_port(2), "camUrl": self.configMng.get_car_cam_url(2), "enable": self.configMng.get_unit_enable(2) }
+        # ]
 
-        self.edLogText.appendPlainText("로봇 클라이언트 초기화 및 연결 시작")
+        # self.robotClients = []
+        # self.activeRobot=None
 
-        cars_units = [
-            { "ip": self.configMng.get_car_ip(0), "port": self.configMng.get_car_port(0), "camUrl": self.configMng.get_car_cam_url(0), "enable": self.configMng.get_unit_enable(0) },
-            { "ip": self.configMng.get_car_ip(1), "port": self.configMng.get_car_port(1), "camUrl": self.configMng.get_car_cam_url(1), "enable": self.configMng.get_unit_enable(1) },
-            { "ip": self.configMng.get_car_ip(2), "port": self.configMng.get_car_port(2), "camUrl": self.configMng.get_car_cam_url(2), "enable": self.configMng.get_unit_enable(2) }
-        ]
+        # for idx, car in enumerate(cars_units):
+        #     print(f"Unit {idx+1} - IP: {car['ip']}, Port: {car['port']}, Cam URL: {car['camUrl']}, Enable: {car['enable']}")
+        #     if car['enable']:
+        #         robot_ip = car['ip']
+        #         robot_port = car['port']
+        #         print(f"로봇 클라이언트 연결시도 (IP: {robot_ip}, 포트: {robot_port})")
 
-        self.robotClients = []
-        self.activeRobot=None
+        #         _client = RobotClient(host=robot_ip, port=robot_port)
+        #         if _client.connect():
+        #             print(f"로봇 클라이언트 연결 성공 (IP: {robot_ip}, 포트: {robot_port})")
+        #             # _client.on_sensor_updated = self.handleSensorUpdate
+        #             _client.on_sensor_updated = (lambda rc=_client: self.handleSensorUpdate(rc))
+        #             _client.on_drive_ack = (lambda rc=_client: self.onDriveAck(rc))
 
-        for idx, car in enumerate(cars_units):
-            print(f"Unit {idx+1} - IP: {car['ip']}, Port: {car['port']}, Cam URL: {car['camUrl']}, Enable: {car['enable']}")
-            if car['enable']:
-                robot_ip = car['ip']
-                robot_port = car['port']
-                print(f"로봇 클라이언트 연결시도 (IP: {robot_ip}, 포트: {robot_port})")
+        #             self.robotClients.append(_client)
 
-                _client = RobotClient(host=robot_ip, port=robot_port)
-                if _client.connect():
-                    print(f"로봇 클라이언트 연결 성공 (IP: {robot_ip}, 포트: {robot_port})")
-                    # _client.on_sensor_updated = self.handleSensorUpdate
-                    _client.on_sensor_updated = (lambda rc=_client: self.handleSensorUpdate(rc))
-                    _client.on_drive_ack = (lambda rc=_client: self.onDriveAck(rc))
+        #             if self.activeRobot is None:
+        #                 self.activeRobot = _client
+        #         else:
+        #             print(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
+        #             self.edLogText.appendPlainText(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
 
-                    self.robotClients.append(_client)
-
-                    if self.activeRobot is None:
-                        self.activeRobot = _client
-                else:
-                    print(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
-                    self.edLogText.appendPlainText(f"로봇 클라이언트 연결 실패 (IP: {robot_ip}, 포트: {robot_port})")
-
-        self.edLogText.appendPlainText("로봇 클라이언트 초기화 및 연결 완료")
+        # self.edLogText.appendPlainText("로봇 클라이언트 초기화 및 연결 완료")
         
     @Slot(object)
     def onDriveAck(self, robotClient):
@@ -447,8 +415,8 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         self.labelWaveHeight.setText(f"파고: {waveHeight}m")
        
         # log 정보 표시
-        self.edLogText.appendPlainText(f"{_currentTime.toString('yyyy-MM-dd hh:mm:ss')} - 기온: {temperature}℃, 강수량: {rainSize}mm, 풍속: {windy}m/s, 습도: {humidity}%, 강수확률: {precipitation}%, 파고: {waveHeight}m")
-        limit_plaintext_lines(self.edLogText, 10)
+        # self.edLogText.appendPlainText(f"{_currentTime.toString('yyyy-MM-dd hh:mm:ss')} - 기온: {temperature}℃, 강수량: {rainSize}mm, 풍속: {windy}m/s, 습도: {humidity}%, 강수확률: {precipitation}%, 파고: {waveHeight}m")
+        # limit_plaintext_lines(self.edLogText, 10)
         
         # if self.edLogText.blockCount() > 10:
         #     cursor = self.edLogText.textCursor()
@@ -657,6 +625,9 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
     @Slot()
     def btnAbnormalStopClicked(self):
         print("btnAbnormalStopClicked")
+        
+
+
         
     @Slot()
     def onClickedBtnOpticalMode(self):
