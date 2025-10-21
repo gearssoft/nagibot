@@ -12,15 +12,8 @@ __pycache__
 
 opencv/basic/image/*.jpg
 
-# res/
-
-.vscode/
-
-
 output/*
-
 runs/
-
 openai_study/key.txt
 .env
 build/
@@ -28,11 +21,7 @@ build/
 dist/
 
 *.ttf
-
 font_rc.py
-
 *.pt
-
 rtsp_sender_config.json
-
 *.log

@@ -1,0 +1,21 @@
+{"test": "Hello, World!"}
+{"test": "This is a test."}
+{"test": "Goodbye, World!"}
+{"a1": {"b1": {"c1": "d1"}}}
+{"array": [1, 2, 3, 4, 5]}
+{"number": 12345}
+{"boolean": true}
+{"null_value": null}
+{"nested_array": [[1, 2], [3, 4], [5, 6]]}
+{"mixed": [1, "two", {"three": 3}, [4]]}
+{"large_text": "A" * 1000}
+{"unicode": "こんにちは世界"}
+{"escaped": "Line1\nLine2\nLine3"}
+{"float": 3.14159}
+{"scientific": 1.23e+10}
+{"empty_object": {}}
+{"empty_array": []}
+{"complex": {"array": [1, {"nested": "value"}, [3, 4]], "boolean": false}}
+{"date_string": "2024-01-01T12:00:00Z"}
+{"special_chars": "!@#$%^&*()_+-=[]{}|;':\",.<>/?`~"}
+{"long_array": list(range(100))}

@@ -1,0 +1,15 @@
+[project]
+name = "uitool"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy==2.0.1",
+    "opencv-contrib-python==4.10.0.84",
+    "pyqtgraph==0.13.7",
+    "pyside6==6.9.3",
+    "pyside6-addons==6.9.3",
+    "pyside6-essentials==6.9.3",
+    "shiboken6==6.9.3",
+]
