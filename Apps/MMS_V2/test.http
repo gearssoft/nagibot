@@ -1,0 +1,35 @@
+### hello rest 
+GET http://localhost:8080/api/v1/fc
+Content-Type: application/octet-stream
+auth-token : 7204
+
+### file list
+GET http://localhost:8080/api/v1/fc/filelist?cwd=./
+auth-token : 7204
+
+### Post test 바이너리 (raw) 바디파서
+POST http://localhost:8080/api/v1/fc/write
+write-name : test.bin
+write-directory : ./uploads
+Content-Type: application/octet-stream
+auth-token : 7204
+
+hello post body express
+
+### Post write text ,텍스프 바디파서 
+POST http://localhost:8080/api/v1/fc/write
+write-name : test.txt
+write-directory : ./uploads
+Content-Type: text/plain
+auth-token : 7204
+
+hello express post body text parser 
+
+### Post read file , json 바디 파서 
+POST http://localhost:8080/api/v1/fc/read
+Content-Type: application/json
+auth-token : 7204
+
+{"path":"./uploads","file":"test.txt"}
+
+
