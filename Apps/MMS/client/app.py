@@ -18,6 +18,7 @@ from client.client import Client
 
 from dotenv import load_dotenv
 import os
+import time
 
 load_dotenv()
 
@@ -231,11 +232,15 @@ class App(tk.Tk):
         self.ping_button.config(state="disabled")
         self.status_var.set("Pinging...")
 
+        start_ms = time.perf_counter() * 1000
+
         def done(fut):
             try:
                 ok = fut.result()  # bool
                 if ok:
                     self.status_var.set("Ping OK")
+                    elapsed_ms = time.perf_counter() * 1000 - start_ms
+                    print(f"Ping response time: {elapsed_ms} ms")
                 else:
                     self.status_var.set("Ping FAIL")
                     messagebox.showwarning("Ping", "Server returned non-success status.")

@@ -1,96 +1,82 @@
-import express from 'express'
-import dotenv from "dotenv"
-import fs from 'fs-extra'
+import express from "express";
+import dotenv from "dotenv";
+import fs from "fs-extra";
 
-import fileControl from "./routers/fileControl.js"
-import chunkUploader from "./routers/chunkUploader.js"
+import fileControl from "./routers/fileControl.js";
+import chunkUploader from "./routers/chunkUploader.js";
+
+// ★ 추가: TCP 서버
+import { TcpServer } from "./missionManager/tcpServer.js";
 
 async function main() {
-    dotenv.config({ path: '.env' }); //환경 변수에 등록 
-    console.log(`run mode : ${process.env.NODE_ENV}`);
+  dotenv.config({ path: ".env" });
+  console.log(`run mode : ${process.env.NODE_ENV}`);
 
-    //디랙토리 생성 
-    {
-        let _ = fs.ensureDirSync(process.env.UPLOAD_PATH)
-        if (_) {
-            console.log(`${_} created`)
-        }
-        // console.log(fs.ensureDirSync(process.env.UPLOAD_PATH));
+  // 업로드 경로 보장
+  {
+    const created = fs.ensureDirSync(process.env.UPLOAD_PATH);
+    if (created) console.log(`${created} created`);
+  }
+
+  // 1) TCP 서버 먼저 시작(환경변수 -> 주입)
+  const tcp = new TcpServer({
+    ip: process.env.TCP_IP ?? "127.0.0.1",
+    port: Number(process.env.TCP_PORT ?? 8282),
+    timeoutMs: Number(process.env.TCP_TIMEOUT_MS ?? 10000),
+  });
+  await tcp.start();
+
+  // 2) Express 앱
+  const app = express();
+
+  // 필요하면 라우터에서 tcp 인스턴스 접근 가능
+  app.locals.tcp = tcp;
+
+  // auth 미들웨어 … (기존 코드)
+  app.use("/api", (req, res, next) => {
+    const authToken = req.header("auth-token");
+    if (authToken === process.env.AUTH_TOKEN) next();
+    else res.status(401).json({ r: "err", msg: "auth fail" });
+  });
+
+  console.log(`auth token ${process.env.AUTH_TOKEN}`);
+
+  app.use("/api/v1/fc", fileControl);
+  app.use("/api/v1/uploader", chunkUploader);
+
+  if (process.env.PATH_ROUTER) {
+    try {
+      const _pathRouters = await fs.readJson(process.env.PATH_ROUTER);
+      for (const it of _pathRouters) {
+        app.use("/" + it.name, express.static(it.path));
+        console.log(`${it.name} : ${it.path}`);
+      }
+      console.log("static router setup complete");
+    } catch (err) {
+      console.log(err);
     }
+  }
 
-    const app = express()
+  app.use("/uploads", express.static(process.env.UPLOAD_PATH));
+  console.log(`upload path : ${process.env.UPLOAD_PATH}`);
 
-    
+  app.use(express.static(process.env.STATIC_ASSET));
 
-    //auth 인증 
-    app.use('/api', (req, res, next) => {
+  app.use((req, res) => res.status(404).send("oops! resource not found"));
 
-        console.log('check api auth')
-        // console.log(req.header('auth-token'))
+  const httpPort = Number(process.env.PORT ?? 3000);
+  app.listen(httpPort, () => {
+    console.log(`server run at : ${httpPort}`);
+    console.log(`webUI url : http://localhost:${httpPort}`);
+  });
 
-        let authToken = req.header('auth-token')
-
-        if (authToken === process.env.AUTH_TOKEN) {
-            console.log(`auth success : ${authToken}`)
-            next() //인증성공 다음단계로...
-        }
-        else {
-            // res.status(401).send('auth fail')
-            console.log(`auth fail : ${authToken}`)
-            res.status(401).json({ r: "err", msg: "auth fail" });
-        }
-
-    });
-
-    console.log(`auth token ${process.env.AUTH_TOKEN}`)
-
-    //라우터 등록
-    app.use('/api/v1/fc', fileControl);
-    app.use('/api/v1/uploader', chunkUploader);
-
-
-
-    if (process.env.PATH_ROUTER) {
-
-        try {
-            let _pathRouters = await fs.readJson(process.env.PATH_ROUTER);
-
-            //라우터 설정
-            for (let i = 0; i < _pathRouters.length; i++) {
-                // app.use(_pathRouters[i].path, require(`./routers/${_pathRouters[i].router}`));
-                app.use('/' + _pathRouters[i].name, express.static(_pathRouters[i].path));
-
-                console.log(`${_pathRouters[i].name} : ${_pathRouters[i].path}`);
-            }
-
-            console.log('static router setup complete ');
-
-        }
-        catch (err) {
-            console.log(err);
-        }
-    }
-
-    app.use('/uploads',express.static(process.env.UPLOAD_PATH));
-    console.log(`upload path : ${process.env.UPLOAD_PATH}`)
-
-    app.use(express.static(process.env.STATIC_ASSET));
-
-
-    //순서 주의 맨 마지막에 나온다.
-    app.use((req, res) => {
-        
-        res.status(404).send('oops! resource not found');
-    });
-
-    app.listen(process.env.PORT, () => {
-        console.log(`server run at : ${process.env.PORT}`)
-        console.log(`connect : http://localhost:${process.env.PORT}`)
-
-
-    });
-
-
+  // 그레이스풀 종료
+  process.on("SIGINT", async () => {
+    console.log("\n> shutting down...");
+    try { await tcp.broadcastJson({ cmd: "server_shutdown" }); } catch {}
+    await tcp.stop();
+    process.exit(0);
+  });
 }
 
-main()
+main();
