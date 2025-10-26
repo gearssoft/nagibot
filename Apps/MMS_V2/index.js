@@ -6,7 +6,7 @@ import fileControl from "./routers/fileControl.js"
 import chunkUploader from "./routers/chunkUploader.js"
 
 async function main() {
-    // dotenv.config({ path: 'config.env' }); //환경 변수에 등록 
+    dotenv.config({ path: '.env' }); //환경 변수에 등록 
     console.log(`run mode : ${process.env.NODE_ENV}`);
 
     //디랙토리 생성 
