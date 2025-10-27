@@ -1,0 +1,95 @@
+### Base
+@host = http://localhost:8080
+@base = {{host}}/api/v1/mms
+@token = 7204
+
+### Hello / Router Root
+GET {{base}}/
+auth-token: {{token}}
+
+### Server State
+GET {{base}}/state
+auth-token: {{token}}
+
+### --- METADATA --------------------------------------------------------
+
+### Get full metadata snapshot
+GET {{base}}/metadata
+auth-token: {{token}}
+
+### Get metadata by dot-path (e.g., pos.x.y)
+GET {{base}}/metadata/pos.x
+auth-token: {{token}}
+
+### Replace metadata (POST: overwrite entire object)
+POST {{base}}/metadata
+Content-Type: application/json
+auth-token: {{token}}
+
+{
+  "system": {
+    "name": "MMS",
+    "version": "1.0.0"
+  },
+  "pos": { "x": 10, "y": 20 },
+  "flags": ["a","b","c"]
+}
+
+### Merge metadata (PATCH: deep-merge)
+PATCH {{base}}/metadata
+Content-Type: application/json
+auth-token: {{token}}
+
+{
+  "pos": { "y": 123, "z": 999 },
+  "extra": { "note": "patched" }
+}
+
+### Clear metadata (DELETE)
+DELETE {{base}}/metadata
+auth-token: {{token}}
+
+### --- IMAGE BANK ------------------------------------------------------
+
+### List banks
+GET {{base}}/banks
+auth-token: {{token}}
+
+### Get bank meta (no download)
+GET {{base}}/banks/1
+auth-token: {{token}}
+
+### Download bank #1 as binary
+GET {{base}}/banks/1?download=1
+auth-token: {{token}}
+
+### Upload image to bank #1 (octet-stream)
+# 준비: 같은 폴더에 test.jpg 파일을 두면 편합니다.
+PUT {{base}}/banks/1
+Content-Type: application/octet-stream
+x-img-type: 0
+x-img-seq: 1
+auth-token: {{token}}
+
+< ./test.jpg
+
+### Delete bank #1
+DELETE {{base}}/banks/1
+auth-token: {{token}}
+
+### --- BROADCAST & HEALTH ---------------------------------------------
+
+### Broadcast JSON to all TCP clients
+POST {{base}}/broadcast
+Content-Type: application/json
+auth-token: {{token}}
+
+{
+  "cmd": "notify",
+  "message": "Hello from WebUI API",
+  "ts": {{$timestamp}}
+}
+
+### Ping (server_time push)
+POST {{base}}/ping
+auth-token: {{token}}

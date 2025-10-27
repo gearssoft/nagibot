@@ -94,7 +94,7 @@ export class TcpServer {
     this.ip = opts.ip ?? "127.0.0.1";
     this.port = Number(opts.port ?? 8282);
     this.timeoutMs = Number(opts.timeoutMs ?? 10_000);
-    this.version = "1.0.2-LE (Node)";
+    this.version = "1.0.0-LE (Node)";
     this.server = null;
     this.sockets = new Set();
 

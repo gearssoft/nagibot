@@ -4,6 +4,7 @@ import fs from "fs-extra";
 
 import fileControl from "./routers/fileControl.js";
 import chunkUploader from "./routers/chunkUploader.js";
+import router_missionManager from "./missionManager/router.js";
 
 // ★ 추가: TCP 서버
 import { TcpServer } from "./missionManager/tcpServer.js";
@@ -43,6 +44,7 @@ async function main() {
 
   app.use("/api/v1/fc", fileControl);
   app.use("/api/v1/uploader", chunkUploader);
+  app.use("/api/v1/mms", router_missionManager);
 
   if (process.env.PATH_ROUTER) {
     try {
