@@ -27,6 +27,12 @@ async function main() {
   });
   await tcp.start();
 
+  {
+    const res =   await tcp.loadMetadata(); // 메타데이터 로드
+    console.log(`loaded ${res.count} mission metadata entries`);
+  }
+  
+
   // 2) Express 앱
   const app = express();
 
@@ -65,6 +71,8 @@ async function main() {
   app.use(express.static(process.env.STATIC_ASSET));
 
   app.use((req, res) => res.status(404).send("oops! resource not found"));
+
+
 
   const httpPort = Number(process.env.PORT ?? 3000);
   app.listen(httpPort, () => {

@@ -179,6 +179,23 @@ export async function mergeMetadata(patchObj) {
     });
 }
 
+export async function saveMetadata() {
+    const _url = `${BASE}/metadata/save`;
+    return await apiFetch(_url, {
+        method: "POST",
+        headers: jsonHeaders()
+    });
+}
+export async function loadMetadata(merge = false) {
+     const _url = `${BASE}/metadata/load`;
+     return await apiFetch(_url, {
+         method: "POST",
+         headers: jsonHeaders(),
+        body: JSON.stringify({ merge })
+     });
+ }
+
+
 // ====== 로봇 관련 ======
 
 /** 로봇 목록 */
@@ -190,105 +207,6 @@ export async function listRobots() {
     });
 }
 
-/** 로봇 상세 */
-export async function getRobot(robotId) {
-    const _url = `${BASE}/robots/${encodeURIComponent(robotId)}`;
-    return await apiFetch(_url, {
-        method: "GET",
-        headers: new Headers({ "auth-token": AUTH_TOKEN })
-    });
-}
-
-/** 로봇 명령 전송 */
-export async function sendRobotCommand(robotId, cmdObj) {
-    const _url = `${BASE}/robots/${encodeURIComponent(robotId)}/cmd`;
-    return await apiFetch(_url, {
-        method: "POST",
-        headers: jsonHeaders(),
-        body: JSON.stringify(cmdObj ?? {})
-    });
-}
-
-// ====== 미션(예: CRUD + 제어) ======
-
-export async function listMissions(query = {}) {
-    const qs = new URLSearchParams(query).toString();
-    const _url = `${BASE}/missions${qs ? `?${qs}` : ""}`;
-    return await apiFetch(_url, {
-        method: "GET",
-        headers: new Headers({ "auth-token": AUTH_TOKEN })
-    });
-}
-
-export async function createMission(data) {
-    const _url = `${BASE}/missions`;
-    return await apiFetch(_url, {
-        method: "POST",
-        headers: jsonHeaders(),
-        body: JSON.stringify(data ?? {})
-    });
-}
-
-export async function getMission(missionId) {
-    const _url = `${BASE}/missions/${encodeURIComponent(missionId)}`;
-    return await apiFetch(_url, {
-        method: "GET",
-        headers: new Headers({ "auth-token": AUTH_TOKEN })
-    });
-}
-
-export async function updateMission(missionId, data) {
-    const _url = `${BASE}/missions/${encodeURIComponent(missionId)}`;
-    return await apiFetch(_url, {
-        method: "PUT",
-        headers: jsonHeaders(),
-        body: JSON.stringify(data ?? {})
-    });
-}
-
-export async function deleteMission(missionId) {
-    const _url = `${BASE}/missions/${encodeURIComponent(missionId)}`;
-    return await apiFetch(_url, {
-        method: "DELETE",
-        headers: new Headers({ "auth-token": AUTH_TOKEN })
-    });
-}
-
-export async function startMission(missionId, args = {}) {
-    const _url = `${BASE}/missions/${encodeURIComponent(missionId)}/start`;
-    return await apiFetch(_url, {
-        method: "POST",
-        headers: jsonHeaders(),
-        body: JSON.stringify(args ?? {})
-    });
-}
-
-export async function stopMission(missionId, args = {}) {
-    const _url = `${BASE}/missions/${encodeURIComponent(missionId)}/stop`;
-    return await apiFetch(_url, {
-        method: "POST",
-        headers: jsonHeaders(),
-        body: JSON.stringify(args ?? {})
-    });
-}
-
-export async function pauseMission(missionId, args = {}) {
-    const _url = `${BASE}/missions/${encodeURIComponent(missionId)}/pause`;
-    return await apiFetch(_url, {
-        method: "POST",
-        headers: jsonHeaders(),
-        body: JSON.stringify(args ?? {})
-    });
-}
-
-export async function resumeMission(missionId, args = {}) {
-    const _url = `${BASE}/missions/${encodeURIComponent(missionId)}/resume`;
-    return await apiFetch(_url, {
-        method: "POST",
-        headers: jsonHeaders(),
-        body: JSON.stringify(args ?? {})
-    });
-}
 
 // ====== 파일 업/다운로드 ======
 

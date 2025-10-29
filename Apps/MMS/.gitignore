@@ -7,3 +7,4 @@ config.env
 path_router.json
 temp/
 .env
+metadata/*

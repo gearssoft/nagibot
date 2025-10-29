@@ -138,6 +138,26 @@ router.delete("/metadata", (req, res) => {
   }
 });
 
+router.post("/metadata/save", (req, res) => {
+  try {
+    const tcp = getTcp(req);
+    const out = tcp.saveMetadata();
+    res.json({ r: out.ok ? "ok" : "err", saved: out.ok, path: out.path });
+  } catch (e) {
+    res.status(500).json({ r: "err", msg: e.message });
+  }
+});
+
+router.post("/metadata/load", (req, res) => {
+  try {
+    const tcp = getTcp(req);
+    const out = tcp.loadMetadata();
+    res.json({ r: out.ok ? "ok" : "err", loaded: out.ok, path: out.path });
+  } catch (e) {
+    res.status(500).json({ r: "err", msg: e.message });
+  }
+});
+
 /** -------------------------------------------------------
  * imageBank 제어
  * ----------------------------------------------------- */

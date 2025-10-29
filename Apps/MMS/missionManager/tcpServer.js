@@ -6,6 +6,12 @@
 // #############################
 
 import net from "node:net";
+
+
+import fs from "node:fs";
+import path from "node:path";
+
+
 import {
   checkcode,
   MAX_PAYLOAD_BYTES,
@@ -101,6 +107,51 @@ export class TcpServer {
     // 전역 상태
     this.metadataJson = {};
     this.imageBank = new Map(); // bank_id -> { data, type, seq, ts, size }
+  }
+
+// ====== 메타데이터 영속화 ======
+  #getMetaDir() {
+    return process.env.METADATA_DIR
+      ? path.resolve(process.env.METADATA_DIR)
+      : path.resolve(process.cwd(), "data");
+  }
+  #getMetaFile() {
+    return path.join(this.#getMetaDir(), "metadata.json");
+  }
+  #ensureDir(dirPath) {
+    if (!fs.existsSync(dirPath)) fs.mkdirSync(dirPath, { recursive: true });
+  }
+  /**
+   * metadata.json 로드
+   * @param {{merge?: boolean}} opts
+   * @returns {{ok:boolean, mode:"replace"|"merge", path:string}}
+   */
+  loadMetadata(opts = {}) {
+    const merge = Boolean(opts.merge ?? false);
+    const dir = this.#getMetaDir();
+    const file = this.#getMetaFile();
+    if (!fs.existsSync(file)) {
+      return { ok: false, mode: merge ? "merge" : "replace", path: file };
+    }
+    const json = JSON.parse(fs.readFileSync(file, "utf8"));
+    if (merge) {
+      deepMerge(this.metadataJson, json);
+      return { ok: true, mode: "merge", path: file };
+    } else {
+      this.metadataJson = json;
+      return { ok: true, mode: "replace", path: file };
+    }
+  }
+  /**
+   * metadata.json 저장 (pretty)
+   * @returns {{ok:boolean, path:string}}
+   */
+  saveMetadata() {
+    const dir = this.#getMetaDir();
+    const file = this.#getMetaFile();
+    this.#ensureDir(dir);
+    fs.writeFileSync(file, JSON.stringify(this.metadataJson ?? {}, null, 2), "utf8");
+    return { ok: true, path: file };
   }
 
   get state() {
