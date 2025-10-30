@@ -10,7 +10,10 @@ import {
     getMetadataByKey,
     saveMetadata,
     loadMetadata,
-    deleteMetadata
+    deleteMetadata,
+    setBaseHost,
+    setAuthToken
+
 
 } from "./apiHelper.js";
 
@@ -70,9 +73,34 @@ let _leaflet = {
 };
 
 async function main() {
+
+
+    const mmsConfig = JSON.parse(localStorage.getItem('mmsConfig')) || {};
+    const host = mmsConfig.apiIp || "http://localhost";
+    const port = mmsConfig.apiPort || "8080";
+    const authToken = mmsConfig.authToken || "7204";
+
     
+    if (host === '.') {
+        setBaseHost(host);
+    }
+    else if(host === '') {
+        const _url = new URL(window.location.href);
+        setBaseHost(`${_url.protocol}//${_url.hostname}:${port}`);
+    } else {
+        setBaseHost(`http://localhost:${port}`);
+    }
+    
+
+    setBaseHost(`.`);
+    setAuthToken(authToken);
+
+    console.log("[MMS CONFIG]", { host, port, authToken });
+
 // 0) 지도 먼저 준비
     initMap();
+
+
 
     try {
         const data = await getState();
@@ -81,6 +109,7 @@ async function main() {
     } catch (err) {
         console.error("[MAIN ERROR]", err);
         element_version.innerText = "error";
+
     }
 
     
