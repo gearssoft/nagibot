@@ -105,7 +105,7 @@ class Ui_StartUpForm(object):
 
     def retranslateUi(self, StartUpForm):
         StartUpForm.setWindowTitle(QCoreApplication.translate("StartUpForm", u"Form", None))
-        self.label.setText(QCoreApplication.translate("StartUpForm", u"\uc784\ubb34\ud1b5\uc81c\uc2dc\uc2a4\ud15c", None))
+        self.label.setText(QCoreApplication.translate("StartUpForm", u"\uc6b4\uc6a9\ud1b5\uc81c\uc2dc\uc2a4\ud15c", None))
         self.btnStart.setText(QCoreApplication.translate("StartUpForm", u"\uc2dc\uc791", None))
         self.btnSetup.setText(QCoreApplication.translate("StartUpForm", u"\uc124\uc815", None))
         self.btnExit.setText(QCoreApplication.translate("StartUpForm", u"\uc885\ub8cc", None))

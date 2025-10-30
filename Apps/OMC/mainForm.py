@@ -34,29 +34,30 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         self._initialize_config()
         
         # 폰트 초기화
-        self._initialize_font()
+        # self._initialize_font()
         
-        # UI 설정
+        # # UI 설정
         self.setupUi(self)
-        self._apply_font_to_all_widgets()
+
+        # # self._apply_font_to_all_widgets()
         
-        # 버튼 시그널 연결
-        self._connect_signals()
+        # # 버튼 시그널 연결
+        # self._connect_signals()
         
-        # UI 초기화
-        self._initialize_ui_state()
+        # # UI 초기화
+        # self._initialize_ui_state()
         
-        # 컨트롤러 및 매니저 초기화
-        self._initialize_controllers()
+        # # 컨트롤러 및 매니저 초기화
+        # self._initialize_controllers()
         
-        # 로봇 클라이언트 초기화
-        self._initialize_robot_clients()
+        # # 로봇 클라이언트 초기화
+        # self._initialize_robot_clients()
         
-        # 타이머 시작
-        self.statusManager.initialize_timers(
-            self._update_clock,
-            self._update_status
-        )
+        # # 타이머 시작
+        # self.statusManager.initialize_timers(
+        #     self._update_clock,
+        #     self._update_status
+        # )
     
     def _initialize_config(self):
         """설정 파일 로드 및 초기화"""
@@ -73,18 +74,18 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         print(f"ConfigManager: 현재 선택된 차량 인덱스: {self.current_unit_index}")
         print(f"ConfigManager: 현재 선택된 서브 차량 인덱스: {self.current_unit_index_sub}")
     
-    def _initialize_font(self):
-        """폰트 로드 및 초기화"""
-        font_id = QFontDatabase.addApplicationFont(":/font/font/D2Coding-Ver1.3.2-20180524.ttf")
-        if font_id != -1:
-            font_families = QFontDatabase.applicationFontFamilies(font_id)
-            if font_families:
-                self.font_d2coding = font_families[0]
-                print("D2Coding 폰트 로드 성공")
-                return
+    # def _initialize_font(self):
+    #     """폰트 로드 및 초기화"""
+    #     font_id = QFontDatabase.addApplicationFont(":/font/font/D2Coding-Ver1.3.2-20180524.ttf")
+    #     if font_id != -1:
+    #         font_families = QFontDatabase.applicationFontFamilies(font_id)
+    #         if font_families:
+    #             self.font_d2coding = font_families[0]
+    #             print("D2Coding 폰트 로드 성공")
+    #             return
         
-        print("D2Coding 폰트 로드 실패")
-        sys.exit(-1)
+    #     print("D2Coding 폰트 로드 실패")
+    #     sys.exit(-1)
     
     def _apply_font_to_all_widgets(self):
         """모든 UI 요소에 D2Coding 폰트 적용"""
@@ -110,25 +111,25 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         self.btnKeyRight.pressed.connect(self.keyRightPressed)
         self.btnKeyRight.released.connect(self.keyRightReleased)
         
-        # 비상정지 버튼
-        self.btnAbnormalStop.pressed.connect(self.btnAbnormalStopPressed)
-        self.btnAbnormalStop.released.connect(self.btnAbnormalStopReleased)
-        self.btnAbnormalStop.clicked.connect(self.btnAbnormalStopClicked)
+        # # 비상정지 버튼
+        # self.btnAbnormalStop.pressed.connect(self.btnAbnormalStopPressed)
+        # self.btnAbnormalStop.released.connect(self.btnAbnormalStopReleased)
+        # self.btnAbnormalStop.clicked.connect(self.btnAbnormalStopClicked)
         
-        # 모드 선택 버튼
-        self.btnAutoDrv.clicked.connect(self.onClickedBtnAutoDrv)
-        self.btnRemoteDrv.clicked.connect(self.onClickedBtnRemoteDrv)
-        self.btnOpticalMode.clicked.connect(self.onClickedBtnOpticalMode)
-        self.btnIRMode.clicked.connect(self.onClickedBtnIRMode)
-        self.btnScaleUp.clicked.connect(self.onClickedBtnScaleUp)
-        self.btnScaleDown.clicked.connect(self.onClickedBtnScaleDown)
-        self.btnUnLock.clicked.connect(self.onClickedBtnUnLock)
-        self.btnLock.clicked.connect(self.onClickedBtnLock)
+        # # 모드 선택 버튼
+        # self.btnAutoDrv.clicked.connect(self.onClickedBtnAutoDrv)
+        # self.btnRemoteDrv.clicked.connect(self.onClickedBtnRemoteDrv)
+        # self.btnOpticalMode.clicked.connect(self.onClickedBtnOpticalMode)
+        # self.btnIRMode.clicked.connect(self.onClickedBtnIRMode)
+        # self.btnScaleUp.clicked.connect(self.onClickedBtnScaleUp)
+        # self.btnScaleDown.clicked.connect(self.onClickedBtnScaleDown)
+        # self.btnUnLock.clicked.connect(self.onClickedBtnUnLock)
+        # self.btnLock.clicked.connect(self.onClickedBtnLock)
         
-        # 줌 버튼
-        self.btnZoomInMainScreen.clicked.connect(self.onClickedBtnZoomInMainScreen)
-        self.btnZoomInBottomScreen.clicked.connect(self.onClickedBtnZoomInBottomScreen)
-        self.btnZoomInBottomRightScreen.clicked.connect(self.onClickedBtnZoomInBottomRightScreen)
+        # # 줌 버튼
+        # self.btnZoomInMainScreen.clicked.connect(self.onClickedBtnZoomInMainScreen)
+        # self.btnZoomInBottomScreen.clicked.connect(self.onClickedBtnZoomInBottomScreen)
+        # self.btnZoomInBottomRightScreen.clicked.connect(self.onClickedBtnZoomInBottomRightScreen)
     
     def _initialize_ui_state(self):
         """UI 초기 상태 설정"""

@@ -64,4 +64,5 @@
     <file>홈.png</file>
     <file>확대.png</file>
   </qresource>
+  <qresource prefix="base"/>
 </RCC>
