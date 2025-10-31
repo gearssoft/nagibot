@@ -153,7 +153,7 @@ class Ui_mainForm(object):
         self.widgetBottomRightCam.setStyleSheet(u"border:none;")
         self.widgetWether = QWidget(mainForm)
         self.widgetWether.setObjectName(u"widgetWether")
-        self.widgetWether.setGeometry(QRect(600, 850, 311, 141))
+        self.widgetWether.setGeometry(QRect(580, 930, 531, 151))
         self.widgetWether.setStyleSheet(u"QWidget {\n"
 "border: 1px solid black;\n"
 "margin : 4px;\n"
@@ -236,13 +236,13 @@ class Ui_mainForm(object):
         self.labelAreaName.setGeometry(QRect(20, 20, 96, 24))
         self.systemLog = QWidget(mainForm)
         self.systemLog.setObjectName(u"systemLog")
-        self.systemLog.setGeometry(QRect(950, 900, 560, 161))
+        self.systemLog.setGeometry(QRect(1110, 930, 391, 151))
         self.systemLog.setStyleSheet(u"border : 1px solid black;\n"
 "margin : 4px;\n"
 "")
         self.edLogText = QPlainTextEdit(self.systemLog)
         self.edLogText.setObjectName(u"edLogText")
-        self.edLogText.setGeometry(QRect(20, 20, 441, 121))
+        self.edLogText.setGeometry(QRect(10, 10, 371, 151))
         self.edLogText.setStyleSheet(u"background-color: rgb(0,0,0);\n"
 "color : rgb(0,255,0);")
         self.edLogText.setReadOnly(True)
@@ -404,20 +404,20 @@ class Ui_mainForm(object):
 
         self.horizontalLayout_2.addWidget(self.rb_ms_patrol)
 
-        self.rb_ms_trace = QRadioButton(self.horizontalLayoutWidget_2)
-        self.rb_ms_trace.setObjectName(u"rb_ms_trace")
+        self.rb_ms_tracking = QRadioButton(self.horizontalLayoutWidget_2)
+        self.rb_ms_tracking.setObjectName(u"rb_ms_tracking")
 
-        self.horizontalLayout_2.addWidget(self.rb_ms_trace)
+        self.horizontalLayout_2.addWidget(self.rb_ms_tracking)
 
         self.rb_ms_return = QRadioButton(self.horizontalLayoutWidget_2)
         self.rb_ms_return.setObjectName(u"rb_ms_return")
 
         self.horizontalLayout_2.addWidget(self.rb_ms_return)
 
-        self.rb_stop = QRadioButton(self.horizontalLayoutWidget_2)
-        self.rb_stop.setObjectName(u"rb_stop")
+        self.rb_ms_stop = QRadioButton(self.horizontalLayoutWidget_2)
+        self.rb_ms_stop.setObjectName(u"rb_ms_stop")
 
-        self.horizontalLayout_2.addWidget(self.rb_stop)
+        self.horizontalLayout_2.addWidget(self.rb_ms_stop)
 
         self.label_connection_status = QLabel(self.frameRobotControlStatus)
         self.label_connection_status.setObjectName(u"label_connection_status")
@@ -586,9 +586,9 @@ class Ui_mainForm(object):
         self.groupBox_2.setTitle("")
         self.rb_ms_move.setText(QCoreApplication.translate("mainForm", u"\uc774\ub3d9", None))
         self.rb_ms_patrol.setText(QCoreApplication.translate("mainForm", u"\uac10\uc2dc", None))
-        self.rb_ms_trace.setText(QCoreApplication.translate("mainForm", u"\ucd94\uc801", None))
+        self.rb_ms_tracking.setText(QCoreApplication.translate("mainForm", u"\ucd94\uc801", None))
         self.rb_ms_return.setText(QCoreApplication.translate("mainForm", u"\ubcf5\uadc0", None))
-        self.rb_stop.setText(QCoreApplication.translate("mainForm", u"\uc885\ub8cc", None))
+        self.rb_ms_stop.setText(QCoreApplication.translate("mainForm", u"\uc885\ub8cc", None))
         self.label_connection_status.setText(QCoreApplication.translate("mainForm", u"Wait", None))
         self.btnAbnormalStop.setText(QCoreApplication.translate("mainForm", u"\ube44\uc0c1\uc815\uc9c0", None))
         self.label_7.setText(QCoreApplication.translate("mainForm", u"<html><head/><body><p><span style=\" font-size:12pt;\">\ub85c\ubd07\uae30\uad6c\ud559 \ubc0f \ubca0\ud130\ub9ac \uc0c1\ud0dc \ud45c\uc2dc</span></p></body></html>", None))

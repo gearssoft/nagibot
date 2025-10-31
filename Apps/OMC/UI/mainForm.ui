@@ -412,10 +412,10 @@ margin : 4px;</string>
   <widget class="QWidget" name="widgetWether" native="true">
    <property name="geometry">
     <rect>
-     <x>600</x>
-     <y>850</y>
-     <width>311</width>
-     <height>141</height>
+     <x>580</x>
+     <y>930</y>
+     <width>531</width>
+     <height>151</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -702,10 +702,10 @@ border : none;
   <widget class="QWidget" name="systemLog" native="true">
    <property name="geometry">
     <rect>
-     <x>950</x>
-     <y>900</y>
-     <width>560</width>
-     <height>161</height>
+     <x>1110</x>
+     <y>930</y>
+     <width>391</width>
+     <height>151</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -716,10 +716,10 @@ margin : 4px;
    <widget class="QPlainTextEdit" name="edLogText">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>20</y>
-      <width>441</width>
-      <height>121</height>
+      <x>10</x>
+      <y>10</y>
+      <width>371</width>
+      <height>151</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -1224,7 +1224,7 @@ border-radius : 16px;</string>
         </widget>
        </item>
        <item>
-        <widget class="QRadioButton" name="rb_ms_trace">
+        <widget class="QRadioButton" name="rb_ms_tracking">
          <property name="text">
           <string>추적</string>
          </property>
@@ -1238,7 +1238,7 @@ border-radius : 16px;</string>
         </widget>
        </item>
        <item>
-        <widget class="QRadioButton" name="rb_stop">
+        <widget class="QRadioButton" name="rb_ms_stop">
          <property name="text">
           <string>종료</string>
          </property>
