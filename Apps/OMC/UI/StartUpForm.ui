@@ -197,7 +197,6 @@
  </widget>
  <resources>
   <include location="../assets/icons.qrc"/>
-  <include location="../assets/font.qrc"/>
  </resources>
  <connections/>
 </ui>
