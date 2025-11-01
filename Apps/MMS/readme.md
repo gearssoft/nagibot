@@ -18,6 +18,9 @@ copy .\sample.config.env .env
 
 npm start # 배포용 실핼
 npm run dev # 개발용 실행 
+
+pm2 start npm --name "MMS" -- start # pm2 배포용 실행
+pm2 restart MMS # pm2 재시작
 ```
 
 ## api auth 인증방법
