@@ -18,7 +18,7 @@ from configMng import ConfigManager
 # 리팩토링된 컨트롤러 및 매니저 임포트
 from video_controller import VideoController
 from map_controller import MapController
-from status_manager import StatusManager
+# from status_manager import StatusManager
 
 from network_adapter import NetworkAdapter
 from client.client import Client
@@ -44,7 +44,8 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         # ===== NetworkAdapter 주입 =====
         def _factory():
             # 연결 파라미터를 한 곳에 모읍니다.
-            return Client(host="localhost", port=8282)
+            return Client(host=self.configMng.get_mms_server_info().get("ip", "localhost"), 
+                          port=self.configMng.get_mms_server_info().get("port", 8282))
 
         self.netMMS = NetworkAdapter(client_factory=_factory, parent=self)
 
@@ -68,25 +69,80 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         self._meta_timer.timeout.connect(self._poll_MMS_metadata)
 
         # === 추가: 하트비트 타이머(서버가 code=100 후 끊는 현상 방지) ===
-        self._hb_interval_ms = 3000          # 서버 요건에 맞게 조정(예: 300~1000ms)
-        self._hb_timer = QTimer(self)
-        self._hb_timer.setInterval(self._hb_interval_ms)
-        self._hb_timer.timeout.connect(self._send_heartbeat)
+        # self._hb_interval_ms = 3000          # 서버 요건에 맞게 조정(예: 300~1000ms)
+        # self._hb_timer = QTimer(self)
+        # self._hb_timer.setInterval(self._hb_interval_ms)
+        # self._hb_timer.timeout.connect(self._send_heartbeat)
 
 
-    
+        self.rb_opmode_auto.clicked.connect(self.onClicked_opmode_Group)
+        self.rb_opmode_operator.clicked.connect(self.onClicked_opmode_Group)
+        self.rb_opmode_manual.clicked.connect(self.onClicked_opmode_Group)
+
+        self.rb_ms_move.clicked.connect(self.onClicked_mission_mode_Group)
+        self.rb_ms_patrol.clicked.connect(self.onClicked_mission_mode_Group)
+        self.rb_ms_tracking.clicked.connect(self.onClicked_mission_mode_Group)
+        self.rb_ms_return.clicked.connect(self.onClicked_mission_mode_Group)
+        self.rb_ms_stop.clicked.connect(self.onClicked_mission_mode_Group)
+
+        self.current_robot_data = {}
+
+    @Slot()
+    def onClicked_opmode_Group(self):
+        try:
+            if self.rb_opmode_auto.isChecked():
+                print("Operation Mode: Auto")
+                self.netMMS.set_json_by_key("robot_1.operation_mode", "auto")
+
+            elif self.rb_opmode_operator.isChecked():
+                print("Operation Mode: Operator")
+                self.netMMS.set_json_by_key("robot_1.operation_mode", "operator")
+            elif self.rb_opmode_manual.isChecked():
+                print("Operation Mode: Manual")
+                self.netMMS.set_json_by_key("robot_1.operation_mode", "manual")
+        except Exception as e:
+            print(f"Error in onClicked_opmode_Group: {e}")
+    @Slot()
+    def onClicked_mission_mode_Group(self):
+        try:
+            if self.rb_ms_move.isChecked():
+                print("Mission Mode: Move")
+                self.netMMS.set_json_by_key("robot_1.mission_mode", "move")
+
+            elif self.rb_ms_patrol.isChecked():
+                print("Mission Mode: Patrol")
+                self.netMMS.set_json_by_key("robot_1.mission_mode", "patrol")
+            elif self.rb_ms_tracking.isChecked():
+                print("Mission Mode: Tracking")
+                self.netMMS.set_json_by_key("robot_1.mission_mode", "tracking")
+            elif self.rb_ms_return.isChecked():
+                print("Mission Mode: Return")
+                self.netMMS.set_json_by_key("robot_1.mission_mode", "return")
+            elif self.rb_ms_stop.isChecked():
+                print("Mission Mode: Stop")
+                self.netMMS.set_json_by_key("robot_1.mission_mode", "stop")
+        except Exception as e:
+            print(f"Error in onClicked_mission_mode_Group: {e}")
+
     # === 메타데이터 폴링 ===
+    def _update_ui_with_robot_data(self, data: dict):
+        """로봇 데이터로 UI 업데이트"""
+        # 여기에 UI 업데이트 로직 추가
+        self.currentTime.setText(data.get("now_time", "N/A"))
+        self.operationTime.setText(data.get("elapsed_time", "N/A"))
+
     @Slot()
     def _poll_MMS_metadata(self):
-        print("[UI] Polling MMS metadata...")
-
+        # print("[UI] Polling MMS metadata...")
         unit_no = (getattr(self, "current_unit_index", 0) or 0) + 1
         key = f"robot_{unit_no}"
-        print(f"[UI] Polling MMS metadata... key={key}")
+        # print(f"[UI] Polling MMS metadata... key={key}")
         if getattr(self, "netMMS", None) and self.netMMS.is_connected():
             self.netMMS.fetch_json_by_key(key)   # ← 어댑터 래퍼 호출
 
+        # self._update_ui_with_robot_data(self.current_robot_data)
 
+        
 
     # === 하트비트 전송 ===
     @Slot()
@@ -94,10 +150,33 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         if getattr(self, "netMMS", None) and self.netMMS.is_connected():
             # self.netMMS.send_ping({"ts": self.netMMS.now_ts()})
             self.netMMS.ping_server()
-            print("[UI] Sent heartbeat ping to MMS.")
-
+            # print("[UI] Sent heartbeat ping to MMS.")
 
     # ===== UI 슬롯 =====
+    def _initialize_ui_state(self):
+        """UI 초기 상태 설정"""
+
+        try : 
+            self._setup_key_button_visibility()
+             # 호기 표시
+            self.txUnitNuberInfo.setText(f"{self.current_unit_index+1} 호기")
+        
+        except Exception as e:
+            print(f'error occurred while setting up key button visibility : {e}')
+
+        # 키 버튼 표시 설정
+        
+        # 배경색 설정
+        # self.checkColor = "#000000"
+        # self.checkBackgroundColor = "rgb(188, 215, 236)"
+        # self.defaultBackgroundColor = "#ffffff"
+        # self.defaultColor = "#000000"
+        
+        # 모드 버튼 초기 색상
+        # self._setup_mode_buttons()
+        
+       
+
     @Slot(dict)
     def _ui_on_connected(self, json_info: dict):
 
@@ -108,12 +187,12 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
             self._meta_timer.start()
             print("[UI] Started MMS metadata polling timer.")
 
-        if not self._hb_timer.isActive():
-            self._hb_timer.start()
-            print("[UI] Started heartbeat timer.")
-        
-                
+        # if not self._hb_timer.isActive():
+        #     self._hb_timer.start()
+        #     print("[UI] Started heartbeat timer.")
         print("[UI] Connected:", json_info)
+
+        self._initialize_ui_state()  # UI 초기 상태 설정
 
     @Slot(str)
     def _ui_on_disconnected(self, reason: str):
@@ -125,13 +204,17 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
 
     @Slot(dict)
     def _ui_on_message(self, payload: dict):
-        print("[UI] Message:", payload)
+        # print("[UI] Message:", payload)
 
-        _robot_data = payload.get("data", {}).get("value", {})
+        self.current_robot_data = payload.get("data", {})
+        _robot_data = self.current_robot_data.get("value", {})
 
-        print(f"[UI] Received robot data: {_robot_data}")
+        # print(f"[UI] Received robot data: {_robot_data}")
 
         if _robot_data:
+            
+            self._update_ui_with_robot_data(self.current_robot_data)
+            
             mission_mode = _robot_data.get("mission_mode", "unknown")
             operation_mode = _robot_data.get("operation_mode", "unknown")
 
@@ -181,9 +264,7 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         
         print(f"ConfigManager: 현재 선택된 차량 인덱스: {self.current_unit_index}")
         print(f"ConfigManager: 현재 선택된 서브 차량 인덱스: {self.current_unit_index_sub}")       
-    
-    
-    
+     
     def _connect_signals(self):
         """버튼 시그널 연결"""
         # 네비게이션 버튼
@@ -199,26 +280,7 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         self.btnKeyLeft.released.connect(self.keyLeftReleased)
         self.btnKeyRight.pressed.connect(self.keyRightPressed)
         self.btnKeyRight.released.connect(self.keyRightReleased)
-        
-        
-    
-    def _initialize_ui_state(self):
-        """UI 초기 상태 설정"""
-        # 키 버튼 표시 설정
-        self._setup_key_button_visibility()
-        
-        # 배경색 설정
-        self.checkColor = "#000000"
-        self.checkBackgroundColor = "rgb(188, 215, 236)"
-        self.defaultBackgroundColor = "#ffffff"
-        self.defaultColor = "#000000"
-        
-        # 모드 버튼 초기 색상
-        self._setup_mode_buttons()
-        
-        # 호기 표시
-        self.txUnitNuberInfo.setText(f"{self.current_unit_index+1} 호기")
-    
+          
     def _setup_key_button_visibility(self):
         """키 버튼 레이블 표시 설정"""
         self.label_keyup_normal.setVisible(True)
@@ -229,37 +291,11 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         self.label_keyleft_push.setVisible(False)
         self.label_keyright_normal.setVisible(True)
         self.label_keyright_push.setVisible(False)
-    
-    def _setup_mode_buttons(self):
-        """모드 버튼 초기 색상 설정"""
-        # 자율주행/원격주행
-        change_background_color(self.btnAutoDrv, self.checkBackgroundColor)
-        change_text_color(self.btnAutoDrv, self.checkColor)
-        change_background_color(self.btnRemoteDrv, self.defaultBackgroundColor)
-        change_text_color(self.btnRemoteDrv, self.defaultColor)
-        
-        # 광학/적외선
-        change_background_color(self.btnOpticalMode, self.checkBackgroundColor)
-        change_text_color(self.btnOpticalMode, self.checkColor)
-        change_background_color(self.btnIRMode, self.defaultBackgroundColor)
-        change_text_color(self.btnIRMode, self.defaultColor)
-        
-        # 스케일 업/다운
-        change_background_color(self.btnScaleUp, self.checkBackgroundColor)
-        change_text_color(self.btnScaleUp, self.checkColor)
-        change_background_color(self.btnScaleDown, self.defaultBackgroundColor)
-        change_text_color(self.btnScaleDown, self.defaultColor)
-        
-        # 잠금/해제
-        change_background_color(self.labelUnLock, self.checkBackgroundColor)
-        change_text_color(self.labelUnLock, self.checkColor)
-        change_background_color(self.labelLock, self.defaultBackgroundColor)
-        change_text_color(self.labelLock, self.defaultColor)
-    
+      
     def _initialize_controllers(self):
         """컨트롤러 및 매니저 초기화"""
         # 상태 관리자
-        self.statusManager = StatusManager()
+        # self.statusManager = StatusManager()
         
         # 비디오 컨트롤러
         self.videoController = VideoController(
@@ -307,21 +343,21 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
     
     # ==================== 타이머 콜백 ====================
     
-    @Slot()
-    def _update_clock(self):
-        """시계 업데이트"""
-        self.statusManager.update_clock_widgets(self.currentTime, self.operationTime)
+    # @Slot()
+    # def _update_clock(self):
+    #     """시계 업데이트"""
+    #     self.statusManager.update_clock_widgets(self.currentTime, self.operationTime)
     
-    @Slot()
-    def _update_status(self):
-        """상태 업데이트"""
-        self.statusManager.update_status_widgets(
-            self.wifiStatus, self.networkStatus, self.batteryStatus,
-            self.labelAreaName, self.labelWether, self.labelTemper,
-            self.labelRain, self.labelWindy, self.labelHumidty,
-            self.labelPrecipitation, self.labelWaveHeight,
-            self.edLogText
-        )
+    # @Slot()
+    # def _update_status(self):
+    #     """상태 업데이트"""
+    #     self.statusManager.update_status_widgets(
+    #         self.wifiStatus, self.networkStatus, self.batteryStatus,
+    #         self.labelAreaName, self.labelWether, self.labelTemper,
+    #         self.labelRain, self.labelWindy, self.labelHumidty,
+    #         self.labelPrecipitation, self.labelWaveHeight,
+    #         self.edLogText
+    #     )
     
     @Slot()
     def gotoHome(self):

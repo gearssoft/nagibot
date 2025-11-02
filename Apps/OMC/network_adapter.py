@@ -178,3 +178,34 @@ class NetworkAdapter(QObject):
 
         self._run_async(_task(), on_done=done)
 
+    def set_json_by_key(self, key: str, value: dict, *, timeout_sec: float = 5.0, echo: bool = False):
+        """
+        서버에 key/value 업데이트 요청.
+        결과를 표준화하여 message(cmd='json_item_set_result')로 emit.
+        - echo=True 이면, 성공 후 즉시 fetch_json_by_key(key)로 최신값 재조회
+        """
+        if not self._connected or not self._client:
+            self.error.emit("Not connected")
+            self.message.emit({"cmd": "json_item_set_result", "key": key, "ok": False, "error": "not connected"})
+            return
+
+        async def _task():
+            import asyncio
+            # 클라이언트의 send_json을 이용해 {"cmd":"set_item",...} 전송 (ACK 기반)
+            payload = {"cmd": "set_item", "key": key, "value": value}
+            ok = await asyncio.wait_for(self._client.send_json(payload), timeout=timeout_sec)
+            return bool(ok)
+
+        def done(fut):
+            try:
+                ok = fut.result()
+                self.message.emit({"cmd": "json_item_set_result", "key": key, "ok": ok})
+                # 성공 시 즉시 재조회(선택): 서버가 push 하지 않는 환경에서도 UI 동기화 보장
+                if ok and echo:
+                    self.fetch_json_by_key(key)
+            except Exception as e:
+                self.error.emit(f"[json_set_by_key:{key}] {e}")
+                self.message.emit({"cmd": "json_item_set_result", "key": key, "ok": False, "error": str(e)})
+
+        self._run_async(_task(), on_done=done)
+

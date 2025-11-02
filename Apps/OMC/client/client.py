@@ -23,6 +23,8 @@ class Client:
         self.checkcode = checkcode
         self.timeout = timeout
 
+        print(f"[CLIENT] initialized for {self.host}:{self.port} with checkcode={self.checkcode}")
+
         self.reader: Optional[asyncio.StreamReader] = None
         self.writer: Optional[asyncio.StreamWriter] = None
 
@@ -160,7 +162,7 @@ class Client:
         if self.writer is None:
             raise ConnectionError("not connected")
 
-        token = f"item:{time.time_ns()}"
+        token = f"item:{time.time_ns()}"  # 요청에 대한 확인을 위한 토큰 생성 , 겹치지않는 값이어야함
         q: asyncio.Queue = asyncio.Queue()
         self._item_waiters[token] = q
 
@@ -199,7 +201,8 @@ class Client:
                         obj_data = json.loads(body.decode("utf-8"))
                     except Exception:
                         obj_data = {"raw": body[:128].hex()}
-                    print(f"[PUSH JSON] {obj_data}")
+
+                    # print(f"[PUSH JSON] {obj_data}")
 
                     if obj_data.get("cmd") == "welcome":
                         self._notify_connect(obj_data)

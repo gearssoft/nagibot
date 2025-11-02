@@ -322,6 +322,15 @@ class ConfigManager:
         """
         self.config["fullscreen"] = bool(is_fullscreen)
 
+    def get_mms_server_info(self):
+        """
+        MMS 서버 정보 반환
+
+        Returns:
+            dict: MMS 서버 정보 딕셔너리
+        """
+        return self.config.get("mmsServer", {})
+
     def save_config(self):
         """
         설정을 파일에 저장
@@ -380,6 +389,14 @@ class ConfigManager:
                     self.config["currentSelectUnit"] = 0
                 if "currentSelectUnit_Sub" in loaded_config:
                     self.config["currentSelectUnit_Sub"] = loaded_config["currentSelectUnit_Sub"]
+
+                if "mmsServer" in loaded_config:
+                    self.config["mmsServer"] = loaded_config["mmsServer"]
+                else:
+                    self.config["mmsServer"] = {
+                        "ip": "localhost",
+                        "port": 8282
+                    }
                     
                     
             return True

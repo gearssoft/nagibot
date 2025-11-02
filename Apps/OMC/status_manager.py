@@ -32,14 +32,14 @@ class StatusManager(QObject):
         self.clock_timer.timeout.connect(clock_callback)
         self.clock_timer.start(1000)
         
-        # 상태 업데이트 타이머 (10초마다)
-        self.status_timer = QTimer()
-        self.status_timer.timeout.connect(status_callback)
-        self.status_timer.start(10000)
+        # # 상태 업데이트 타이머 (10초마다)
+        # self.status_timer = QTimer()
+        # self.status_timer.timeout.connect(status_callback)
+        # self.status_timer.start(10000)
         
-        # 즉시 업데이트
-        clock_callback()
-        status_callback()
+        # # 즉시 업데이트
+        # clock_callback()
+        # status_callback()
     
     def get_current_time_string(self):
         """현재 시간 문자열 반환"""

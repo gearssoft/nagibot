@@ -26,6 +26,8 @@ class MainForm(QWidget):
 
             print("ConfigManager: 전체화면 모드:", self.configMng.is_fullscreen())
 
+            print("ConfigManager: mms 설정:", self.configMng.get_mms_server_info())
+
 
         if self.configMng.is_fullscreen():
             self.setWindowState(Qt.WindowFullScreen)
