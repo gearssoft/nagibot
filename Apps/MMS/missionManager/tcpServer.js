@@ -55,6 +55,8 @@ class SocketReader {
     });
     socket.on("close", () => { this.closed = true; this._flush(new Error("socket closed")); });
     socket.on("error", e => { this._flush(e); });
+
+    
   }
 
   _flush(err) {
@@ -86,7 +88,7 @@ class SocketReader {
       this.waiters.push({
         n,
         resolve: (b) => { clearTimeout(timer); resolve(b); },
-        reject : (e) => { clearTimeout(timer); reject(e); },
+        reject: (e) => { clearTimeout(timer); reject(e); },
       });
     });
   }
@@ -107,9 +109,40 @@ export class TcpServer {
     // 전역 상태
     this.metadataJson = {};
     this.imageBank = new Map(); // bank_id -> { data, type, seq, ts, size }
+
+    // 부팅 시각
+    this.bootTsSec = Math.floor(Date.now() / 1000);
   }
 
-// ====== 메타데이터 영속화 ======
+    // === 시간 유틸 ===
+  #pad2(n) { return String(n).padStart(2, "0"); }
+
+  #formatDate(d) {
+    const yyyy = d.getFullYear();
+    const MM = this.#pad2(d.getMonth() + 1);
+    const dd = this.#pad2(d.getDate());
+    const hh = this.#pad2(d.getHours());
+    const mm = this.#pad2(d.getMinutes());
+    const ss = this.#pad2(d.getSeconds());
+    // Qt의 "yyyy-MM-dd hh:mm:ss" 형식에 맞춤
+    return `${yyyy}-${MM}-${dd} ${hh}:${mm}:${ss}`;
+  }
+
+  #currentTimeString() {
+    return this.#formatDate(new Date());
+  }
+
+  #elapsedTimeString() {
+    const nowSec = Math.floor(Date.now() / 1000);
+    const elapsed = Math.max(0, nowSec - (this.bootTsSec ?? nowSec));
+    const h = this.#pad2(Math.floor(elapsed / 3600));
+    const m = this.#pad2(Math.floor((elapsed % 3600) / 60));
+    const s = this.#pad2(elapsed % 60);
+    return `${h}:${m}:${s}`;
+  }
+
+
+  // ====== 메타데이터 영속화 ======
   #getMetaDir() {
     return process.env.METADATA_DIR
       ? path.resolve(process.env.METADATA_DIR)
@@ -180,7 +213,7 @@ export class TcpServer {
   async stop() {
     if (!this.server) return;
     for (const s of this.sockets) {
-      try { s.destroy(); } catch {}
+      try { s.destroy(); } catch { }
     }
     await new Promise((res) => this.server.close(() => res()));
     this.server = null;
@@ -192,6 +225,8 @@ export class TcpServer {
       [...this.sockets].map(sock => new Promise(resolve => sock.write(buf, () => resolve())))
     );
   }
+
+
 
   // ------- 내부 처리 -------
   async #handleConnection(socket) {
@@ -207,7 +242,7 @@ export class TcpServer {
     let nextId = (() => { let i = 1; return () => i++; })();
 
     const closeWithLog = () => {
-      try { socket.destroy(); } catch {}
+      try { socket.destroy(); } catch { }
       this.sockets.delete(socket);
       console.log(`[TCP] closed: ${addr}`);
     };
@@ -220,7 +255,7 @@ export class TcpServer {
       await writer.send(buildJsonPacket(PUSH_JSON, {
         cmd: "welcome",
         version: this.version,
-        server_time: Math.floor(Date.now()/1000),
+        server_time: Math.floor(Date.now() / 1000),
         id: nextId(),
       })); // 원본 흐름 유지 :contentReference[oaicite:2]{index=2}
 
@@ -265,9 +300,9 @@ export class TcpServer {
             await writer.send(buildAckPacketFor(requestCode, ERR_INVALID_FORMAT)); continue;
           }
           const imgType = dataHdr.readUInt8(0);
-          const bankId  = dataHdr.readUInt32LE(4);
+          const bankId = dataHdr.readUInt32LE(4);
           const imgSize = dataHdr.readUInt32LE(8);
-          const imgSeq  = dataHdr.readUInt32LE(12);
+          const imgSeq = dataHdr.readUInt32LE(12);
 
           if (![IMG_JPG, IMG_PNG, IMG_BMP].includes(imgType)) {
             await writer.send(buildAckPacketFor(requestCode, ERR_INVALID_PARAMETER)); continue;
@@ -284,7 +319,7 @@ export class TcpServer {
           }
 
           this.imageBank.set(bankId, {
-            data: imgData, type: imgType, seq: imgSeq, ts: Date.now()/1000, size: imgData.length,
+            data: imgData, type: imgType, seq: imgSeq, ts: Date.now() / 1000, size: imgData.length,
           });
           await writer.send(buildAckPacketFor(requestCode, SUCCESS));
           continue;
@@ -344,18 +379,79 @@ export class TcpServer {
               deepMerge(this.metadataJson, data);
             } else if (cmd === "get_all") {
               const snapshot = JSON.parse(JSON.stringify(this.metadataJson));
-              await writer.send(buildJsonPacket(PUSH_JSON, { cmd: "all_metadata", data: snapshot }));
+
+              // ✅ 추가 필드: 현재시간/경과시간
+              const now_time = this.#currentTimeString();
+              const elapsed_time = this.#elapsedTimeString();
+              
+              await writer.send(buildJsonPacket(PUSH_JSON, { 
+                cmd: "all_metadata", 
+                data: snapshot,
+                now_time,
+                elapsed_time
+              }));
               continue;
             } else if (cmd === "get_item") {
               const key = String(obj.key || "");
               const token = obj.token;
               const value = key.includes(".") ? getByPath(this.metadataJson, key) : (this.metadataJson?.[key] ?? null);
-              await writer.send(buildJsonPacket(PUSH_JSON, { cmd: "item_metadata", key, value, token }));
+
+
+              // ✅ 추가 필드: 현재시간/경과시간
+              const now_time = this.#currentTimeString();
+              const elapsed_time = this.#elapsedTimeString();
+
+              await writer.send(buildJsonPacket(PUSH_JSON, {
+                cmd: "item_metadata",
+                key,
+                token,
+                value,
+                now_time,       // "yyyy-MM-dd hh:mm:ss"
+                elapsed_time    // "HH:MM:SS" (서버 시작 이후)
+              }));
+              // await writer.send(buildJsonPacket(PUSH_JSON, { cmd: "item_metadata", key, value, token }));
+
               continue;
+            } else if (cmd === "set_item") {
+              const key = String(obj.key || "");
+              const value = obj.value;
+              const token = obj.token;
+
+              if (!key) {
+                await writer.send(buildAckPacketFor(requestCode, ERR_INVALID_PARAMETER));
+                continue;
+              }
+
+              // --- 점표기 지원 set ---
+              if (key.includes(".")) {
+                const parts = key.split(".");
+                let curr = this.metadataJson;
+                for (let i = 0; i < parts.length - 1; i++) {
+                  const p = parts[i];
+                  if (typeof curr[p] !== "object" || curr[p] === null) curr[p] = {};
+                  curr = curr[p];
+                }
+                curr[parts[parts.length - 1]] = value;
+              } else {
+                this.metadataJson[key] = value;
+              }
+
+              // 1) 요청에 대한 ACK (클라이언트의 send_json()이 기다림)
+              await writer.send(buildAckPacketFor(requestCode, SUCCESS));
+
+              // 2) (선택) 에코/브로드캐스트용 PUSH_JSON
+              //    UI 동기화/다중 클라이언트 갱신에 유용
+              await writer.send(buildJsonPacket(PUSH_JSON, {
+                cmd: "item_metadata_set",
+                key, value, token
+              }));
+
+              continue;
+
             } else if (cmd === "list_banks") {
               const banks = [];
               for (const [bId, e] of this.imageBank.entries()) {
-                banks.push({ bank_id: bId, img_type: e.type, img_size: e.size, img_seq: e.seq, ts: Math.floor(e.ts ?? Date.now()/1000) });
+                banks.push({ bank_id: bId, img_type: e.type, img_size: e.size, img_seq: e.seq, ts: Math.floor(e.ts ?? Date.now() / 1000) });
               }
               await writer.send(buildJsonPacket(PUSH_JSON, { cmd: "bank_list", banks }));
               continue;
@@ -363,7 +459,7 @@ export class TcpServer {
               const bId = Number(obj.bank_id ?? -1);
               const e = this.imageBank.get(bId);
               const msg = e
-                ? { cmd: "bank_info", bank_id: bId, exists: true, img_type: e.type, img_size: e.size, img_seq: e.seq, ts: Math.floor(e.ts ?? Date.now()/1000) }
+                ? { cmd: "bank_info", bank_id: bId, exists: true, img_type: e.type, img_size: e.size, img_seq: e.seq, ts: Math.floor(e.ts ?? Date.now() / 1000) }
                 : { cmd: "bank_info", bank_id: bId, exists: false };
               await writer.send(buildJsonPacket(PUSH_JSON, msg));
               continue;
@@ -391,7 +487,7 @@ export class TcpServer {
           try {
             const ack = await reader.readExactly(5);
             const reqCode = ack.readUInt32LE(0);
-            const status  = ack.readUInt8(4);
+            const status = ack.readUInt8(4);
             console.log(`[TCP] push ACK: status=${status} for req=${reqCode}`);
           } catch (e) {
             if (String(e.message).includes("timeout")) console.warn("[TCP][WARN] push ACK read timeout");
@@ -404,7 +500,7 @@ export class TcpServer {
       }
     } catch (e) {
       console.error("[TCP][ERROR]", e.message);
-      try { await writer.send(buildPushStatusPacket(ERR_EXCEPTION)); } catch {}
+      try { await writer.send(buildPushStatusPacket(ERR_EXCEPTION)); } catch { }
     } finally {
       closeWithLog();
     }
