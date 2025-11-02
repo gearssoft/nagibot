@@ -6,7 +6,7 @@ import fileControl from "./routers/fileControl.js";
 import chunkUploader from "./routers/chunkUploader.js";
 import router_missionManager from "./missionManager/router.js";
 
-// ★ 추가: TCP 서버
+//TCP 서버
 import { TcpServer } from "./missionManager/tcpServer.js";
 
 async function main() {
@@ -29,7 +29,14 @@ async function main() {
 
   {
     const res =   await tcp.loadMetadata(); // 메타데이터 로드
-    console.log(`loaded ${res.count} mission metadata entries`);
+
+    if (res.ok == true) {
+      
+      console.log(`metadata mode : ${res.mode}`);
+      console.log(`path : ${res.path}`);
+    }
+
+    
   }
   
 
