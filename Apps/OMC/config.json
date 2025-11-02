@@ -23,6 +23,7 @@
         }
     ],
     "currentSelectUnit": 1,
+    "currentSelectUnit_Sub": 2,
     "imageDetectionServer": {
         "ip": "localhost",
         "port": 8085,
@@ -30,9 +31,13 @@
     },
     "isSoundOn": false,
     "fullscreen": false,
-    "currentSelectUnit_Sub": 2,
     "mmsServer": {
         "ip": "bsqai01.iptime.org",
         "port": 21051
+    },
+    "robotControlServer": {
+        "ip": "localhost",
+        "port": 8283
     }
+    
 }

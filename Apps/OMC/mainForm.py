@@ -90,37 +90,39 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
     @Slot()
     def onClicked_opmode_Group(self):
         try:
+            current_unit_index = self.current_unit_index + 1
             if self.rb_opmode_auto.isChecked():
                 print("Operation Mode: Auto")
-                self.netMMS.set_json_by_key("robot_1.operation_mode", "auto")
+                self.netMMS.set_json_by_key(f"robot_{current_unit_index}.operation_mode", "auto")
 
             elif self.rb_opmode_operator.isChecked():
                 print("Operation Mode: Operator")
-                self.netMMS.set_json_by_key("robot_1.operation_mode", "operator")
+                self.netMMS.set_json_by_key(f"robot_{current_unit_index}.operation_mode", "operator")
             elif self.rb_opmode_manual.isChecked():
                 print("Operation Mode: Manual")
-                self.netMMS.set_json_by_key("robot_1.operation_mode", "manual")
+                self.netMMS.set_json_by_key(f"robot_{current_unit_index}.operation_mode", "manual")
         except Exception as e:
             print(f"Error in onClicked_opmode_Group: {e}")
     @Slot()
     def onClicked_mission_mode_Group(self):
         try:
+            current_unit_index = self.current_unit_index + 1
             if self.rb_ms_move.isChecked():
                 print("Mission Mode: Move")
-                self.netMMS.set_json_by_key("robot_1.mission_mode", "move")
+                self.netMMS.set_json_by_key(f"robot_{current_unit_index}.mission_mode", "move")
 
             elif self.rb_ms_patrol.isChecked():
                 print("Mission Mode: Patrol")
-                self.netMMS.set_json_by_key("robot_1.mission_mode", "patrol")
+                self.netMMS.set_json_by_key(f"robot_{current_unit_index}.mission_mode", "patrol")
             elif self.rb_ms_tracking.isChecked():
                 print("Mission Mode: Tracking")
-                self.netMMS.set_json_by_key("robot_1.mission_mode", "tracking")
+                self.netMMS.set_json_by_key(f"robot_{current_unit_index}.mission_mode", "tracking")
             elif self.rb_ms_return.isChecked():
                 print("Mission Mode: Return")
-                self.netMMS.set_json_by_key("robot_1.mission_mode", "return")
+                self.netMMS.set_json_by_key(f"robot_{current_unit_index}.mission_mode", "return")
             elif self.rb_ms_stop.isChecked():
                 print("Mission Mode: Stop")
-                self.netMMS.set_json_by_key("robot_1.mission_mode", "stop")
+                self.netMMS.set_json_by_key(f"robot_{current_unit_index}.mission_mode", "stop")
         except Exception as e:
             print(f"Error in onClicked_mission_mode_Group: {e}")
 
