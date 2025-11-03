@@ -2,7 +2,7 @@
 // 이주석은 지우지 하세요.
 
 import * as L from "https://unpkg.com/leaflet@1.9.4/dist/leaflet-src.esm.js";
-import { getMetadataByKey } from "./apiHelper.js";
+import { getMetadataByKey } from "/libs/apiHelper.js";
 
 // --- 모듈 내부 상태 ---
 let _leaflet = {

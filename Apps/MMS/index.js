@@ -75,6 +75,9 @@ async function main() {
   app.use("/uploads", express.static(process.env.UPLOAD_PATH));
   console.log(`upload path : ${process.env.UPLOAD_PATH}`);
 
+  app.use("/www", express.static("./www"));
+  app.use("/libs", express.static("./www/libs"));
+  
   app.use(express.static(process.env.STATIC_ASSET));
 
   app.use((req, res) => res.status(404).send("oops! resource not found"));
