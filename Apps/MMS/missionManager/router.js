@@ -44,6 +44,33 @@ function imgTypeToMime(t) {
   return "application/octet-stream";
 }
 
+// missionManager/router.js 상단 유틸 근처에 추가
+function setByPath(obj, path, value) {
+  if (!path || typeof path !== "string") return;
+  const keys = path.split(".");
+  let cur = obj;
+  for (let i = 0; i < keys.length - 1; i++) {
+    const k = keys[i];
+    if (typeof cur[k] !== "object" || cur[k] === null || Array.isArray(cur[k])) {
+      cur[k] = {};
+    }
+    cur = cur[k];
+  }
+  cur[keys[keys.length - 1]] = value;
+}
+function deleteByPath(obj, path) {
+  if (!path || typeof path !== "string") return false;
+  const keys = path.split(".");
+  let cur = obj;
+  for (let i = 0; i < keys.length - 1; i++) {
+    const k = keys[i];
+    if (typeof cur[k] !== "object" || cur[k] === null) return false;
+    cur = cur[k];
+  }
+  return delete cur[keys[keys.length - 1]];
+}
+
+
 /** 루트: 라우터 정보 */
 router.get("/", (req, res) => {
   res.json({ r: "ok", info: "mission manager (tcp admin api)" });
@@ -97,6 +124,35 @@ router.get("/metadata/:path", (req, res) => {
   }
 });
 
+// ===== 키 목록 (optional: 평탄화) =====
+router.get("/metadata/keys", (req, res) => {
+  try {
+    const tcp = getTcp(req);
+    const flat = String(req.query.flat || "0") === "1";
+    const obj = tcp.metadataJson || {};
+    if (!flat) {
+      return res.json({ r: "ok", keys: Object.keys(obj) });
+    }
+    // flat=1 이면 'a.b.c' 형태로 모든 경로 리턴
+    const out = [];
+    const walk = (o, prefix = "") => {
+      for (const k of Object.keys(o)) {
+        const keyPath = prefix ? `${prefix}.${k}` : k;
+        if (o[k] && typeof o[k] === "object" && !Array.isArray(o[k])) {
+          walk(o[k], keyPath);
+        } else {
+          out.push(keyPath);
+        }
+      }
+    };
+    walk(obj, "");
+    res.json({ r: "ok", keys: out });
+  } catch (e) {
+    res.status(500).json({ r: "err", msg: e.message });
+  }
+});
+
+
 // POST /metadata : 전체 교체(덮어쓰기)
 router.post("/metadata", (req, res) => {
   try {
@@ -138,6 +194,64 @@ router.delete("/metadata", (req, res) => {
   }
 });
 
+
+// ===== 키 단위 Upsert (PUT /metadata/:path) =====
+// body: { value: any }
+router.put("/metadata/:path", (req, res) => {
+  try {
+    const tcp = getTcp(req);
+    const path = String(req.params.path || "");
+    if (!path) return res.status(400).json({ r: "err", msg: "path required" });
+
+    const body = req.body;
+    const hasWrapper = body && Object.prototype.hasOwnProperty.call(body, "value");
+    const value = hasWrapper ? body.value : body; // {value} 혹은 raw object 둘 다 허용
+
+    setByPath(tcp.metadataJson, path, value);
+    res.json({ r: "ok", path, replaced: true });
+  } catch (e) {
+    res.status(500).json({ r: "err", msg: e.message });
+  }
+});
+
+// ===== 키 단위 부분 병합 (PATCH /metadata/:path) =====
+// body: { ... }  (타겟이 object일 때 deepMerge, 아니면 set)
+router.patch("/metadata/:path", (req, res) => {
+  try {
+    const tcp = getTcp(req);
+    const path = String(req.params.path || "");
+    if (!path) return res.status(400).json({ r: "err", msg: "path required" });
+
+    const patch = req.body;
+    const cur = path.includes(".") ? getByPath(tcp.metadataJson, path) : (tcp.metadataJson?.[path]);
+
+    if (cur && typeof cur === "object" && !Array.isArray(cur) && patch && typeof patch === "object" && !Array.isArray(patch)) {
+      deepMerge(cur, patch);
+      return res.json({ r: "ok", path, merged: true });
+    }
+    // 대상이 object가 아니면 통째로 교체
+    setByPath(tcp.metadataJson, path, patch);
+    res.json({ r: "ok", path, replaced: true });
+  } catch (e) {
+    res.status(500).json({ r: "err", msg: e.message });
+  }
+});
+
+// ===== 키 단위 삭제 (DELETE /metadata/:path) =====
+router.delete("/metadata/:path", (req, res) => {
+  try {
+    const tcp = getTcp(req);
+    const path = String(req.params.path || "");
+    if (!path) return res.status(400).json({ r: "err", msg: "path required" });
+
+    const ok = deleteByPath(tcp.metadataJson, path);
+    res.json({ r: "ok", path, deleted: ok });
+  } catch (e) {
+    res.status(500).json({ r: "err", msg: e.message });
+  }
+});
+
+// POST /metadata/save : 메타데이터를 디스크에 저장
 router.post("/metadata/save", (req, res) => {
   try {
     const tcp = getTcp(req);
