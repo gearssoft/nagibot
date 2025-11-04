@@ -69,6 +69,7 @@ async function main() {
         case "apply_patch": {
           // 차량 파라미터/상태 변경(옵션)
           robot.applyPatch(data);
+          // console.log(`[ROBOT] applied patch:`, data);
           break;
         }
         default:

@@ -52,6 +52,19 @@ export class Robot {
     this.longitude = Number.isFinite(opts.longitude) ? Number(opts.longitude) : null;
     this.latitude  = Number.isFinite(opts.latitude)  ? Number(opts.latitude)  : null;
 
+    // ---- battery model ----
+    this.battPercent = Number(opts.battPercent ?? 100);   // [%] 0~100
+    this.battTempC   = Number(opts.battTempC   ?? 25);    // [℃]
+    this.battHealth  = String(opts.battHealth  ?? "normal"); // "normal|warm|hot|critical"
+    this._battDrainBase = 0.03 / 60;  // [%/sec] 기본 소모(3%/min -> 예시값은 필요시 조정)
+    this._battDrainK    = 0.12 / 60;  // 속도·조향에 따른 가중 소모
+    this._battTempRiseK = 0.15;       // 발열 민감도 (가속·조향시)
+    this._battCoolK     = 0.05;       // 공랭 복귀율
+
+    // ---- kinematics (for UI x/y speed) ----
+    this.vx = 0;   // [m/s]
+    this.vy = 0;   // [m/s]
+
     // 초기 lon/lat이 없으면 x,y로부터 계산
     if (this.longitude == null || this.latitude == null) {
       const { lon, lat } = this._xyToLonLat(this.x, this.y);
@@ -151,6 +164,9 @@ export class Robot {
 
     this.x += xDot * dt;
     this.y += yDot * dt;
+    this.vx = xDot;         // 즉시 노출용 축속도
+    this.vy = yDot;
+
     this.headingDeg = this._normalizeDeg(this.headingDeg + (thetaDot * 180 / Math.PI) * dt);
     this.v *= this.drag;
 
@@ -158,6 +174,36 @@ export class Robot {
     const { lon, lat } = this._xyToLonLat(this.x, this.y);
     this.longitude = lon;
     this.latitude = lat;
+
+    // ---- battery update ----
+    this.#updateBattery(dt);
+  }
+
+  #updateBattery(dt) {
+    // 소비전력 근사: 속도와 조향부하(절대 조향각) 기반
+    const steerLoad = Math.abs(this.steerDeg) / Math.max(1, this.steerLimitDeg); // 0~1
+    const load = Math.abs(this.v) + steerLoad; // 단순 합(필요시 가중치 조정)
+
+    // SoC 감소[%]: 기본 소모 + 부하 기반 소모
+    const dSoC = (this._battDrainBase + this._battDrainK * load) * dt * 100; // [%]
+    this.battPercent = Math.max(0, this.battPercent - dSoC);
+
+    // 온도 동역학: 부하시 상승, 무부하시 냉각
+    const targetRise = 10 * load;     // 부하에 따른 상승 목표(℃)
+    const ambient = 24;               // 주변 온도
+    const targetTemp = ambient + targetRise;
+    const rise = (targetTemp - this.battTempC) * this._battTempRiseK * dt;
+    const cool = (ambient - this.battTempC) * this._battCoolK * dt;
+    this.battTempC += rise + cool;
+
+    // 상태 라벨링
+    const p = this.battPercent;
+    const t = this.battTempC;
+    let health = "normal";
+    if (t >= 60 || p <= 5) health = "critical";
+    else if (t >= 50 || p <= 10) health = "hot";
+    else if (t >= 40 || p <= 20) health = "warm";
+    this.battHealth = health;
   }
 
   toJSON() {
@@ -175,6 +221,8 @@ export class Robot {
       WheelOmega: this.WheelOmega,
       steerDeg: this.steerDeg,
       v: this.v,
+      vx: this.vx,
+      vy: this.vy,
 
       longitude: this.longitude,
       latitude: this.latitude,
@@ -182,8 +230,24 @@ export class Robot {
       // 참고로 geo 기준점도 함께 노출(클라가 변환 필요 시 사용)
       originLon: this.originLon,
       originLat: this.originLat,
-      metersPerDeg: this.metersPerDeg
+      metersPerDeg: this.metersPerDeg,
+
+      // ---- battery telemetry ----
+      battPercent: Math.round(this.battPercent * 10) / 10, // 예: 83.7
+      battTempC:   Math.round(this.battTempC   * 10) / 10, // 예: 32.4
+      battState:   this.#healthToCode(this.battHealth),    // 0=normal,1=warm,2=hot,3=critical
+      battHealth:  this.battHealth                          // 텍스트 라벨
+
     };
+  }
+
+  #healthToCode(h) {
+    switch (h) {
+      case "warm": return 1;
+      case "hot": return 2;
+      case "critical": return 3;
+      default: return 0; // normal
+    }
   }
 
   // ===== 좌표 변환 유틸 =====
