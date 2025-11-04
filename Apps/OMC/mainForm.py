@@ -46,8 +46,13 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
             # 연결 파라미터를 한 곳에 모읍니다.
             return Client(host=self.configMng.get_mms_server_info().get("ip", "localhost"), 
                           port=self.configMng.get_mms_server_info().get("port", 8282))
+        def _rbot_factory():
+            return Client(host=self.configMng.get_robot_control_server_info().get("ip", "localhost"), 
+                          port=self.configMng.get_robot_control_server_info().get("port", 8283))
 
+         # NetworkAdapter 인스턴스 생성
         self.netMMS = NetworkAdapter(client_factory=_factory, parent=self)
+        self.netRobot = NetworkAdapter(client_factory=_rbot_factory, parent=self)
 
         # 어댑터 시그널 구독 → UI 슬롯
         self.netMMS.connected.connect(self._ui_on_connected)
@@ -55,11 +60,18 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         self.netMMS.error.connect(self._ui_on_error)
         self.netMMS.message.connect(self._ui_on_message)
 
+        # 로봇 어댑터 시그널 구독 → UI 슬롯
+        self.netRobot.connected.connect(self._rbot_ui_on_connected)
+        self.netRobot.disconnected.connect(self._rbot_ui_on_disconnected)
+        self.netRobot.error.connect(self._rbot_ui_on_error)
+        self.netRobot.message.connect(self._rbot_ui_on_message)
+
         # 앱 종료 시 안전 정리
         QApplication.instance().aboutToQuit.connect(self.netMMS.shutdown)
 
         # 자동 연결 (원래 Connect_network에서 하던 동작)
         self.netMMS.start()
+        self.netRobot.start() 
         #=======================================================================
 
         # === 추가: 메타데이터 주기 폴링 타이머 ===
@@ -87,6 +99,7 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
 
         self.current_robot_data = {}
 
+    
     @Slot()
     def onClicked_opmode_Group(self):
         try:
@@ -144,7 +157,6 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
 
         # self._update_ui_with_robot_data(self.current_robot_data)
 
-        
 
     # === 하트비트 전송 ===
     @Slot()
@@ -176,9 +188,10 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         
         # 모드 버튼 초기 색상
         # self._setup_mode_buttons()
-        
-       
 
+
+    #===================== NetworkAdapter MMS ====================
+    
     @Slot(dict)
     def _ui_on_connected(self, json_info: dict):
 
@@ -249,6 +262,22 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
                 self.rb_ms_return.setChecked(True)
             elif mission_mode == "stop":
                 self.rb_ms_stop.setChecked(True)
+
+    #===================== NetworkAdapter Robot ====================
+    @Slot(dict)
+    def _rbot_ui_on_connected(self, json_info: dict):
+        print("[UI] Robot Connected:", json_info)
+    @Slot(str)
+    def _rbot_ui_on_disconnected(self, reason: str):
+        print("[UI] Robot Disconnected:", reason)
+    @Slot(str)
+    def _rbot_ui_on_error(self, msg: str):
+        print("[UI] Robot Error:", msg)
+    @Slot(dict)
+    def _rbot_ui_on_message(self, payload: dict):
+        print("[UI] Robot Message:", payload)
+        # TODO: Implement message handling logic
+
 
     #===================== UI 초기화 ====================
     
@@ -342,24 +371,6 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
             zoom=13
         )
     
-    
-    # ==================== 타이머 콜백 ====================
-    
-    # @Slot()
-    # def _update_clock(self):
-    #     """시계 업데이트"""
-    #     self.statusManager.update_clock_widgets(self.currentTime, self.operationTime)
-    
-    # @Slot()
-    # def _update_status(self):
-    #     """상태 업데이트"""
-    #     self.statusManager.update_status_widgets(
-    #         self.wifiStatus, self.networkStatus, self.batteryStatus,
-    #         self.labelAreaName, self.labelWether, self.labelTemper,
-    #         self.labelRain, self.labelWindy, self.labelHumidty,
-    #         self.labelPrecipitation, self.labelWaveHeight,
-    #         self.edLogText
-    #     )
     
     @Slot()
     def gotoHome(self):

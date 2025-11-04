@@ -52,7 +52,15 @@ class ConfigManager:
                 "enable": False
             },
             "isSoundOn": False,
-            "fullscreen": True
+            "fullscreen": True,
+            "mmsServer": {
+                "ip": "localhost",
+                "port": 8282
+            },
+            "robotControlServer": {
+                "ip": "localhost",
+                "port": 8283
+            }
         }
         
         # 설정 파일이 존재하면 불러오기
@@ -330,6 +338,15 @@ class ConfigManager:
             dict: MMS 서버 정보 딕셔너리
         """
         return self.config.get("mmsServer", {})
+    
+    def get_robot_control_server_info(self):
+        """
+        로봇 제어 서버 정보 반환
+
+        Returns:
+            dict: 로봇 제어 서버 정보 딕셔너리
+        """
+        return self.config.get("robotControlServer", {})
 
     def save_config(self):
         """
