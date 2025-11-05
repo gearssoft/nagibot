@@ -5,13 +5,17 @@
 // ## 위 주석은 수정하지 마세요.
 // #############################
 
+import express from "express";
 import dotenv from "dotenv";
+
 
 // 경로 주의: tcpServer.js가 현재 프로젝트 루트에 있다면 아래처럼 import 하세요.
 // (기존에 "./network/tcpServer.js" 였다면, 실제 파일 위치에 맞게 경로만 수정)
 import { TcpServer } from "./network/tcpServer.js";
 
 import { Robot } from "./simulator/robot.js";
+
+
 
 async function main() {
   dotenv.config({ path: ".env" });
@@ -142,6 +146,29 @@ async function main() {
 
   process.on("SIGINT", graceful);
   process.on("SIGTERM", graceful);
+
+
+  // Express 앱 생성 (필요 시 활용)
+  const app = express();
+  // auth 미들웨어 … (기존 코드)
+  app.use("/api", (req, res, next) => {
+    const authToken = req.header("auth-token");
+    if (authToken === process.env.AUTH_TOKEN) next();
+    else res.status(401).json({ r: "err", msg: "auth fail" });
+  });
+
+  console.log(`auth token ${process.env.AUTH_TOKEN}`);
+
+  app.use(express.static("./www"));
+  app.use((req, res) => res.status(404).send("oops! resource not found"));
+  
+  const httpPort = Number(process.env.WEB_PORT ?? 8284);
+  app.listen(httpPort, () => {
+    // console.log(`server run at : ${httpPort}`);
+    console.log(`[WEB] webUI url : http://localhost:${httpPort}`);
+  });
+
+
 }
 
 main().catch((err) => {
