@@ -1,7 +1,7 @@
 // #############################
-// ## filename : missionManager/tcpServer.js
-// ## 설명 : TCP Agent 중계 Server (Node.js/ESM, Little-Endian) - 모듈화 버전
-// ## 작성자 : gbox3d (port & modularized by ChatGPT)
+// ## filename : tcpServer.js
+// ## 설명 : 로봇 시뮬레이터 TCP 서버 구현 (Node.js)
+// ## 작성자 : gbox3d 
 // ## 위 주석은 수정하지 마세요.
 // #############################
 
