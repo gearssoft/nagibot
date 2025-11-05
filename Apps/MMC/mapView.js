@@ -14,6 +14,8 @@ let _leaflet = {
   },
 };
 
+
+
 /**
  * 지도 초기화 (중복 생성 방지)
  * @param {Object} opts
@@ -126,5 +128,75 @@ export function destroyMap() {
   if (_leaflet.map) {
     _leaflet.map.remove();
     _leaflet = { map: null, layers: { base: null, marker: null, accuracy: null } };
+  }
+}
+
+// ✅ 배너 표시
+export function showNoLocationBanner(text = "위치 데이터 없음") {
+  if (!_leaflet.map) return;
+
+  // 이미 있으면 텍스트만 갱신
+  if (_leaflet.layers.noDataCtl) {
+    const el = _leaflet.layers.noDataCtl._container?.querySelector(".no-data-text");
+    if (el) el.textContent = text;
+    return;
+  }
+
+  // Leaflet Control로 배너 추가
+  const NoDataControl = L.Control.extend({
+    onAdd: function () {
+      const div = L.DomUtil.create("div", "leaflet-control no-data-banner");
+      div.innerHTML = `<span class="no-data-text">${text}</span>`;
+      L.DomEvent.disableClickPropagation(div);
+      return div;
+    },
+  });
+
+  _leaflet.layers.noDataCtl = new NoDataControl({ position: "topright" });
+  _leaflet.map.addControl(_leaflet.layers.noDataCtl);
+
+  // 마커/정확도 제거(있다면)
+  if (_leaflet.layers.marker) { _leaflet.map.removeLayer(_leaflet.layers.marker); _leaflet.layers.marker = null; }
+  if (_leaflet.layers.accuracy) { _leaflet.map.removeLayer(_leaflet.layers.accuracy); _leaflet.layers.accuracy = null; }
+}
+
+// ✅ 배너 숨김
+export function hideNoLocationBanner() {
+  if (_leaflet.map && _leaflet.layers.noDataCtl) {
+    _leaflet.map.removeControl(_leaflet.layers.noDataCtl);
+    _leaflet.layers.noDataCtl = null;
+  }
+}
+
+
+// --- 추가: 헤딩(도)을 CSS 회전각으로 변환 (0°=동, CCW+ → CSS는 CW+ 이므로 90 - heading)
+function cssAngleFromHeading(headingDeg) {
+  const h = Number.isFinite(headingDeg) ? headingDeg : 0;
+  return 90 - h;
+}
+
+export function updateMapWithStatusData(status, center = true) {
+  if (!_leaflet.map || !status) return;
+
+  const lat = Number(status.latitude);
+  const lng = Number(status.longitude);
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+
+  // ✅ 위치가 유효하면 배너 숨김
+  hideNoLocationBanner();
+
+  if (_leaflet.layers.marker) {
+    _leaflet.map.removeLayer(_leaflet.layers.marker);
+    _leaflet.layers.marker = null;
+  }
+  if (_leaflet.layers.accuracy) {
+    _leaflet.map.removeLayer(_leaflet.layers.accuracy);
+    _leaflet.layers.accuracy = null;
+  }
+
+  _leaflet.layers.marker = L.marker([lat, lng]).addTo(_leaflet.map);
+
+  if (center) {
+    _leaflet.map.setView([lat, lng], _leaflet.map.getZoom());
   }
 }

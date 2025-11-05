@@ -11,7 +11,10 @@ import {
     setAuthToken
 } from "/libs/apiHelper.js";
 
-import { initMap, updateMapForCurrentUnit } from "./mapView.js";
+import { initMap, updateMapForCurrentUnit, updateMapWithStatusData,
+    showNoLocationBanner, hideNoLocationBanner
+} from "./mapView.js";
+
 
 // --- 기본 초기 메타데이터 ---
 const INIT_DATA = {
@@ -167,6 +170,10 @@ export class MMCApp {
                     const r = await mergeMetadata({ currentSelectUnit: val });
                     console.log("[MERGE METADATA RESPONSE]", r);
                     alert("선택 호기 업데이트 완료");
+
+                    this.#updateRobotStatusDataToMap(true);
+
+
                     try {
                         const s = await saveMetadata();
                         console.log("[SAVE METADATA RESPONSE]", s);
@@ -266,9 +273,12 @@ export class MMCApp {
         while (this.polling) {
             try {
                 await this.#updateRobotModeStatusOnce();
+                await this.#updateRobotStatusDataToMap();
+
             } catch (err) {
                 console.error("[POLL ERROR]", err);
             }
+
             await new Promise((r) => setTimeout(r, this.pollInterval));
         }
     }
@@ -302,6 +312,25 @@ export class MMCApp {
             if (radio2) radio2.checked = true;
             this.#updateMissionModeStatus(i, ms);
         }
+    }
+
+    async #updateRobotStatusDataToMap(fixCenter = true) {
+        const sel = await getMetadataByKey("currentSelectUnit");
+        const idx0 = sel?.value ?? 0;
+        const unitIndex = Number(idx0) + 1;
+
+        const res = await getMetadataByKey(`robot_${unitIndex}.status_data`);
+        const status = res?.value;
+
+        if (!status || typeof status !== "object") {
+            // ✅ 위치 데이터 없음 배너 표시
+            showNoLocationBanner("선택된 호기의 위치 데이터 없음");
+            return;
+        }
+
+        // ✅ 정상 데이터면 배너 숨기고 지도 갱신
+        hideNoLocationBanner();
+        updateMapWithStatusData(status, fixCenter);
     }
 }
 
