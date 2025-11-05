@@ -71,6 +71,10 @@ export class Robot {
       this.longitude = lon;
       this.latitude = lat;
     }
+
+    this._battMode = "discharge"; // "discharge" | "charge"
+    this._battChargeRate = 0.35 / 60; // [%/sec] 충전 속도(예: 0.35%/sec ≈ 21%/min)
+
   }
 
   static fromMetadata(m = {}) {
@@ -184,9 +188,31 @@ export class Robot {
     const steerLoad = Math.abs(this.steerDeg) / Math.max(1, this.steerLimitDeg); // 0~1
     const load = Math.abs(this.v) + steerLoad; // 단순 합(필요시 가중치 조정)
 
-    // SoC 감소[%]: 기본 소모 + 부하 기반 소모
-    const dSoC = (this._battDrainBase + this._battDrainK * load) * dt * 100; // [%]
-    this.battPercent = Math.max(0, this.battPercent - dSoC);
+    // Battery 방전/충전 모델
+    if (this._battMode === "discharge") {
+      // 방전: 기본 소모 + 부하 가중 소모
+      const dSoC = (this._battDrainBase + this._battDrainK * load) * dt * 100; // [%]
+      this.battPercent = Math.max(0, this.battPercent - dSoC);
+      // 0% 도달 시 충전 모드로 전환
+      if (this.battPercent <= 0) {
+        this.battPercent = 0;
+        this._battMode = "charge";
+      }
+    } else {
+      // 충전: 고정 충전 속도(원하면 주행/정지 상태에 따라 가중 가능)
+      const dSoC = this._battChargeRate * dt * 100; // [%]
+      this.battPercent = Math.min(100, this.battPercent + dSoC);
+      // 100% 도달 시 방전 모드로 전환
+      if (this.battPercent >= 100) {
+        this.battPercent = 100;
+        this._battMode = "discharge";
+      }
+    }
+
+    // 0 미만이면 다시 100으로 복귀 (시뮬 편의상)
+    if (this.battPercent <= 0) {
+      this.battPercent = 100;
+    }
 
     // 온도 동역학: 부하시 상승, 무부하시 냉각
     const targetRise = 10 * load;     // 부하에 따른 상승 목표(℃)
