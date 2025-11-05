@@ -588,7 +588,7 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         # 각도만 0으로 복귀(속도는 유지)
             rpm = self._last_rpm
             self.netRobot.control_robot_set_actuators(
-                rpm=rpm,
+                rpm=0,
                 angle_deg=0,
                 omega_rad=2.0
             )        
@@ -617,7 +617,7 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         # 각도만 0으로 복귀(속도는 유지)
             rpm = self._last_rpm
             self.netRobot.control_robot_set_actuators(
-                rpm=rpm,
+                rpm=0,
                 angle_deg=0,
                 omega_rad=2.0
             )
