@@ -70,6 +70,7 @@ class NetworkAdapter(QObject):
         # Client 콜백을 Qt 시그널로 브릿지
         self._client.on_connection_start = self._on_connection_start
         self._client.on_connection_lost = self._on_connection_lost
+        self._client.on_push_update = self._on_push_update
         # 필요 시 self._client.on_message = self._on_message  형태로 확장 가능
 
         def done(fut):
@@ -110,9 +111,13 @@ class NetworkAdapter(QObject):
         self._client = None
         self.disconnected.emit(reason)
 
+    def _on_push_update(self, json_info: dict):
+        self.message.emit(json_info)
+
     # 필요 시 일반 메시지 브릿지
-    def _on_message(self, payload: dict):
-        self.message.emit(payload)
+    # def _on_message(self, payload: dict):
+    #     print(f"[NetworkAdapter] Message received: {payload}")
+    #     self.message.emit(payload)
 
     # 앱 종료 시 안전 정리(선택)
     def shutdown(self):
@@ -125,8 +130,6 @@ class NetworkAdapter(QObject):
                 if loop.is_running():
                     loop.call_soon_threadsafe(loop.stop)
             self._loop_thread = None
-
-    # Call TCP APIs here ==========
     
     # ping 전송 ==========
     def ping_server(self):
@@ -207,5 +210,180 @@ class NetworkAdapter(QObject):
                 self.error.emit(f"[json_set_by_key:{key}] {e}")
                 self.message.emit({"cmd": "json_item_set_result", "key": key, "ok": False, "error": str(e)})
 
+        self._run_async(_task(), on_done=done)
+
+# ===== MMS 전용 어댑터 (메타데이터/뱅크/알림 등) =====
+class NetworkAdapter_MMS(NetworkAdapter):
+    def __init__(self, client_factory: Callable[[], Any], parent=None):
+        super().__init__(client_factory, parent)
+
+    # 메타데이터 전체 요청
+    def fetch_all_metadata(self, *, timeout_sec: float = 5.0):
+        if not self._connected or not self._client:
+            self.error.emit("Not connected")
+            self.message.emit({"cmd": "all_metadata", "ok": False, "error": "not connected"})
+            return
+
+        async def _task():
+            import asyncio
+            payload = {"cmd": "get_all"}
+            ok = await asyncio.wait_for(self._client.send_json(payload), timeout=timeout_sec)
+            return bool(ok)
+
+        def done(fut):
+            try:
+                ok = fut.result()
+                # 서버는 PUSH_JSON으로 all_metadata를 보내므로,
+                # 여기선 ACK만 확인. 실데이터는 _on_push_update → message 시그널로 옴.
+                self.message.emit({"cmd": "all_metadata/ack", "ok": ok})
+            except Exception as e:
+                self.error.emit(f"[MMS:get_all] {e}")
+                self.message.emit({"cmd": "all_metadata/ack", "ok": False, "error": str(e)})
+
+        self._run_async(_task(), on_done=done)
+
+    # 특정 키 요청(get_item)
+    def fetch_item(self, key: str, *, timeout_sec: float = 5.0):
+        if not self._connected or not self._client:
+            self.error.emit("Not connected")
+            self.message.emit({"cmd": "item_metadata", "key": key, "ok": False, "error": "not connected"})
+            return
+
+        async def _task():
+            import asyncio
+            payload = {"cmd": "get_item", "key": key}
+            ok = await asyncio.wait_for(self._client.send_json(payload), timeout=timeout_sec)
+            return bool(ok)
+
+        def done(fut):
+            try:
+                ok = fut.result()
+                self.message.emit({"cmd": "item_metadata/ack", "key": key, "ok": ok})
+            except Exception as e:
+                self.error.emit(f"[MMS:get_item:{key}] {e}")
+                self.message.emit({"cmd": "item_metadata/ack", "key": key, "ok": False, "error": str(e)})
+
+        self._run_async(_task(), on_done=done)
+
+    # 특정 키 설정(set_item)
+    def set_item(self, key: str, value: dict, *, timeout_sec: float = 5.0, echo: bool = False):
+        if not self._connected or not self._client:
+            self.error.emit("Not connected")
+            self.message.emit({"cmd": "item_metadata_set", "key": key, "ok": False, "error": "not connected"})
+            return
+
+        async def _task():
+            import asyncio
+            payload = {"cmd": "set_item", "key": key, "value": value}
+            ok = await asyncio.wait_for(self._client.send_json(payload), timeout=timeout_sec)
+            return bool(ok)
+
+        def done(fut):
+            try:
+                ok = fut.result()
+                self.message.emit({"cmd": "item_metadata_set/ack", "key": key, "ok": ok})
+                if ok and echo:
+                    self.fetch_item(key)
+            except Exception as e:
+                self.error.emit(f"[MMS:set_item:{key}] {e}")
+                self.message.emit({"cmd": "item_metadata_set/ack", "key": key, "ok": False, "error": str(e)})
+
+        self._run_async(_task(), on_done=done)
+
+      
+class NetworkAdapter_Robot(NetworkAdapter):
+    def __init__(self, client_factory: Callable[[], Any], parent=None):
+        super().__init__(client_factory, parent)
+
+      # ===== control_robot: 구동기 제어 (RPM/조향각/각속도) =====
+    def control_robot_set_actuators(self, *, rpm: int, angle_deg: int, omega_rad: float,
+                                    timeout_sec: float = 5.0, token=None):
+        if not self._connected or not self._client:
+            self.error.emit("Not connected")
+            return
+        async def _task():
+            import asyncio
+            payload = {
+                "cmd": "control_robot",
+                "action": "set_actuators",
+                "data": {
+                    "WheelSpeed": int(rpm),
+                    "WheelAngle": int(angle_deg),
+                    "WheelOmega": float(omega_rad),
+                },
+                "token": token,
+            }
+            ok = await asyncio.wait_for(self._client.send_json(payload), timeout=timeout_sec)
+            return bool(ok)
+        def done(fut):
+            try:
+                ok = fut.result()
+                self.message.emit({"cmd": "control_robot/ack", "action": "set_actuators", "ok": ok})
+            except Exception as e:
+                self.error.emit(f"[control_robot:set_actuators] {e}")
+                self.message.emit({"cmd": "control_robot/ack", "action": "set_actuators", "ok": False, "error": str(e)})
+        self._run_async(_task(), on_done=done)
+
+    # ===== control_robot: 운용 패치 (모드/배터리 등 상태값 갱신) =====
+    def control_robot_apply_patch(self, *, mission_mode=None, operation_mode=None,
+                                  batt_percent=None, batt_tempC=None, extra: dict | None = None,
+                                  timeout_sec: float = 5.0, token=None):
+        if not self._connected or not self._client:
+            self.error.emit("Not connected")
+            return
+        async def _task():
+            # import asyncio
+            patch = {}
+            if mission_mode is not None:   patch["mission"]   = mission_mode   # move|patrol|tracking|return|stop
+            if operation_mode is not None: patch["mode"] = operation_mode # auto|operator|manual
+            if batt_percent is not None:   patch["battPercent"]    = float(batt_percent)
+            if batt_tempC is not None:     patch["battTempC"]      = float(batt_tempC)
+            if extra: patch.update(extra)
+
+            payload = {
+                "cmd": "control_robot",
+                "action": "apply_patch",
+                "data": patch,
+                "token": token,
+            }
+            ok = await asyncio.wait_for(self._client.send_json(payload), timeout=timeout_sec)
+            return bool(ok)
+        def done(fut):
+            try:
+                ok = fut.result()
+                self.message.emit({"cmd": "control_robot/ack", "action": "apply_patch", "ok": ok})
+            except Exception as e:
+                self.error.emit(f"[control_robot:apply_patch] {e}")
+                self.message.emit({"cmd": "control_robot/ack", "action": "apply_patch", "ok": False, "error": str(e)})
+        self._run_async(_task(), on_done=done)
+
+    # ===== control_robot: 위치/자세 텔레포트 =====
+    def control_robot_teleport(self, *, x: float | None = None, y: float | None = None,
+                               heading_deg: float | None = None, timeout_sec: float = 5.0, token=None):
+        if not self._connected or not self._client:
+            self.error.emit("Not connected")
+            return
+        async def _task():
+            import asyncio
+            data = {}
+            if x is not None:           data["x"] = float(x)
+            if y is not None:           data["y"] = float(y)
+            if heading_deg is not None: data["headingDeg"] = float(heading_deg)
+
+            payload = {
+                "cmd": "control_robot",
+                "action": "apply_patch",     # 시뮬레이터는 apply_patch로 위치/헤딩 반영
+                "data": data,
+                "token": token,
+            }
+            ok = await asyncio.wait_for(self._client.send_json(payload), timeout=timeout_sec)
+            return bool(ok)
+        def done(fut):
+            try:
+                ok = fut.result()
+                self.message.emit({"cmd": "control_robot/ack", "action": "teleport", "ok": ok})
+            except Exception as e:
+                self.error.emit(f"[control_robot:teleport] {e}")
+                self.message.emit({"cmd": "control_robot/ack", "action": "teleport", "ok": False, "error": str(e)})
         self._run_async(_task(), on_done=done)
 

@@ -414,6 +414,14 @@ class ConfigManager:
                         "ip": "localhost",
                         "port": 8282
                     }
+
+                if "robotControlServer" in loaded_config:
+                    self.config["robotControlServer"] = loaded_config["robotControlServer"]
+                else:
+                    self.config["robotControlServer"] = {
+                        "ip": "localhost",
+                        "port": 8283
+                    }
                     
                     
             return True

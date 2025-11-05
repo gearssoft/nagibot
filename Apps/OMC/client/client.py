@@ -41,6 +41,8 @@ class Client:
         self.on_connection_start: Optional[Callable[[dict], None]] = None
         self.on_connection_lost: Optional[Callable[[str], None]] = None
 
+        self.on_push_update: Optional[Callable[[dict], None]] = None
+
     def _notify_connect(self, json_info: dict):
         cb = self.on_connection_start
         if cb:
@@ -48,6 +50,14 @@ class Client:
                 cb(json_info)
             except Exception as e:
                 print(f"[CLIENT][WARN] on_connection_start callback error: {e}")
+
+    def _notify_robot_update(self, json_info: dict):
+        cb = self.on_robot_update
+        if cb:
+            try:
+                cb(json_info)
+            except Exception as e:
+                print(f"[CLIENT][WARN] on_robot_update callback error: {e}")
 
     def _notify_disconnect(self, reason: str):
         cb = self.on_connection_lost
@@ -211,6 +221,17 @@ class Client:
                         token = obj_data.get("token")
                         if token and token in self._item_waiters:
                             self._item_waiters[token].put_nowait(obj_data)
+                    else:
+                        if self.on_push_update:
+                            try:
+                                self.on_push_update(obj_data)
+                            except Exception as e:
+                                print(f"[CLIENT][WARN] on_push_update callback error: {e}")
+
+                    #     # print(f"[CLIENT][INFO] item_metadata received for token={token}")
+                    # if obj_data.get("cmd") == "robot_update":
+                    #     self._notify_robot_update(obj_data)
+                        
 
                     try:
                         await ClientProtocol.send_ack(

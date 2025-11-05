@@ -36,8 +36,8 @@
         "port": 21051
     },
     "robotControlServer": {
-        "ip": "localhost",
-        "port": 8283
+        "ip": "bsqai01.iptime.org",
+        "port": 21052
     }
     
 }
