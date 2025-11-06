@@ -1,5 +1,6 @@
-// filename: www/index.js
-// 이주석은 지우지 마세요.
+// filename: index.js
+// 작성자 : gbox3d
+// 이주석은 지우지 마세요. 위 주석을 지우는 '자'는 3대를 저주할겁니다.
 
 import {
     getState,
@@ -11,8 +12,11 @@ import {
     setAuthToken
 } from "/libs/apiHelper.js";
 
-import { initMap, updateMapForCurrentUnit, updateMapWithStatusData,
-    showNoLocationBanner, hideNoLocationBanner
+
+import {
+    initMap, updateMapForCurrentUnit, updateMapWithStatusData,
+    showNoLocationBanner, hideNoLocationBanner,
+    updateWaypointsForUnit, enableCtrlClickToAppendWaypoint
 } from "./mapView.js";
 
 
@@ -74,6 +78,9 @@ export class MMCApp {
         this.#setupEndpoint();
         initMap();
 
+        // Ctrl+클릭 웨이포인트 추가 활성화
+        enableCtrlClickToAppendWaypoint();
+
         await this.#loadStateVersion();
         await this.#ensureMetadata();
         await this.#bindUnitSelection();
@@ -81,6 +88,13 @@ export class MMCApp {
         this.#bindRobotModeHandlers();
 
         this.startPolling();
+
+        // 시작 시 현재 선택 유닛의 웨이포인트도 그려줌
+        try {
+            const sel = await getMetadataByKey("currentSelectUnit");
+            const unitIdx1 = ((sel?.value ?? 0) | 0) + 1;
+            await updateWaypointsForUnit(unitIdx1);
+        } catch (_) { }
     }
 
     stop() {
@@ -183,6 +197,13 @@ export class MMCApp {
                     try {
                         updateMapForCurrentUnit?.(val);
                     } catch (_) { }
+
+                    // 선택 유닛 변경 시 해당 유닛의 웨이포인트 재렌더링
+                    try {
+                        await updateWaypointsForUnit(val + 1);
+                    } catch (_) { }
+
+
                 });
             });
         } catch (err) {
