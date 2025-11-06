@@ -221,7 +221,7 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         """UI 초기 상태 설정"""
 
         try : 
-            self._setup_key_button_visibility()
+            # self._setup_key_button_visibility()
              # 호기 표시
             self.txUnitNuberInfo.setText(f"{self.current_unit_index+1} 호기")
         

@@ -76,3 +76,10 @@ lauch.json 파일은 다음과 같이 설정합니다.
     ]
 }
 ```
+
+## Test Url
+
+```txt
+bsqai01.iptime.org
+ailab-miso.iptime.org
+```
