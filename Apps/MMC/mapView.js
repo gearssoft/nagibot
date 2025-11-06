@@ -10,13 +10,19 @@ let _leaflet = {
   map: null,
   layers: {
     base: null,
-    marker: null,      // 단일 위치 마커(상태 패널용)
-    accuracy: null,
-    wpGroup: null,     // waypoints 마커 그룹
-    wpLine: null,      // waypoints 폴리라인
-    selHalo: null      // 선택 하이라이트 링
+
+    // ✅ 로봇별 마커/정확도 원을 인덱스 키로 관리
+    robot_markers: {},   // { [unitIndex: number]: L.Marker }
+    robot_accuracy: {},  // { [unitIndex: number]: L.Circle }
+
+    wpGroup: null,
+    wpLine: null,
+    selHalo: null
   },
-  selectedMarker: null,     // 선택된 WP 마커(일반 마커)
+  selectedMarker: null,
+
+  // ✅ 로봇 공통 아이콘(미리 생성해 재사용)
+  robotIcon: null,
 };
 
 // ---------------------- 공용 유틸 ----------------------
@@ -99,7 +105,7 @@ export async function updateWaypointsForUnit(unitIndex1) {
   if (!_leaflet.map) await initMap();
 
   const wps = await _getWaypoints(unitIndex1);
-  _clearWaypointLayers();
+  _clearWaypointLayers(); // 기존 웨이포인트 레이어 제거
   if (!wps.length) return;
 
   _leaflet.layers.wpGroup = L.layerGroup().addTo(_leaflet.map);
@@ -113,10 +119,10 @@ export async function updateWaypointsForUnit(unitIndex1) {
     const m = L.marker(ll, {
       draggable: true,
       icon: L.icon({
-        iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+        iconUrl: "/res/marker-icon.png",
         iconSize: [25, 41],
         iconAnchor: [12, 41],
-        shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+        shadowUrl: "/res/marker-shadow.png",
         shadowSize: [41, 41],
       })
     }).addTo(_leaflet.layers.wpGroup);
@@ -236,7 +242,7 @@ export function enableCtrlClickToAppendWaypoint() {
 export async function initMap(opts = {}) {
   if (_leaflet.map) return _leaflet.map;
 
-  const center = Array.isArray(opts.center) ? opts.center : [37.5665, 126.9780]; // 서울
+  const center = Array.isArray(opts.center) ? opts.center : [37.5665, 126.9780];
   const zoom = Number.isFinite(opts.zoom) ? opts.zoom : 13;
 
   _leaflet.map = L.map("map-frame").setView(center, zoom);
@@ -245,29 +251,77 @@ export async function initMap(opts = {}) {
     { maxZoom: 19, attribution: "&copy; OpenStreetMap contributors" }
   ).addTo(_leaflet.map);
 
+  // ✅ 로봇 마커 아이콘(요청 경로 사용)
+  _leaflet.robotIcon = L.icon({
+    iconUrl: "res/marker_robot.png",   // ← 요청하신 경로 그대로
+    iconSize: [48, 48],
+    iconAnchor: [24, 30],              // 원점 중앙
+    // shadowUrl: ... (필요 시)
+  });
+
   return _leaflet.map;
 }
 
-export function setMarkerByLatLng(lat, lng, acc = null) {
+function _setOrUpdateRobot(unitIndex, lat, lng, acc = null, center = true) {
   if (!_leaflet.map) return;
 
-  if (_leaflet.layers.marker) {
-    _leaflet.map.removeLayer(_leaflet.layers.marker);
-    _leaflet.layers.marker = null;
-  }
-  if (_leaflet.layers.accuracy) {
-    _leaflet.map.removeLayer(_leaflet.layers.accuracy);
-    _leaflet.layers.accuracy = null;
+  let m = _leaflet.layers.robot_markers[unitIndex];
+  if (!m) {
+    m = L.marker([lat, lng], {
+      icon: _leaflet.robotIcon || undefined,
+      title: `robot_${unitIndex}`,
+      zIndexOffset: 1000, // (선택) 위로 올리고 싶으면
+    }).addTo(_leaflet.map);
+
+    // ✅ 아이콘 위에 굵고 큰 “호기 번호” 항상 표시
+    m.bindTooltip(`${unitIndex}`, {
+      permanent: true,
+      direction: "top",
+      offset: L.point(0, -22),     // 아이콘 윗부분 살짝 띄우기
+      className: "robot-index-label",
+      opacity: 1,
+    });
+
+    _leaflet.layers.robot_markers[unitIndex] = m;
+  } else {
+    m.setLatLng([lat, lng]);
+
+    // (안전) 이미 라벨이 없다면 붙여주기
+    if (!m.getTooltip()) {
+      m.bindTooltip(`${unitIndex}`, {
+        permanent: true,
+        direction: "top",
+        offset: L.point(0, -22),
+        className: "robot-index-label",
+        opacity: 1,
+      });
+    } else {
+      m.setTooltipContent(`${unitIndex}`);
+    }
   }
 
-  _leaflet.layers.marker = L.marker([lat, lng]).addTo(_leaflet.map);
-
-  if (typeof acc === "number" && isFinite(acc) && acc > 0) {
-    _leaflet.layers.accuracy = L.circle([lat, lng], { radius: acc }).addTo(_leaflet.map);
+  // 정확도 원 갱신
+  if (Number.isFinite(acc) && acc > 0) {
+    let c = _leaflet.layers.robot_accuracy[unitIndex];
+    if (!c) {
+      c = L.circle([lat, lng], { radius: acc }).addTo(_leaflet.map);
+      _leaflet.layers.robot_accuracy[unitIndex] = c;
+    } else {
+      c.setLatLng([lat, lng]);
+      c.setRadius(acc);
+    }
+  } else if (_leaflet.layers.robot_accuracy[unitIndex]) {
+    _leaflet.map.removeLayer(_leaflet.layers.robot_accuracy[unitIndex]);
+    delete _leaflet.layers.robot_accuracy[unitIndex];
   }
 
-  _leaflet.map.setView([lat, lng], Math.max(_leaflet.map.getZoom(), 15));
+  if (center) {
+    _leaflet.map.setView([lat, lng], _leaflet.map.getZoom(), { animate: false });
+  }
 }
+
+
+
 
 export async function getUnitLatLngFromMetadata(unitIndex) {
   const i = unitIndex;
@@ -296,23 +350,27 @@ export async function getUnitLatLngFromMetadata(unitIndex) {
   return null;
 }
 
-export async function updateMapForCurrentUnit(unitIndex) {
-  if (!_leaflet.map) await initMap();
-  const pos = await getUnitLatLngFromMetadata(unitIndex);
-  if (!pos) {
-    console.warn("[mapView] 좌표 정보 없음:", unitIndex);
-    return;
-  }
-  setMarkerByLatLng(pos.lat, pos.lng, pos.acc ?? null);
-}
-
-/** (선택) 지도 제거 */
 export function destroyMap() {
   if (_leaflet.map) {
+    // 로봇 레이어 전부 제거
+    clearAllRobots();
+
+    // 나머지 레이어/맵 정리
+    if (_leaflet.layers.wpGroup) _leaflet.layers.wpGroup.clearLayers();
+    if (_leaflet.layers.wpLine) _leaflet.map.removeLayer(_leaflet.layers.wpLine);
+    if (_leaflet.layers.selHalo) _leaflet.map.removeLayer(_leaflet.layers.selHalo);
+    if (_leaflet.layers.base) _leaflet.map.removeLayer(_leaflet.layers.base);
+
     _leaflet.map.remove();
-    _leaflet = { map: null, layers: { base: null, marker: null, accuracy: null } };
+    _leaflet = {
+      map: null,
+      layers: { base: null, robot_markers: {}, robot_accuracy: {}, wpGroup: null, wpLine: null, selHalo: null },
+      selectedMarker: null,
+      robotIcon: null,
+    };
   }
 }
+
 
 // 배너 표시/숨김 + 상태 렌더 (기존 index.js와의 호환 유지)
 export function showNoLocationBanner(text = "위치 데이터 없음") {
@@ -347,27 +405,36 @@ export function hideNoLocationBanner() {
   }
 }
 
-export function updateMapWithStatusData(status, center = true) {
+export function updateMapWithStatusData(unitIndex, status, center = true) {
   if (!_leaflet.map || !status) return;
 
   const lat = Number(status.latitude);
   const lng = Number(status.longitude);
+  const acc = Number(status.accuracy); // 없으면 NaN
+
   if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
 
-  hideNoLocationBanner();
+  // hideNoLocationBanner();
+  _setOrUpdateRobot(unitIndex, lat, lng, Number.isFinite(acc) ? acc : null, center);
+}
 
-  if (_leaflet.layers.marker) {
-    _leaflet.map.removeLayer(_leaflet.layers.marker);
-    _leaflet.layers.marker = null;
-  }
-  if (_leaflet.layers.accuracy) {
-    _leaflet.map.removeLayer(_leaflet.layers.accuracy);
-    _leaflet.layers.accuracy = null;
-  }
 
-  _leaflet.layers.marker = L.marker([lat, lng]).addTo(_leaflet.map);
-
-  if (center) {
-    _leaflet.map.setView([lat, lng], _leaflet.map.getZoom());
+export function removeRobot(unitIndex) {
+  const m = _leaflet.layers.robot_markers[unitIndex];
+  if (m) {
+    _leaflet.map.removeLayer(m);
+    delete _leaflet.layers.robot_markers[unitIndex];
   }
+  const c = _leaflet.layers.robot_accuracy[unitIndex];
+  if (c) {
+    _leaflet.map.removeLayer(c);
+    delete _leaflet.layers.robot_accuracy[unitIndex];
+  }
+}
+
+export function clearAllRobots() {
+  Object.values(_leaflet.layers.robot_markers).forEach(m => _leaflet.map.removeLayer(m));
+  Object.values(_leaflet.layers.robot_accuracy).forEach(c => _leaflet.map.removeLayer(c));
+  _leaflet.layers.robot_markers = {};
+  _leaflet.layers.robot_accuracy = {};
 }

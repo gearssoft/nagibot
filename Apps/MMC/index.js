@@ -12,13 +12,11 @@ import {
     setAuthToken
 } from "/libs/apiHelper.js";
 
-
 import {
-    initMap, updateMapForCurrentUnit, updateMapWithStatusData,
+    initMap, updateMapWithStatusData,
     showNoLocationBanner, hideNoLocationBanner,
     updateWaypointsForUnit, enableCtrlClickToAppendWaypoint
 } from "./mapView.js";
-
 
 // --- 기본 초기 메타데이터 ---
 const INIT_DATA = {
@@ -87,14 +85,41 @@ export class MMCApp {
         this.#bindRobotCountSetter();
         this.#bindRobotModeHandlers();
 
-        this.startPolling();
+        // 초기 로봇 운용 갯수 세팅
+        const resNum = await getMetadataByKey("numberOFUnits");
+        if (resNum?.value) {
+            const inp = this.getRobotCountInput();
+            if (inp) inp.value = resNum.value;
+        }
 
-        // 시작 시 현재 선택 유닛의 웨이포인트도 그려줌
+        await this.#updateRobotModeStatusOnce();
+
+        // ---- 초기 지도 상태 세팅 (선택된 유닛 센터링 + 웨이포인트) ----
         try {
+
+            //모든 유닛 지도에 추가
+            this.#updateRobotStatusDataToMap(false);
+
             const sel = await getMetadataByKey("currentSelectUnit");
-            const unitIdx1 = ((sel?.value ?? 0) | 0) + 1;
-            await updateWaypointsForUnit(unitIdx1);
-        } catch (_) { }
+            const unitIdx1 = ((sel?.value ?? 0) | 0) + 1; // 1-based
+            await updateWaypointsForUnit(unitIdx1);       // 초기 웨이포인트 로드
+
+            const resOther = await getMetadataByKey(`robot_${unitIdx1}.status_data`);
+            const statusOther = resOther?.value;
+            if (statusOther && typeof statusOther === "object") {
+                // ✅ 1-based 인덱스로 호출, 선택된 로봇은 센터 이동
+                updateMapWithStatusData(unitIdx1, statusOther, true);
+            }
+            else {
+                showNoLocationBanner(`선택된 호기(${unitIdx1})의 위치 데이터 없음`);
+            }
+
+        } catch (e) { 
+            console.error("[INITIAL MAP SETUP ERROR]", e);
+        }
+
+        // 폴링 시작 (모든 로봇 위치는 갱신, 기본은 센터 이동 안함)
+        this.startPolling();
     }
 
     stop() {
@@ -151,7 +176,6 @@ export class MMCApp {
 
                     const s = await saveMetadata();
                     console.log("[SAVE METADATA RESPONSE]", s);
-
                 } else {
                     console.log("초기화 완료 ✅");
                 }
@@ -179,31 +203,36 @@ export class MMCApp {
             // 변경 이벤트
             this.getUnitRadios().forEach((radio) => {
                 radio.addEventListener("change", async (e) => {
-                    const val = toInt(e.target.value, 0);
-                    console.log("선택 호기 변경:", val);
-                    const r = await mergeMetadata({ currentSelectUnit: val });
-                    console.log("[MERGE METADATA RESPONSE]", r);
+                    const val0 = toInt(e.target.value, 0);
+                    console.log("선택 호기 변경:", val0);
+                    await mergeMetadata({ currentSelectUnit: val0 });
                     alert("선택 호기 업데이트 완료");
 
-                    this.#updateRobotStatusDataToMap(true);
-
-
                     try {
-                        const s = await saveMetadata();
-                        console.log("[SAVE METADATA RESPONSE]", s);
+                        await saveMetadata();
                     } catch (err) {
                         console.error("[SAVE ERROR]", err);
                     }
+
+                    // ✅ 선택 유닛의 1-based 인덱스
+                    const unitIdx1 = val0 + 1;
+
+                    // ✅ 선택 유닛 웨이포인트 재렌더
+                    try { await updateWaypointsForUnit(unitIdx1); } catch (_) {}
+
+                    // ✅ 선택 유닛의 status_data가 있다면 그 로봇만 센터 이동
                     try {
-                        updateMapForCurrentUnit?.(val);
-                    } catch (_) { }
-
-                    // 선택 유닛 변경 시 해당 유닛의 웨이포인트 재렌더링
-                    try {
-                        await updateWaypointsForUnit(val + 1);
-                    } catch (_) { }
-
-
+                        const resS = await getMetadataByKey(`robot_${unitIdx1}.status_data`);
+                        const s = resS?.value;
+                        if (s && typeof s === "object") {
+                            hideNoLocationBanner();
+                            updateMapWithStatusData(unitIdx1, s, true); // 선택 로봇만 center
+                        } else {
+                            showNoLocationBanner("선택된 호기의 위치 데이터 없음");
+                        }
+                    } catch (err) {
+                        console.error("[SELECT UNIT CENTER ERROR]", err);
+                    }
                 });
             });
         } catch (err) {
@@ -230,7 +259,7 @@ export class MMCApp {
     }
 
     #bindRobotModeHandlers() {
-        // 이벤트 위임 (클로저 제거)
+        // 이벤트 위임
         const container = this.getModeContainer();
         container.addEventListener("change", async (e) => {
             const el = e.target;
@@ -294,12 +323,11 @@ export class MMCApp {
         while (this.polling) {
             try {
                 await this.#updateRobotModeStatusOnce();
-                await this.#updateRobotStatusDataToMap();
-
+                // ✅ 모든 로봇 위치 갱신(센터 이동은 기본적으로 하지 않음)
+                await this.#updateRobotStatusDataToMap(false);
             } catch (err) {
                 console.error("[POLL ERROR]", err);
             }
-
             await new Promise((r) => setTimeout(r, this.pollInterval));
         }
     }
@@ -309,10 +337,6 @@ export class MMCApp {
         if (resNum?.r !== "ok") return;
 
         const numberOFUnits = resNum.value;
-        // console.log("운용 호기 수:", numberOFUnits);
-
-        const inp = this.getRobotCountInput();
-        if (inp) inp.value = numberOFUnits;
 
         for (let i = 1; i <= numberOFUnits; i++) {
             // 운용모드
@@ -335,23 +359,27 @@ export class MMCApp {
         }
     }
 
-    async #updateRobotStatusDataToMap(fixCenter = true) {
+    /**
+     * 모든 로봇의 status_data를 지도에 반영.
+     * @param {boolean} centerSelected 선택된 유닛만 센터 이동할지 여부
+     */
+    async #updateRobotStatusDataToMap(centerSelected = false) {
+        const unitCountRes = await getMetadataByKey("numberOFUnits");
+        const unitCount = unitCountRes?.value ?? 0;
+
         const sel = await getMetadataByKey("currentSelectUnit");
-        const idx0 = sel?.value ?? 0;
-        const unitIndex = Number(idx0) + 1;
+        const selected0 = sel?.value ?? 0;
+        const selected1 = selected0 + 1; // 1-based
 
-        const res = await getMetadataByKey(`robot_${unitIndex}.status_data`);
-        const status = res?.value;
-
-        if (!status || typeof status !== "object") {
-            // ✅ 위치 데이터 없음 배너 표시
-            showNoLocationBanner("선택된 호기의 위치 데이터 없음");
-            return;
+        for (let i = 1; i <= unitCount; i++) {
+            const resOther = await getMetadataByKey(`robot_${i}.status_data`);
+            const statusOther = resOther?.value;
+            if (statusOther && typeof statusOther === "object") {
+                // ✅ 1-based 인덱스로 호출
+                const center = centerSelected && (i === selected1);
+                updateMapWithStatusData(i, statusOther, center);
+            }
         }
-
-        // ✅ 정상 데이터면 배너 숨기고 지도 갱신
-        hideNoLocationBanner();
-        updateMapWithStatusData(status, fixCenter);
     }
 }
 

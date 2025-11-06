@@ -211,3 +211,29 @@ body {
   text-shadow: 0 0 3px #fff, 0 0 2px #fff;  /* 지형 위에서도 잘 보이게 */
   pointer-events: none;        /* 라벨은 클릭 불가 */
 }
+
+
+/* 로봇 인덱스 라벨 스타일 */
+.leaflet-tooltip.robot-index-label {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+
+  /* 글꼴 스타일 */
+  font-weight: 800;         /* 굵게 */
+  font-size: 16px;          /* 크게 */
+  line-height: 1;
+  color: #111;
+
+  /* 아이콘과의 간격 미세조정 */
+  transform: translateY(-2px);
+
+  /* 지도 위에서도 잘 보이도록 외곽선 효과 */
+  text-shadow:
+    -1px -1px 0 rgba(255,255,255,0.9),
+     1px -1px 0 rgba(255,255,255,0.9),
+    -1px  1px 0 rgba(255,255,255,0.9),
+     1px  1px 0 rgba(255,255,255,0.9);
+}
