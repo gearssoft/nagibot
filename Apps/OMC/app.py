@@ -14,23 +14,15 @@ class MainForm(QWidget):
 
         self.configMng = ConfigManager()
         if self.configMng.load_config() == True:
-            print("ConfigManager: 설정 파일 로드 성공")
-            
-            print("ConfigManager: 차량 IP 목록:", [car['ip'] for car in self.configMng.config['cars']])
-            print("ConfigManager: 차량 포트 목록:", [car['port'] for car in self.configMng.config['cars']])
-            print("ConfigManager: 차량 카메라 URL 목록:", [car['camUrl'] for car in self.configMng.config['cars']])
+            print("ConfigManager: 설정 파일 로드 성공")            
             print("ConfigManager: 이미지 감지 서버 IP:", self.configMng.config['imageDetectionServer']['ip'])
             print("ConfigManager: 이미지 감지 서버 포트:", self.configMng.config['imageDetectionServer']['port'])
-
             print("ConfigManager: 현재 선택된 차량 인덱스:", self.configMng.get_current_select_unit())
-
             print("ConfigManager: 전체화면 모드:", self.configMng.is_fullscreen())
-
             print("ConfigManager: mms 설정:", self.configMng.get_mms_server_info())
-
-
         if self.configMng.is_fullscreen():
             self.setWindowState(Qt.WindowFullScreen)
+        
         
         #stackedWidget 만들고 
         self.stacked_widget = QStackedWidget(self)
@@ -51,18 +43,25 @@ class MainForm(QWidget):
         self.startup_form.btnExit.clicked.connect(self.close)
 
     def show_startup_form(self):
-        
-        try :
-        
+        try:
             # startup_form 빼고 나머지 위젯 제거
             while self.stacked_widget.count() > 1:
                 widget = self.stacked_widget.widget(self.stacked_widget.count() - 1)
+
+                # ✅ 화면 내려가기 전 안전 정리
+                if hasattr(widget, "safeDestroy"):
+                    try:
+                        widget.safeDestroy()
+                    except Exception as e:
+                        print(f"[nav] safeDestroy error: {e}")
+
                 self.stacked_widget.removeWidget(widget)
                 widget.deleteLater()
-            
+
             self.stacked_widget.setCurrentWidget(self.startup_form)
         except Exception as e:
             print(f'error occurred while removing widgets : {e}')
+
 
     def show_main_form(self):
         try:
@@ -86,25 +85,27 @@ class MainForm(QWidget):
         except Exception as e:
             print(f'error occurred while showing setup form : {e}')
     
-    def navigateBack(self,remove_current=True):
-        
-        # 이전 화면으로 이동
-        """
-        이전 위젯으로 이동하는 통합 메서드
-        :param remove_current: 현재 위젯을 제거할지 여부
-        """
-        try :
+    def navigateBack(self, remove_current=True):
+        try:
             if self.stacked_widget.count() < 1:
                 return
             current_index = self.stacked_widget.currentIndex()
             if current_index > 0:
+                current_widget = self.stacked_widget.currentWidget()
                 if remove_current:
-                    current_widget = self.stacked_widget.currentWidget()
+                    # ✅ 먼저 안전 정리
+                    if hasattr(current_widget, "safeDestroy"):
+                        try:
+                            current_widget.safeDestroy()
+                        except Exception as e:
+                            print(f"[nav] safeDestroy error: {e}")
                     self.stacked_widget.removeWidget(current_widget)
+                    current_widget.deleteLater()
                 else:
                     self.stacked_widget.setCurrentIndex(current_index - 1)
         except Exception as e:
             print(f'error occurred while navigating back : {e}')
+
         
     def closeEvent(self, event):
         print("closeEvent")

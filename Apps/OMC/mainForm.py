@@ -35,43 +35,54 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
     
     def __init__(self, parent=None):
         super().__init__(parent)
-
         
-        
-        # 설정 관리자 초기화
-        self._initialize_config()
-        
-        # 폰트 초기화
-        # self._initialize_font()
+        self._dead = False                      # ✅ 생존 플래그
+        self.destroyed.connect(lambda: setattr(self, "_dead", True))  # 파괴 시 보강 가드
         
         # # UI 설정
         self.setupUi(self)
 
-        ROBOT_HOST = self.configMng.get_robot_control_server_info().get("ip", "localhost")
-        ROBOT_PORT = self.configMng.get_robot_control_server_info().get("port", 8283)        
-        MMS_HOST = self.configMng.get_mms_server_info().get("ip", "localhost")
-        MMS_PORT = self.configMng.get_mms_server_info().get("port", 8282)         
+        # 설정 관리자 초기화
+        self._initialize_config()  
 
-        self.netRobot = NetworkAdapter_Robot(
-            lambda: Client(host=ROBOT_HOST, port=ROBOT_PORT)
-        )
-        self.netMMS = NetworkAdapter_MMS(
-            lambda: Client(host=MMS_HOST, port=MMS_PORT)
-        )
+        ROBOT_HOST = self.configMng.config['robotControlServer']['ip']
+        ROBOT_PORT = self.configMng.config['robotControlServer']['port']
+        MMS_HOST = self.configMng.config['mmsServer']['ip']
+        MMS_PORT = self.configMng.config['mmsServer']['port']
+
+        if self.configMng.config['robotControlServer']['enable']:
+            print(f"Robot Control Server Enabled: {ROBOT_HOST}:{ROBOT_PORT}")
+            self.netRobot = NetworkAdapter_Robot(
+                lambda: Client(host=ROBOT_HOST, port=ROBOT_PORT)
+            )
+        else:
+            print("Robot Control Server Disabled in Config.")
+            self.netRobot = None
+
+        if self.configMng.config['mmsServer']['enable']:
+            print(f"MMS Server Enabled: {MMS_HOST}:{MMS_PORT}")
+            self.netMMS = NetworkAdapter_MMS(
+                lambda: Client(host=MMS_HOST, port=MMS_PORT)
+            )
+        else:
+            print("MMS Server Disabled in Config.")
+            self.netMMS = None
 
         # 어댑터 시그널 구독 → UI 슬롯
-        self.netMMS.connected.connect(self._ui_on_connected)
-        self.netMMS.disconnected.connect(self._ui_on_disconnected)
-        self.netMMS.error.connect(self._ui_on_error)
-        self.netMMS.message.connect(self._ui_on_message)
-        self.netMMS._on_push_update = self._ui_on_push_update
+        if self.netMMS:
+            self.netMMS.connected.connect(self._ui_on_connected)
+            self.netMMS.disconnected.connect(self._ui_on_disconnected)
+            self.netMMS.error.connect(self._ui_on_error)
+            self.netMMS.message.connect(self._ui_on_message)
+            self.netMMS._on_push_update = self._ui_on_push_update
 
         # 로봇 어댑터 시그널 구독 → UI 슬롯
-        self.netRobot.connected.connect(self._rbot_ui_on_connected)
-        self.netRobot.disconnected.connect(self._rbot_ui_on_disconnected)
-        self.netRobot.error.connect(self._rbot_ui_on_error)
-        self.netRobot.message.connect(self._rbot_ui_on_message)
-        self.netRobot._on_push_update = self._rbot_ui_on_push_update
+        if self.netRobot:
+            self.netRobot.connected.connect(self._rbot_ui_on_connected)
+            self.netRobot.disconnected.connect(self._rbot_ui_on_disconnected)
+            self.netRobot.error.connect(self._rbot_ui_on_error)
+            self.netRobot.message.connect(self._rbot_ui_on_message)
+            self.netRobot._on_push_update = self._rbot_ui_on_push_update
 
         # 앱 종료 시 안전 정리
         QApplication.instance().aboutToQuit.connect(self.netMMS.shutdown)
@@ -116,6 +127,9 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
             lambda lat, lon, heading, center:
                 self.mapController.update_robot_marker(lat, lon, heading, center)
         )
+
+        self.btnGoHome.clicked.connect(self.gotoHome)
+        self.btnGotoSetup.clicked.connect(self.gotoSetup)
 
 
     # 키보드
@@ -263,7 +277,9 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
 
     @Slot(dict)
     def _ui_on_message(self, payload: dict):
-        # print("[UI] Message:", payload)
+        
+        if getattr(self, "_dead", False):
+            return
 
         self.current_robot_data = payload.get("data", {})
         _robot_data = self.current_robot_data.get("value", {})
@@ -402,10 +418,10 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         print("ConfigManager: 설정 파일 로드 성공")
         
         self.current_unit_index = self.configMng.get_current_select_unit() - 1
-        self.current_unit_index_sub = self.configMng.get_current_select_unit_sub() - 1
+        # self.current_unit_index_sub = self.configMng.get_current_select_unit_sub() - 1
         
         print(f"ConfigManager: 현재 선택된 차량 인덱스: {self.current_unit_index}")
-        print(f"ConfigManager: 현재 선택된 서브 차량 인덱스: {self.current_unit_index_sub}")       
+        # print(f"ConfigManager: 현재 선택된 서브 차량 인덱스: {self.current_unit_index_sub}")       
      
     def initControlKeyPadUI(self):
         """키패드 UI 초기화"""
@@ -719,21 +735,46 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
     def onClickedBtnZoomInBottomRightScreen(self):
         print("onClickedBtnZoomInBottomRightScreen")
     
-    # ==================== 종료 처리 ====================
-    
-    def closeEvent(self, event):
-        """윈도우 종료 이벤트"""
-        print("closeEvent")
+    # ==================== 종료 처리 ====================    
+    def safeDestroy(self):
+        if getattr(self, "_dead", False):
+            return
+        self._dead = True
+        try:
+            # 타이머
+            if hasattr(self, "_meta_timer") and self._meta_timer.isActive():
+                self._meta_timer.stop()
+                self._meta_timer.deleteLater()
 
-        self.netMMS.stop()
-        self.netMMS.shutdown()
-        
+            # MMS
+            if getattr(self, "netMMS", None):
+                # ✅ 모든 시그널 끊기
+                for sig in ("connected", "disconnected", "error", "message"):
+                    try:
+                        getattr(self.netMMS, sig).disconnect()
+                    except Exception:
+                        pass
+                self.netMMS._on_push_update = None
+                self.netMMS.stop()
+                self.netMMS.shutdown()
 
-        self.videoController.cleanup()
-        self.mapController.cleanup()
-        self.statusManager.cleanup()
-        self.closedSignal.emit()
-        super().closeEvent(event)
+            # ROBOT
+            if getattr(self, "netRobot", None):
+                for sig in ("connected", "disconnected", "error", "message"):
+                    try:
+                        getattr(self.netRobot, sig).disconnect()
+                    except Exception:
+                        pass
+                self.netRobot._on_push_update = None
+                self.netRobot.stop()
+                self.netRobot.shutdown()
+
+            # 컨트롤러
+            if getattr(self, "mapController", None):
+                self.mapController.cleanup()
+
+        except Exception as e:
+            print(f"[safeDestroy] error: {e}")
 
 import sys, faulthandler, traceback
 from PySide6.QtCore import qInstallMessageHandler, QtMsgType

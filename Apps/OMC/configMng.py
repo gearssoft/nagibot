@@ -24,40 +24,28 @@ class ConfigManager:
         self.config_file = config_file
         
         # 기본 설정값
-        self.config = {
-            "cars": [
-                {
-                    "ip": "127.0.0.1",
-                    "port": 8080,
-                    "camUrl": "http://127.0.0.1:8081/stream",
-                    "enable": False
-                },
-                {
-                    "ip": "",
-                    "port": 8080,
-                    "camUrl": "",
-                    "enable": False
-                },
-                {
-                    "ip": "",
-                    "port": 8080,
-                    "camUrl": "",
-                    "enable": False
-                }
-            ],
+        self.config = {            
             "currentSelectUnit" : 1,
+            "cam": {
+                "enable": False,
+                "irCameraUrl": "http://localhost:8081/stream",
+                "cameraUrl": "http://localhost:8080/stream"
+            },            
             "imageDetectionServer" : {
+                "enable": False,
                 "ip": "localhost",
-                "port": 8085,
-                "enable": False
+                "port": 8085
+                
             },
             "isSoundOn": False,
             "fullscreen": True,
             "mmsServer": {
+                "enable": False,
                 "ip": "localhost",
                 "port": 8282
             },
             "robotControlServer": {
+                "enable": False,
                 "ip": "localhost",
                 "port": 8283
             }
@@ -74,169 +62,7 @@ class ConfigManager:
     
     def set_current_select_unit(self,index) :
         self.config['currentSelectUnit'] = index
-
-    def get_current_select_unit_sub(self) :
-        if self.config['currentSelectUnit_Sub'] is not None :
-            return  self.config['currentSelectUnit_Sub']
-        else :
-            return 0
-        
-    def set_current_select_unit_sub(self,index) :
-        self.config['currentSelectUnit_Sub'] = index
     
-    def get_car_ip(self, car_idx=0):
-        """
-        차량 IP 반환
-        
-        Args:
-            car_idx (int): 차량 인덱스 (0-2)
-            
-        Returns:
-            str: 차량 IP 주소
-        """
-        if car_idx < 0 or car_idx >= 3:
-            raise ValueError("차량 인덱스는 0에서 2 사이여야 합니다.")
-        return self.config["cars"][car_idx]["ip"]
-    
-    def set_car_ip(self, ip, car_idx=0):
-        """
-        차량 IP 설정
-        
-        Args:
-            ip (str): 설정할 IP 주소
-            car_idx (int): 차량 인덱스 (0-2)
-        """
-        if car_idx < 0 or car_idx >= 3:
-            raise ValueError("차량 인덱스는 0에서 2 사이여야 합니다.")
-        self.config["cars"][car_idx]["ip"] = ip
-    
-    def get_car_port(self, car_idx=0):
-        """
-        차량 포트 반환
-        
-        Args:
-            car_idx (int): 차량 인덱스 (0-2)
-            
-        Returns:
-            int: 차량 포트 번호
-        """
-        if car_idx < 0 or car_idx >= 3:
-            raise ValueError("차량 인덱스는 0에서 2 사이여야 합니다.")
-        return self.config["cars"][car_idx]["port"]
-    
-    def set_car_port(self, port, car_idx=0):
-        """
-        차량 포트 설정
-        
-        Args:
-            port (int): 설정할 포트 번호
-            car_idx (int): 차량 인덱스 (0-2)
-        """
-        if car_idx < 0 or car_idx >= 3:
-            raise ValueError("차량 인덱스는 0에서 2 사이여야 합니다.")
-        self.config["cars"][car_idx]["port"] = int(port)
-    
-    def get_car_cam_url(self, car_idx=0):
-        """
-        차량 카메라 URL 반환
-        
-        Args:
-            car_idx (int): 차량 인덱스 (0-2)
-            
-        Returns:
-            str: 차량 카메라 URL
-        """
-        if car_idx < 0 or car_idx >= 3:
-            raise ValueError("차량 인덱스는 0에서 2 사이여야 합니다.")
-        return self.config["cars"][car_idx]["camUrl"]
-    
-    def set_car_cam_url(self, url, car_idx=0):
-        """
-        차량 카메라 URL 설정
-        
-        Args:
-            url (str): 설정할 카메라 URL
-            car_idx (int): 차량 인덱스 (0-2)
-        """
-        if car_idx < 0 or car_idx >= 3:
-            raise ValueError("차량 인덱스는 0에서 2 사이여야 합니다.")
-        self.config["cars"][car_idx]["camUrl"] = url
-
-    def get_car_cam_url_ir(self, car_idx=0):
-        """
-        차량 적외선 카메라 URL 반환
-        
-        Args:
-            car_idx (int): 차량 인덱스 (0-2)
-            
-        Returns:
-            str: 차량 적외선 카메라 URL
-        """
-        if car_idx < 0 or car_idx >= 3:
-            raise ValueError("차량 인덱스는 0에서 2 사이여야 합니다.")
-        return self.config["cars"][car_idx].get("camUrl_ir", "")
-    
-    def set_car_cam_url_ir(self, url, car_idx=0):
-        """
-        차량 적외선 카메라 URL 설정
-        
-        Args:
-            url (str): 설정할 적외선 카메라 URL
-            car_idx (int): 차량 인덱스 (0-2)
-        """
-        if car_idx < 0 or car_idx >= 3:
-            raise ValueError("차량 인덱스는 0에서 2 사이여야 합니다.")
-        self.config["cars"][car_idx]["camUrl_ir"] = url
-    
-    def is_sound_on(self):
-        """
-        사운드 설정 상태 반환
-        
-        Returns:
-            bool: 사운드 설정 상태
-        """
-        return self.config["isSoundOn"]
-    
-    def set_sound(self, is_on):
-        """
-        사운드 설정 상태 변경
-        
-        Args:
-            is_on (bool): 사운드 설정 상태
-        """
-        self.config["isSoundOn"] = bool(is_on)
-    
-    def get_car_info(self, car_idx=0):
-        """
-        차량 정보 전체 반환
-        
-        Args:
-            car_idx (int): 차량 인덱스 (0-2)
-            
-        Returns:
-            dict: 차량 정보 딕셔너리
-        """
-        if car_idx < 0 or car_idx >= 3:
-            raise ValueError("차량 인덱스는 0에서 2 사이여야 합니다.")
-        return self.config["cars"][car_idx]
-    
-    def set_car_info(self, car_info, car_idx=0):
-        """
-        차량 정보 전체 설정
-        
-        Args:
-            car_info (dict): 차량 정보 딕셔너리
-            car_idx (int): 차량 인덱스 (0-2)
-        """
-        if car_idx < 0 or car_idx >= 3:
-            raise ValueError("차량 인덱스는 0에서 2 사이여야 합니다.")
-        
-        required_keys = ["ip", "port", "camUrl"]
-        for key in required_keys:
-            if key not in car_info:
-                raise ValueError(f"차량 정보에 '{key}' 키가 필요합니다.")
-        
-        self.config["cars"][car_idx] = car_info
         
     def get_detection_server_ip(self):
         """
@@ -289,29 +115,7 @@ class ConfigManager:
             enable (bool): 활성화 여부
         """
         self.config["imageDetectionServer"]["enable"] = bool(enable)
-
-    def get_unit_enable(self, car_idx=0):
-        """
-        차량 유닛 활성화 상태 반환
-        Args:
-            car_idx (int): 차량 인덱스 (0-2)
-        Returns:
-            bool: 차량 유닛 활성화 여부
-        """
-        if car_idx < 0 or car_idx >= 3:
-            raise ValueError("차량 인덱스는 0에서 2 사이여야 합니다.")
-        return self.config["cars"][car_idx].get("enable", False)
     
-    def set_unit_enable(self, enable, car_idx=0):
-        """
-        차량 유닛 활성화 상태 설정
-        Args:
-            enable (bool): 활성화 여부
-            car_idx (int): 차량 인덱스 (0-2)
-        """
-        if car_idx < 0 or car_idx >= 3:
-            raise ValueError("차량 인덱스는 0에서 2 사이여야 합니다.")
-        self.config["cars"][car_idx]["enable"] = bool(enable)
 
     def is_fullscreen(self):
         """
@@ -378,50 +182,41 @@ class ConfigManager:
         try:
             with open(self.config_file, 'r', encoding='utf-8') as f:
                 loaded_config = json.load(f)
-                
-                # 기존 구조를 유지하면서 업데이트
-                if "cars" in loaded_config:
-                    for i, car in enumerate(loaded_config["cars"]):
-                        if i < 3:  # 최대 3대까지만
-                            self.config["cars"][i].update(car)
-                
-                # isSoundOn 업데이트
-                if "isSoundOn" in loaded_config:
-                    self.config["isSoundOn"] = loaded_config["isSoundOn"]
+
+                self.config = loaded_config
                     
-                if "imageDetectionServer" in loaded_config:
-                    self.config["imageDetectionServer"].update(loaded_config["imageDetectionServer"])
-                else:
-                    # 기본 이미지 감지 서버 설정 추가
-                    self.config["imageDetectionServer"] = {
-                        "ip": "localhost",
-                        "port": 8085
-                    }
-                if "fullscreen" in loaded_config:
-                    self.config["fullscreen"] = loaded_config["fullscreen"]
+                # if "imageDetectionServer" in loaded_config:
+                #     self.config["imageDetectionServer"].update(loaded_config["imageDetectionServer"])
+                # else:
+                #     # 기본 이미지 감지 서버 설정 추가
+                #     self.config["imageDetectionServer"] = {
+                #         "ip": "localhost",
+                #         "port": 8085
+                #     }
+                # if "fullscreen" in loaded_config:
+                #     self.config["fullscreen"] = loaded_config["fullscreen"]
                 
-                if "currentSelectUnit" in loaded_config:
-                    self.config["currentSelectUnit"] = loaded_config["currentSelectUnit"]
-                else :
-                    self.config["currentSelectUnit"] = 0
-                if "currentSelectUnit_Sub" in loaded_config:
-                    self.config["currentSelectUnit_Sub"] = loaded_config["currentSelectUnit_Sub"]
+                # if "currentSelectUnit" in loaded_config:
+                #     self.config["currentSelectUnit"] = loaded_config["currentSelectUnit"]
+                # else :
+                #     self.config["currentSelectUnit"] = 0
+                
 
-                if "mmsServer" in loaded_config:
-                    self.config["mmsServer"] = loaded_config["mmsServer"]
-                else:
-                    self.config["mmsServer"] = {
-                        "ip": "localhost",
-                        "port": 8282
-                    }
+                # if "mmsServer" in loaded_config:
+                #     self.config["mmsServer"] = loaded_config["mmsServer"]
+                # else:
+                #     self.config["mmsServer"] = {
+                #         "ip": "localhost",
+                #         "port": 8282
+                #     }
 
-                if "robotControlServer" in loaded_config:
-                    self.config["robotControlServer"] = loaded_config["robotControlServer"]
-                else:
-                    self.config["robotControlServer"] = {
-                        "ip": "localhost",
-                        "port": 8283
-                    }
+                # if "robotControlServer" in loaded_config:
+                #     self.config["robotControlServer"] = loaded_config["robotControlServer"]
+                # else:
+                #     self.config["robotControlServer"] = {
+                #         "ip": "localhost",
+                #         "port": 8283
+                #     }
                     
                     
             return True
@@ -434,45 +229,45 @@ if __name__ == "__main__":
     # ConfigManager 인스턴스 생성
     config_mgr = ConfigManager()
     
-    # 모든 차량 정보 출력
-    for i in range(3):
-        car_info = config_mgr.get_car_info(i)
-        print(f"== 차량 {i+1} 정보 ==")
-        print(f"IP: {car_info['ip']}")
-        print(f"Port: {car_info['port']}")
-        print(f"Camera URL: {car_info['camUrl']}")
-        print()
+    # # 모든 차량 정보 출력
+    # for i in range(3):
+    #     car_info = config_mgr.get_car_info(i)
+    #     print(f"== 차량 {i+1} 정보 ==")
+    #     print(f"IP: {car_info['ip']}")
+    #     print(f"Port: {car_info['port']}")
+    #     print(f"Camera URL: {car_info['camUrl']}")
+    #     print()
     
-    print(f"Sound On: {config_mgr.is_sound_on()}")
+    # print(f"Sound On: {config_mgr.is_sound_on()}")
     
-    # 첫 번째 차량 설정 변경
-    config_mgr.set_car_ip("192.168.1.100", 0)
-    config_mgr.set_car_port(9090, 0)
-    config_mgr.set_car_cam_url("http://192.168.1.100:8081/stream", 0)
+    # # 첫 번째 차량 설정 변경
+    # config_mgr.set_car_ip("192.168.1.100", 0)
+    # config_mgr.set_car_port(9090, 0)
+    # config_mgr.set_car_cam_url("http://192.168.1.100:8081/stream", 0)
     
-    # 두 번째 차량 설정 변경
-    car2_info = {
-        "ip": "192.168.1.101",
-        "port": 9091,
-        "camUrl": "http://192.168.1.101:8081/stream"
-    }
-    config_mgr.set_car_info(car2_info, 1)
+    # # 두 번째 차량 설정 변경
+    # car2_info = {
+    #     "ip": "192.168.1.101",
+    #     "port": 9091,
+    #     "camUrl": "http://192.168.1.101:8081/stream"
+    # }
+    # config_mgr.set_car_info(car2_info, 1)
     
-    # 사운드 설정 변경
-    config_mgr.set_sound(False)
+    # # 사운드 설정 변경
+    # config_mgr.set_sound(False)
     
-    # 변경된 설정 저장
-    config_mgr.save_config()
+    # # 변경된 설정 저장
+    # config_mgr.save_config()
     
-    print("\n설정이 변경되었습니다.")
-    # 변경된 설정 확인
-    for i in range(3):
-        car_info = config_mgr.get_car_info(i)
-        print(f"== 차량 {i+1} 정보 ==")
-        print(f"IP: {car_info['ip']}")
-        print(f"Port: {car_info['port']}")
-        print(f"Camera URL: {car_info['camUrl']}")
-        print(f"Enable: {car_info.get('enable', False)}")
-        print()
+    # print("\n설정이 변경되었습니다.")
+    # # 변경된 설정 확인
+    # for i in range(3):
+    #     car_info = config_mgr.get_car_info(i)
+    #     print(f"== 차량 {i+1} 정보 ==")
+    #     print(f"IP: {car_info['ip']}")
+    #     print(f"Port: {car_info['port']}")
+    #     print(f"Camera URL: {car_info['camUrl']}")
+    #     print(f"Enable: {car_info.get('enable', False)}")
+    #     print()
     
-    print(f"Sound On: {config_mgr.is_sound_on()}")
+    # print(f"Sound On: {config_mgr.is_sound_on()}")
