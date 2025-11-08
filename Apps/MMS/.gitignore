@@ -8,3 +8,5 @@ path_router.json
 temp/
 .env
 metadata/*
+logs/
+ecosystem.config.*
