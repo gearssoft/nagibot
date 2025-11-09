@@ -21,13 +21,48 @@ npm run dev # 개발용 실행
 
 pm2 start npm --name "MMS" -- start # pm2 배포용 실행
 pm2 restart MMS # pm2 재시작
+
+pm2 start ecosystem.config.js
+
 ```
+
+**ecosystem.config.cjs**
+
+```js
+module.exports = {
+  apps: [
+    {
+      name: "MMS",
+      cwd: "D:\\works\\nagibot\\Apps\\MMS", 
+      script: "npm",
+      args: "start",
+      interpreter: "none", // npm은 node로 실행하지 않음
+      env: {
+        NODE_ENV: "production",
+        PORT: 8080, // 필요시 포트 지정
+      },
+      autorestart: true,
+      watch: true, // 코드 변경 시 자동 재시작 원하면 true
+      max_memory_restart: "512M", // 메모리 초과 시 자동 재시작
+      time: true, // 로그에 timestamp 포함
+      error_file: "./logs/err.log",
+      out_file: "./logs/out.log",
+      log_date_format: "YYYY-MM-DD HH:mm:ss",
+    },
+  ],
+};
+
+``` 
+
+
 
 ## api auth 인증방법
 auth 인증토큰을 헤더에 전달한다.  
 ```
 auth-token : 5874  
 ```
+
+
 
 
 
