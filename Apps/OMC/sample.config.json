@@ -1,29 +1,10 @@
 {
-    "cars": [
-        {
-            "ip": "",
-            "port": 0,
-            "camUrl": "rtsp://192.168.10.81:3000/eo",
-            "enable": false,
-            "camUrl_ir": "rtsp://192.168.10.81:3000/ir"
-        },
-        {
-            "ip": "",
-            "port": 0,
-            "camUrl": "",
-            "enable": false,
-            "camUrl_ir": "rtsp://192.168.10.81:3000/ir"
-        },
-        {
-            "ip": "",
-            "port": 0,
-            "camUrl": "",
-            "enable": false,
-            "camUrl_ir": ""
-        }
-    ],
-    "currentSelectUnit": 1,
-    "currentSelectUnit_Sub": 2,
+    "cam": {
+        "enable": false,
+        "irCameraUrl": "http://localhost:8081/stream",
+        "cameraUrl": "http://localhost:8080/stream"
+    },
+    "currentSelectUnit": 2,
     "imageDetectionServer": {
         "ip": "localhost",
         "port": 8085,
@@ -32,12 +13,13 @@
     "isSoundOn": false,
     "fullscreen": false,
     "mmsServer": {
+        "enable": true,
         "ip": "localhost",
-        "port": 8282
+        "port": 8283
     },
     "robotControlServer": {
+        "enable": true,
         "ip": "localhost",
         "port": 8283
     }
-    
 }
