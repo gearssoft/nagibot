@@ -473,10 +473,10 @@ margin : 4px;
    <widget class="QPlainTextEdit" name="edLogText">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>911</width>
-      <height>351</height>
+      <x>10</x>
+      <y>10</y>
+      <width>891</width>
+      <height>301</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -490,8 +490,8 @@ color : rgb(0,255,0);</string>
    <widget class="QLineEdit" name="lineEdit_cmd">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>360</y>
+      <x>10</x>
+      <y>310</y>
       <width>781</width>
       <height>41</height>
      </rect>
@@ -501,7 +501,7 @@ color : rgb(0,255,0);</string>
     <property name="geometry">
      <rect>
       <x>790</x>
-      <y>360</y>
+      <y>310</y>
       <width>111</width>
       <height>41</height>
      </rect>
