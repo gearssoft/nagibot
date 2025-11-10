@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-import gi  # GStreamer와 GObject 라이브러리 사용
+import gi
 import argparse
 import os
 import sys
 
 gi.require_version('Gst', '1.0')
 gi.require_version('GstRtspServer', '1.0')
-from gi.repository import Gst, GstRtspServer, GObject
+from gi.repository import Gst, GstRtspServer, GLib
 
 # GStreamer 초기화
 Gst.init(None)
@@ -29,7 +29,7 @@ def parse_args():
         action='append',
         required=True,
         metavar='FILE:MP',
-        help="스트림 등록 (예: test.mp4:/test). 이 옵션을 반복해서 여러 스트림을 등록할 수 있음"
+        help="스트림 등록 (예: test.mp4:/test). 반복 사용 가능"
     )
     p.add_argument(
         '-p','--port',
@@ -53,12 +53,10 @@ if __name__ == '__main__':
             print(f"Error: 잘못된 형식: {item}", file=sys.stderr)
             sys.exit(1)
 
-        # 파일 존재 검사
         if not os.path.isfile(file_path):
             print(f"Error: 파일을 찾을 수 없습니다: {file_path}", file=sys.stderr)
             sys.exit(1)
 
-        # 마운트 포인트 형식 보정
         if not mount.startswith('/'):
             mount = '/' + mount
 
@@ -66,4 +64,5 @@ if __name__ == '__main__':
         print(f'등록 완료 → rtsp://127.0.0.1:{args.port}{mount} (파일: {file_path})')
 
     server.attach(None)
-    GObject.MainLoop().run()
+    loop = GLib.MainLoop()  # ✅ 최신 방식
+    loop.run()
