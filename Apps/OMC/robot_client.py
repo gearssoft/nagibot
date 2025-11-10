@@ -184,98 +184,57 @@ class RobotClient:
                 self.on_drive_ack()
 
 
-    def send_drive_command(self, speed, direction):
-        """주행 제어 명령 전송"""
-        if not self.connected or not self.socket:
-            print("서버에 연결되어 있지 않습니다.")
-            return False
+    # def send_drive_command(self, speed, direction):
+    #     """주행 제어 명령 전송"""
+    #     if not self.connected or not self.socket:
+    #         print("서버에 연결되어 있지 않습니다.")
+    #         return False
             
-        try:
-            with self.lock:
-                self.sequence_no += 1
+    #     try:
+    #         with self.lock:
+    #             self.sequence_no += 1
                 
-                # 드라이브 제어 객체 생성
-                drive_control = DriveControl(
-                    speed=speed,         # 속도 (-2.0 ~ 2.0 m/s)
-                    direction=direction,  # 방향 (-1.0 ~ 1.0 rad)
-                    operation_mode=1      # 1: 자율 모드
-                )
+    #             # 드라이브 제어 객체 생성
+    #             drive_control = DriveControl(
+    #                 speed=speed,         # 속도 (-2.0 ~ 2.0 m/s)
+    #                 direction=direction,  # 방향 (-1.0 ~ 1.0 rad)
+    #                 operation_mode=1      # 1: 자율 모드
+    #             )
                 
-                # 패킷 생성
-                packet = create_drive_control_packet(
-                    sender_id=DeviceID.CONTROL_CENTER,
-                    receiver_id=DeviceID.SCOUT_ROBOT,
-                    sequence_no=self.sequence_no,
-                    drive_control=drive_control
-                )
+    #             # 패킷 생성
+    #             packet = create_drive_control_packet(
+    #                 sender_id=DeviceID.CONTROL_CENTER,
+    #                 receiver_id=DeviceID.SCOUT_ROBOT,
+    #                 sequence_no=self.sequence_no,
+    #                 drive_control=drive_control
+    #             )
                 
-                # 패킷 전송
-                packet_bytes = packet.to_bytes()
-                self.socket.sendall(packet_bytes)
+    #             # 패킷 전송
+    #             packet_bytes = packet.to_bytes()
+    #             self.socket.sendall(packet_bytes)
                 
-                return True
+    #             return True
                 
-        except Exception as e:
-            print(f"명령 전송 실패: {e}")
-            return False
+    #     except Exception as e:
+    #         print(f"명령 전송 실패: {e}")
+    #         return False
             
-    def get_sensor_data(self):
-        """센서 데이터 반환"""
-        with self.lock:
-            return {
-                'sensors': self.sensors.copy(),
-                'position': self.position.copy(),
-                'orientation': self.orientation.copy(),
-                'linear_velocity': self.linear_velocity.copy(),
-                'angular_velocity': self.angular_velocity.copy(),
-                'last_update_time': self.last_update_time
-            }
-    def get_drive_status(self):
-        """현재 주행 상태 반환"""
-        with self.lock:
-            return {
-                'speed': self.speed,
-                'yaw': self.yaw,
-                'position': self.position.copy()
-            }
-
-# 테스트 코드
-if __name__ == "__main__":
-    client = RobotClient()
-    
-    if client.connect():
-        try:
-            # 전진 명령
-            client.send_drive_command(1.0, 0.0)
-            time.sleep(2)
-            
-            # 좌회전
-            client.send_drive_command(0.5, 0.5)
-            time.sleep(2)
-            
-            # 우회전
-            client.send_drive_command(0.5, -0.5)
-            time.sleep(2)
-            
-            # 정지
-            client.send_drive_command(0.0, 0.0)
-            
-            # 센서 데이터 출력
-            sensor_data = client.get_sensor_data()
-            print("센서 데이터:")
-            for sensor_id, sensor in sensor_data['sensors'].items():
-                print(f"  센서 {sensor_id}: {sensor}")
-                
-            print(f"위치: {sensor_data['position']}")
-            print(f"속도: {sensor_data['linear_velocity']}")
-            
-            # 무한 루프로 센서 데이터 출력
-            # while True:
-            #     time.sleep(1)
-            #     sensor_data = client.get_sensor_data()
-            #     print(f"위치: {sensor_data['position']}, 속도: {sensor_data['linear_velocity']}")
-                
-        except KeyboardInterrupt:
-            print("프로그램 종료")
-        finally:
-            client.disconnect()
+    # def get_sensor_data(self):
+    #     """센서 데이터 반환"""
+    #     with self.lock:
+    #         return {
+    #             'sensors': self.sensors.copy(),
+    #             'position': self.position.copy(),
+    #             'orientation': self.orientation.copy(),
+    #             'linear_velocity': self.linear_velocity.copy(),
+    #             'angular_velocity': self.angular_velocity.copy(),
+    #             'last_update_time': self.last_update_time
+    #         }
+    # def get_drive_status(self):
+    #     """현재 주행 상태 반환"""
+    #     with self.lock:
+    #         return {
+    #             'speed': self.speed,
+    #             'yaw': self.yaw,
+    #             'position': self.position.copy()
+    #         }

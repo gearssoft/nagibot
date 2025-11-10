@@ -8,13 +8,16 @@ import sys
 from PySide6.QtWidgets import QApplication, QWidget
 from PySide6.QtCore import Signal, Slot,QTimer, Qt
 from PySide6.QtGui import QFontDatabase
-
+from PySide6.QtGui import QImage, QPixmap
 
 import UI.mainForm
 from cssutils import change_background_color, change_text_color
 from my_qt_utils import match_widget_to_parent
 from configMng import ConfigManager
-# from robot_client import RobotClient
+
+# --- 상단 import 근처에 추가 ---
+from PySide6.QtGui import QTextCursor
+
 
 # 리팩토링된 컨트롤러 및 매니저 임포트
 from video_controller import VideoController
@@ -23,6 +26,14 @@ from map_controller import MapController
 
 from network_adapter import NetworkAdapter_MMS, NetworkAdapter_Robot
 from client.client import Client
+
+
+
+from video_thread import VideoThread         
+from videoFrame import VideoDialog       
+
+from utils import parse_command_line
+
 
 class MainForm(QWidget, UI.mainForm.Ui_mainForm):
     
@@ -49,6 +60,26 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         ROBOT_PORT = self.configMng.config['robotControlServer']['port']
         MMS_HOST = self.configMng.config['mmsServer']['ip']
         MMS_PORT = self.configMng.config['mmsServer']['port']
+        
+        CAM_ENABLE = self.configMng.config['cam']['enable']
+        IR_CAMERA_URL = self.configMng.config['cam']['irCameraUrl']
+        CAMERA_URL = self.configMng.config['cam']['cameraUrl']
+
+        self.IR_CAMERA_URL = IR_CAMERA_URL
+        self.CAMERA_URL = CAMERA_URL
+
+        print(f"Camera Enable: {CAM_ENABLE}, IR Camera URL: {IR_CAMERA_URL}, RGB Camera URL: {CAMERA_URL}")
+
+        self._rtsp_thread = None
+        self._video_dialog = None
+
+        if CAM_ENABLE:
+            print("Camera streaming is enabled.")
+            self.addLog("[UI] Camera streaming is enabled.")
+            self._start_rtsp(CAMERA_URL)
+        else:
+            print("Camera streaming is disabled in config.")
+            self.addLog("[UI] Camera streaming is disabled in config.")
 
         if self.configMng.config['robotControlServer']['enable']:
             print(f"Robot Control Server Enabled: {ROBOT_HOST}:{ROBOT_PORT}")
@@ -131,6 +162,91 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         self.btnGoHome.clicked.connect(self.gotoHome)
         self.btnGotoSetup.clicked.connect(self.gotoSetup)
 
+        self.pushButton_cmd_Send.clicked.connect(self.OnSendCustomCommand)
+        self.btnZoomIn.clicked.connect(self.onClickedBtnZoomInMainScreen)
+
+    def _start_rtsp(self, url: str):
+        """RTSP 스레드를 시작하고 프레임 신호를 UI에 연결"""
+        try:
+            if self._rtsp_thread:
+                self._stop_rtsp()
+            self._rtsp_thread = VideoThread(url)
+            self._rtsp_thread.change_pixmap_signal.connect(self._on_rtsp_frame)
+            self._rtsp_thread.start()
+            self.addLog(f"[UI] RTSP started: {url}")
+        except Exception as e:
+            self.addLog(f"[UI] ❌ RTSP start error: {e}")
+
+    def _stop_rtsp(self):
+        """RTSP 스레드를 안전하게 중지"""
+        try:
+            if self._rtsp_thread:
+                self._rtsp_thread.stop()
+                self._rtsp_thread = None
+                self.addLog("[UI] RTSP stopped")
+        except Exception as e:
+            self.addLog(f"[UI] ❌ RTSP stop error: {e}")
+
+    @Slot(object)
+    def _on_rtsp_frame(self, cv_img):
+        """VideoThread에서 온 BGR 프레임을 QLabel/확대창에 반영"""
+        try:
+            # OpenCV BGR -> RGB
+            h, w = cv_img.shape[:2]
+            rgb = cv_img[:, :, ::-1].copy()
+            qimg = QImage(rgb.data, w, h, w * 3, QImage.Format.Format_RGB888)
+            pix = QPixmap.fromImage(qimg)
+
+            # 메인 화면 갱신 (디자이너에 있는 QLabel 이름 사용)
+            if hasattr(self, "mainCamScreen_bmpLabel") and self.mainCamScreen_bmpLabel:
+                # 라벨 크기에 맞게 유지비율 스케일
+                scaled = pix.scaled(self.mainCamScreen_bmpLabel.size(),
+                                    Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                self.mainCamScreen_bmpLabel.setPixmap(scaled)
+
+            # 확대 다이얼로그가 열려 있으면 동시 업데이트
+            if self._video_dialog and self._video_dialog.isVisible():
+                self._video_dialog.update_video_frame(pix)
+        except Exception as e:
+            # 프레임 변환 문제는 조용히 로깅
+            print(f"[UI] _on_rtsp_frame error: {e}")
+
+    def camZoomIn(self):
+        """카메라 줌 인 (확대)"""
+        if self._video_dialog is None:
+            self._video_dialog = VideoDialog(self)
+        self._video_dialog.show()
+        self._video_dialog.raise_()
+    def camZoomOut(self):
+        """카메라 줌 아웃 (축소)"""
+        if self._video_dialog:
+            self._video_dialog.close()
+            self._video_dialog = None
+
+
+    # --- MainForm 클래스 내부에 유틸 추가(아무 메서드 위든 OK) ---
+    def _is_log_view_at_bottom(self) -> bool:
+        """사용자가 현재 로그뷰 맨 아래를 보고 있는지 판단"""
+        sb = self.edLogText.verticalScrollBar()
+        # 여유 마진 2~3 정도 두면 픽셀 오차에도 안정적
+        return sb.value() >= (sb.maximum() - 2)
+
+    # --- 기존 addLog 교체 ---
+    def addLog(self, message: str):
+        """로그 메시지 추가 (맨 아래 보고 있을 때만 자동 스크롤)"""
+        try:
+            stick_bottom = self._is_log_view_at_bottom()
+            self.edLogText.appendPlainText(message)
+
+            if stick_bottom:
+                # 방법 A: 스크롤바 값을 끝으로
+                sb = self.edLogText.verticalScrollBar()
+                sb.setValue(sb.maximum())
+        except Exception as e:
+            print(f"[UI] addLog error: {e}")
+    def clearLog(self):
+        """로그 뷰 클리어"""
+        self.edLogText.clear()
 
     # 키보드
     def keyPressEvent(self, event):
@@ -160,7 +276,6 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
             print("Key Right Released")
         else:
             super().keyReleaseEvent(event)
-
     
     @Slot()
     def onClicked_opmode_Group(self):
@@ -258,21 +373,24 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         #     self._hb_timer.start()
         #     print("[UI] Started heartbeat timer.")
         print("[UI] Connected:", json_info)
+        self.addLog(f"[UI] Connected to MMS server. Info: {json_info}")
 
         self._initialize_ui_state()  # UI 초기 상태 설정
 
     @Slot(str)
     def _ui_on_disconnected(self, reason: str):
-        print("[UI] Disconnected:", reason)        
+        print("[UI] Disconnected:", reason)                
+        self.addLog(f"[UI] Disconnected from MMS server: {reason}")
 
     @Slot(str)
     def _ui_on_error(self, msg: str):
         print("[UI] Error:", msg)
+        self.addLog(f"[UI] MMS Error: {msg}")
 
     @Slot(dict)
     def _ui_on_push_update(self, json_info: dict):
         print("[UI] Push Update:", json_info)
-
+        # self.addLog(f"[UI] Push Update: {json_info}")
     
 
     @Slot(dict)
@@ -335,12 +453,19 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
     @Slot(dict)
     def _rbot_ui_on_connected(self, json_info: dict):
         print("[UI] Robot Connected:", json_info)
+        self.addLog(f"[UI] Robot Connected. Info: {json_info}")
     @Slot(str)
     def _rbot_ui_on_disconnected(self, reason: str):
         print("[UI] Robot Disconnected:", reason)
+        self.addLog(f"[UI] Robot Disconnected: {reason}")
+        if self.mapController:
+            self.mapController.show_message("🚫 로봇과 연결되지 않았습니다.")
     @Slot(str)
     def _rbot_ui_on_error(self, msg: str):
         print("[UI] Robot Error:", msg)    
+        self.addLog(f"[UI] Robot Error: {msg}")
+        if self.mapController:
+            self.mapController.show_message("🚫 로봇과 연결되지 않았습니다.")
 
     @Slot(dict)
     def _rbot_ui_on_push_update(self, json_info: dict):
@@ -724,8 +849,7 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
     # 줌 버튼
     @Slot()
     def onClickedBtnZoomInMainScreen(self):
-        print("onClickedBtnZoomInMainScreen")
-        self.videoController.show_video_dialog()
+        self.camZoomIn()
     
     @Slot()
     def onClickedBtnZoomInBottomScreen(self):
@@ -736,11 +860,15 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         print("onClickedBtnZoomInBottomRightScreen")
     
     # ==================== 종료 처리 ====================    
-    def safeDestroy(self):
+    def safeDestroy(self):        
         if getattr(self, "_dead", False):
             return
         self._dead = True
         try:
+            # RTSP
+            if hasattr(self, "_rtsp_thread") and self._rtsp_thread:
+                self._stop_rtsp()
+
             # 타이머
             if hasattr(self, "_meta_timer") and self._meta_timer.isActive():
                 self._meta_timer.stop()
@@ -776,6 +904,109 @@ class MainForm(QWidget, UI.mainForm.Ui_mainForm):
         except Exception as e:
             print(f"[safeDestroy] error: {e}")
 
+    @Slot()
+    def OnSendCustomCommand(self):
+        raw = self.lineEdit_cmd.text().strip()
+        if not raw:
+            return
+
+        try:
+            cmd, pos, opts = parse_command_line(raw)
+        except Exception as e:
+            self.addLog(f"[UI] ❌ 명령 구문 분석 오류: {e}")
+            return
+
+        def _need_robot():
+            if self.netRobot and self.netRobot.is_connected():
+                return True
+            self.addLog("[UI] ❌ 로봇이 연결되어 있지 않습니다.")
+            return False
+
+        # ---------------- RCM ----------------
+        if cmd == "rcm":
+            if not _need_robot():
+                return
+            payload = {}
+
+            if opts:
+                payload.update(opts)
+
+            # 위치 인자 사용: rcm <key> [value]
+            if pos:
+                key = str(pos[0])
+                if len(pos) >= 2:
+                    payload[key] = pos[1]
+                else:
+                    # 값이 없으면 True 토글
+                    payload[key] = True
+
+            if not payload:
+                self.addLog("[UI] ⚠️ rcm 사용법: rcm <key> [value] | rcm key=value ... | rcm --flag")
+                return
+
+            msg = {"rcm": payload}
+            self.netRobot.set_json_by_key("custom_command", msg)
+            self.addLog(f"[UI] 🚀 RCM command sent → {msg}")
+            return
+
+        # ---------------- CLI ----------------
+        if cmd == "cli":
+            sub = (str(pos[0]).lower() if pos else "")
+            if sub == "clear":
+                self.clearLog()
+                return
+            self.addLog(f"[UI] ⚠️ 알 수 없는 cli 명령: {sub}")
+            return
+
+        # ---------------- CAM ----------------
+        if cmd == "cam":
+            # cam zoom [배율], cam ir, cam rgb
+            sub = (str(pos[0]).lower() if pos else "")
+            if sub == "zoom":
+                # 예: cam zoom 2.0  혹은 cam --zoom 2.0
+                factor = None
+                if len(pos) >= 2 and isinstance(pos[1], (int, float)):
+                    factor = float(pos[1])
+                elif "zoom" in opts and isinstance(opts["zoom"], (int, float)):
+                    factor = float(opts["zoom"])
+                self.camZoomIn() if factor is None else self.camZoomIn(factor)
+                return
+            if sub in ("ir", "infra", "infrared"):
+                self._start_rtsp(self.IR_CAMERA_URL)
+                return
+            if sub in ("rgb", "color"):
+                self._start_rtsp(self.CAMERA_URL)
+                return
+            self.addLog(f"[UI] ⚠️ 알 수 없는 cam 명령: {sub}")
+            return
+
+        # ---------------- RTSP ----------------
+        if cmd == "rtsp":
+            # rtsp start [url] | rtsp start url=<...> | rtsp stop
+            sub = (str(pos[0]).lower() if pos else "")
+            if sub == "stop":
+                self._stop_rtsp()
+                return
+            if sub == "start":
+                # 우선순위: opts['url'] > pos[1] > config
+                url = None
+                if "url" in opts and isinstance(opts["url"], str):
+                    url = opts["url"]
+                elif len(pos) >= 2 and isinstance(pos[1], str):
+                    url = pos[1]
+                else:
+                    url = self.configMng.config['cam']['cameraUrl']
+                self._start_rtsp(url)
+                return
+            self.addLog(f"[UI] ⚠️ 알 수 없는 rtsp 명령: {sub}")
+            return
+
+        # ---------------- 기타 ----------------
+        self.addLog(f"[UI] ⚠️ 알 수 없는 명령 형식: {raw}")
+
+    
+
+#--- 예외 처리 및 로깅 설정 ---
 import sys, faulthandler, traceback
 from PySide6.QtCore import qInstallMessageHandler, QtMsgType
 

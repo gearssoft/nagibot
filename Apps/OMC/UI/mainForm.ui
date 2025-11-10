@@ -367,6 +367,53 @@ margin : 4px;</string>
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QWidget" name="widget_zoom_in" native="true">
+    <property name="geometry">
+     <rect>
+      <x>1220</x>
+      <y>490</y>
+      <width>91</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border : none;</string>
+    </property>
+    <widget class="QPushButton" name="btnZoomIn">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>91</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_3">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>91</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="../assets/icons.qrc">:/확대.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <zorder>label_3</zorder>
+    <zorder>btnZoomIn</zorder>
+   </widget>
   </widget>
   <widget class="QWidget" name="widgetBottomLeftScreen" native="true">
    <property name="geometry">

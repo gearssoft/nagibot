@@ -2,137 +2,13 @@
 from PySide6.QtCore import QObject, Qt, QTimer, QEvent, Signal, Slot
 from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtWebChannel import QWebChannel
+from PySide6.QtWebEngineCore import QWebEngineSettings
+
+from pathlib import Path
+from PySide6.QtCore import QUrl
+
+
 from my_qt_utils import match_widget_to_parent
-
-_LEAFLET_HTML = r"""
-<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <title>Robot Map</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-    crossorigin=""
-  />
-  <style>
-    html, body, #map { height: 100%; margin: 0; padding: 0; }
-
-    /* 로봇 헤딩 아이콘 (DivIcon) */
-    .robot-wrap {
-      position: relative;
-      width: 36px; height: 36px;
-      transform: translate(-18px, -18px); /* 마커 기준점을 중앙으로 */
-    }
-
-    .robot-arrow {
-        position: absolute;
-        left: 50%; top: 50%;
-        width: 0; height: 0;
-        transform-origin: 50% 50%;
-        /* 위쪽을 향하는 삼각형(기본 0deg = 북쪽) */
-        border-left: 8px solid transparent;
-        border-right: 8px solid transparent;
-        border-bottom: 28px solid #0078ff;   /* 높이 ↑ */
-        transform: translate(-50%, -70%) rotate(0deg);  /* 약간 위로 밀기 */
-        filter: drop-shadow(0 1px 2px rgba(0,0,0,0.35));
-    }
-
-    .robot-core {
-      position: absolute;
-      left: 50%; top: 50%;
-      width: 10px; height: 10px;
-      transform: translate(-50%, -50%);
-      background: white;
-      border: 2px solid #0078ff;
-      border-radius: 50%;
-      box-shadow: 0 0 4px rgba(0,0,0,.35);
-    }
-  </style>
-</head>
-<body>
-  <div id="map"></div>
-
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
-
-    <script>
-
-    function cssAngleFromHeading(headingDeg) {
-    // 로봇 yaw 0°=동(East), CCW+, CSS는 CW+ → 변환
-    // CSS 각도 = 90 - headingDeg
-    const h = (headingDeg || 0);
-    return 90 - h;
-    }
-
-    let map, robotMarker, pyBridge = null;   /* ✅ 중복 선언 금지: 한 번만 */
-
-    function makeRobotIcon(headingDeg) {
-        const html =
-        '<div class="robot-wrap">' +
-            '<div class="robot-arrow" style="transform: translate(-50%, -60%) rotate(' + cssAngleFromHeading(headingDeg) + 'deg)"></div>' +
-            '<div class="robot-core"></div>' +
-        '</div>';
-        return L.divIcon({
-        html,
-        className: '',
-        iconSize: [36, 36],
-        iconAnchor: [18, 18],
-        });
-    }
-
-    // WebChannel 연결
-    if (typeof qt !== "undefined") {
-        new QWebChannel(qt.webChannelTransport, function (channel) {
-        pyBridge = channel.objects.pyBridge;
-        });
-    }
-
-    function initMap(lat, lon, zoom) {
-        map = L.map('map').setView([lat, lon], zoom);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 20, attribution: '&copy; OpenStreetMap'
-        }).addTo(map);
-
-        // 드래그/줌 시작/종료 시 Python에 알림
-        const onStart = () => { if (pyBridge) pyBridge.onDrag(true); };
-        const onEnd   = () => { if (pyBridge) pyBridge.onDrag(false); };
-        map.on('movestart', onStart);
-        map.on('dragstart', onStart);
-        map.on('zoomstart', onStart);
-        map.on('moveend', onEnd);
-        map.on('dragend', onEnd);
-        map.on('zoomend', onEnd);
-    }
-
-    // headingDeg: degrees (0°=북, +시계방향)
-    function updateRobot(lat, lon, headingDeg, center=true) {
-        if (!map) return;
-        const pos = [lat, lon];
-        if (!robotMarker) {
-        robotMarker = L.marker(pos, { icon: makeRobotIcon(headingDeg) }).addTo(map);
-        } else {
-        robotMarker.setLatLng(pos);
-        robotMarker.setIcon(makeRobotIcon(headingDeg));
-        }
-        if (center) {
-        map.setView(pos, map.getZoom(), { animate: false });
-        }
-    }
-
-    /* 전역 바인딩(중요) */
-    window.initMap = initMap;
-    window.updateRobot = updateRobot;
-</script>
-
-
-  
-</body>
-</html>
-"""
 
 # JS → Python 브릿지
 class _MapBridge(QObject):
@@ -153,7 +29,6 @@ class MapController(QObject):
         self._inited = False
         self._pending = None   # (lat, lon, headingDeg, center)
         
-        
 
         self._dragging = False
         self._drag_cooldown = QTimer(self)
@@ -165,6 +40,18 @@ class MapController(QObject):
         self._bridge = None
 
         self._drag_cooldown.timeout.connect(self._clear_drag)
+
+    def show_message(self, text: str):
+        """지도 위에 상태 메시지를 표시"""
+        if self.web_view is None:
+            return
+        # 지도 위 label_widget이 존재할 때 표시
+        for child in self.web_view.parent().children():
+            if hasattr(child, "setText") and hasattr(child, "setAlignment"):
+                child.setText(text)
+                child.setAlignment(Qt.AlignCenter)
+                child.setStyleSheet("color: red; font-size: 16px; font-weight: bold; background-color: rgba(255,255,255,0.7);")
+                break
 
     def _set_drag(self, on: bool):
         if self._dragging != on:
@@ -184,7 +71,15 @@ class MapController(QObject):
         label_widget.setAlignment(Qt.AlignCenter)
 
         self.web_view = QWebEngineView(parent_widget)
-        self.web_view.setHtml(_LEAFLET_HTML)
+
+        #self.web_view.setHtml(_LEAFLET_HTML)
+
+        self.web_view.settings().setAttribute(
+            QWebEngineSettings.LocalContentCanAccessRemoteUrls, True
+        )
+
+        html_path = Path(__file__).parent / "assets/map/leaflet_map.html"
+        self.web_view.setUrl(QUrl.fromLocalFile(str(html_path)))
         
         # WebChannel: JS와 통신 세팅
         self._channel = QWebChannel(self.web_view.page())
