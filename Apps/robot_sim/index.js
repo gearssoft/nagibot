@@ -17,6 +17,7 @@ import { Robot } from "./simulator/robot.js";
 
 
 
+
 async function main() {
   dotenv.config({ path: ".env" });
   console.log(`run mode : ${process.env.NODE_ENV}`);
@@ -48,9 +49,10 @@ async function main() {
     };
   }
 
-  // 로봇 생성 시 기준점 전달
+  // 로봇 생성 시 기준점 전달  
   const seed = { ...(tcp.metadataJson.robot ?? {}), ...(tcp.metadataJson.geo ?? {}) };
-  const robot = Robot.fromMetadata({ robot: seed, geo: tcp.metadataJson.geo });
+  seed.id = Number(process.env.ROBOT_ID ?? 1);
+  const robot = Robot.fromMetadata({ robot: seed, geo: tcp.metadataJson.geo  });
 
   // ✅ control_robot 콜백 등록
   tcp.registerJsonHandler("control_robot", async (obj, { tcp }) => {

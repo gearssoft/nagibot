@@ -102,7 +102,7 @@ export class TcpServer {
     this.ip = opts.ip ?? "127.0.0.1";
     this.port = Number(opts.port ?? 8283);
     this.timeoutMs = Number(opts.timeoutMs ?? 10_000);
-    this.version = "1.0.0-LE (Node)";
+    this.version = "1.0.1-LE (Node)";
     this.server = null;
     this.sockets = new Set();
 
@@ -270,7 +270,8 @@ export class TcpServer {
         version: this.version,
         app : 'robot_sim_vehicle_model_t01',
         server_time: Math.floor(Date.now() / 1000),
-        id: nextId(),
+        packet_id: nextId(),
+        robot_id: this.metadataJson.robot?.id ?? 1
       })); // 원본 흐름 유지 :contentReference[oaicite:2]{index=2}
 
       while (true) {
